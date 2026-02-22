@@ -2,7 +2,66 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
+  /* ── Brand (Primary Blue) ── */
+  --color-brand-50: oklch(0.97 0.014 250);
+  --color-brand-100: oklch(0.93 0.034 250);
+  --color-brand-200: oklch(0.87 0.065 250);
+  --color-brand-300: oklch(0.78 0.1 250);
+  --color-brand-400: oklch(0.68 0.14 250);
+  --color-brand-500: oklch(0.58 0.17 250);
+  --color-brand-600: oklch(0.52 0.17 250);
+  --color-brand-700: oklch(0.45 0.15 250);
+  --color-brand-800: oklch(0.38 0.12 250);
+  --color-brand-900: oklch(0.30 0.09 250);
+
+  /* ── Surface ── */
+  --color-surface: oklch(1 0 0);
+  --color-surface-secondary: oklch(0.985 0.002 250);
+  --color-surface-tertiary: oklch(0.96 0.004 250);
+  --color-surface-hover: oklch(0.975 0.003 250);
+
+  /* ── Text ── */
+  --color-text-primary: oklch(0.21 0.02 260);
+  --color-text-secondary: oklch(0.45 0.014 260);
+  --color-text-tertiary: oklch(0.60 0.01 260);
+  --color-text-inverse: oklch(1 0 0);
+  --color-text-link: oklch(0.52 0.17 250);
+
+  /* ── Border ── */
+  --color-border-primary: oklch(0.91 0.004 260);
+  --color-border-strong: oklch(0.82 0.008 260);
+  --color-border-focus: oklch(0.52 0.17 250);
+
+  /* ── Status ── */
+  --color-success-50: oklch(0.97 0.025 155);
+  --color-success-500: oklch(0.55 0.16 155);
+  --color-success-600: oklch(0.48 0.14 155);
+
+  --color-danger-50: oklch(0.97 0.018 25);
+  --color-danger-500: oklch(0.58 0.2 25);
+  --color-danger-600: oklch(0.52 0.19 25);
+
+  --color-warning-50: oklch(0.97 0.03 85);
+  --color-warning-500: oklch(0.75 0.15 70);
+
+  /* ── Platform ── */
+  --color-platform-github: oklch(0.27 0.02 260);
+  --color-platform-jira: oklch(0.52 0.17 250);
+  --color-platform-slack: oklch(0.50 0.17 310);
+  --color-platform-confluence: oklch(0.58 0.13 250);
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.04);
+  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.06), 0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.08), 0 4px 6px oklch(0 0 0 / 0.04);
+  --shadow-overlay: 0 20px 25px oklch(0 0 0 / 0.1), 0 8px 10px oklch(0 0 0 / 0.06);
+
+  /* ── Animations ── */
   --animate-slide-in: slide-in 0.2s ease-out;
+  --animate-slide-up: slide-up 0.15s ease-out;
+  --animate-fade-in: fade-in 0.15s ease-out;
+  --animate-scale-in: scale-in 0.15s ease-out;
 }
 
 @keyframes slide-in {
@@ -13,5 +72,32 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

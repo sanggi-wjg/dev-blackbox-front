@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import Button from '@/components/common/Button';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
 
 interface SummaryDatePickerProps {
   date: string;
@@ -8,29 +10,37 @@ interface SummaryDatePickerProps {
 export default function SummaryDatePicker({ date, onChange }: SummaryDatePickerProps) {
   const goPrev = () => onChange(dayjs(date).subtract(1, 'day').format('YYYY-MM-DD'));
   const goNext = () => onChange(dayjs(date).add(1, 'day').format('YYYY-MM-DD'));
+  const goToday = () => onChange(dayjs().format('YYYY-MM-DD'));
   const isToday = dayjs(date).isSame(dayjs(), 'day');
 
   return (
     <div className="flex items-center gap-2">
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={goPrev}
-        className="rounded-lg border border-gray-300 px-2.5 py-1.5 text-sm hover:bg-gray-100"
-      >
-        ◀
-      </button>
+        aria-label="이전 날짜"
+        icon={<ChevronLeftIcon className="h-4 w-4" />}
+      />
       <input
         type="date"
         value={date}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+        className="h-8 rounded-lg border border-border-primary bg-surface px-3 text-sm text-text-primary transition-colors focus:border-border-focus focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
       />
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={goNext}
         disabled={isToday}
-        className="rounded-lg border border-gray-300 px-2.5 py-1.5 text-sm hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        ▶
-      </button>
+        aria-label="다음 날짜"
+        icon={<ChevronRightIcon className="h-4 w-4" />}
+      />
+      {!isToday && (
+        <Button variant="ghost" size="sm" onClick={goToday}>
+          오늘
+        </Button>
+      )}
     </div>
   );
 }

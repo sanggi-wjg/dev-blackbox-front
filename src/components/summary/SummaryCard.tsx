@@ -1,52 +1,70 @@
 import Markdown from 'react-markdown';
+import Card, { CardHeader, CardBody } from '@/components/common/Card';
+import Badge from '@/components/common/Badge';
+import { GitHubIcon, JiraIcon, SlackIcon } from '@/components/icons';
+import type { ReactNode } from 'react';
 
 interface SummaryCardProps {
   platform: string;
   summary: string;
 }
 
-const platformConfig: Record<string, { label: string; borderColor: string; badge: string }> = {
+const platformConfig: Record<
+  string,
+  { label: string; borderColor: string; badge: 'github' | 'jira' | 'slack' | 'confluence'; icon: ReactNode }
+> = {
   GITHUB: {
     label: 'GitHub',
-    borderColor: 'border-l-gray-800',
-    badge: 'bg-gray-800 text-white',
+    borderColor: 'border-l-platform-github',
+    badge: 'github',
+    icon: <GitHubIcon className="h-4 w-4" />,
   },
   JIRA: {
     label: 'Jira',
-    borderColor: 'border-l-blue-600',
-    badge: 'bg-blue-600 text-white',
+    borderColor: 'border-l-platform-jira',
+    badge: 'jira',
+    icon: <JiraIcon className="h-4 w-4" />,
   },
   CONFLUENCE: {
     label: 'Confluence',
-    borderColor: 'border-l-blue-400',
-    badge: 'bg-blue-400 text-white',
+    borderColor: 'border-l-platform-confluence',
+    badge: 'confluence',
+    icon: null,
   },
   SLACK: {
     label: 'Slack',
-    borderColor: 'border-l-purple-600',
-    badge: 'bg-purple-600 text-white',
+    borderColor: 'border-l-platform-slack',
+    badge: 'slack',
+    icon: <SlackIcon className="h-4 w-4" />,
   },
 };
 
 export default function SummaryCard({ platform, summary }: SummaryCardProps) {
   const config = platformConfig[platform] ?? {
     label: platform,
-    borderColor: 'border-l-gray-300',
-    badge: 'bg-gray-300 text-gray-800',
+    borderColor: 'border-l-border-strong',
+    badge: 'default' as const,
+    icon: null,
   };
 
   return (
-    <div className={`rounded-lg border border-gray-200 border-l-4 ${config.borderColor} bg-white shadow-sm`}>
-      <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3">
-        <span className={`rounded px-2 py-0.5 text-xs font-semibold ${config.badge}`}>
-          {config.label}
-        </span>
-      </div>
-      <div className="px-5 py-4">
-        <div className="prose prose-sm prose-gray max-w-none prose-headings:text-gray-800 prose-p:text-gray-600 prose-strong:text-gray-700 prose-ul:text-gray-600 prose-code:rounded prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:text-gray-700 prose-code:before:content-none prose-code:after:content-none">
+    <Card
+      padding="none"
+      className={`border-l-4 ${config.borderColor} transition-shadow duration-150 hover:shadow-md`}
+    >
+      <CardHeader className="flex items-center gap-2">
+        <Badge variant={config.badge as 'github' | 'jira' | 'slack' | 'confluence'}>
+          <span className="inline-flex items-center gap-1.5">
+            {config.icon}
+            {config.label}
+          </span>
+        </Badge>
+      </CardHeader>
+      <CardBody>
+        <div className="prose prose-sm max-w-none prose-headings:text-text-primary prose-p:text-text-secondary prose-strong:text-text-primary prose-ul:text-text-secondary prose-code:rounded prose-code:bg-surface-tertiary prose-code:px-1 prose-code:py-0.5 prose-code:text-text-primary prose-code:before:content-none prose-code:after:content-none">
           <Markdown>{summary}</Markdown>
         </div>
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   );
 }

@@ -1,13 +1,13 @@
 export function Skeleton({ className = '' }: { className?: string }) {
   return (
-    <div className={`animate-pulse rounded bg-gray-200 ${className}`} />
+    <div className={`animate-pulse rounded bg-surface-tertiary ${className}`} />
   );
 }
 
 export function SummaryCardSkeleton() {
   return (
-    <div className="rounded-lg border border-gray-200 border-l-4 border-l-gray-300 bg-white shadow-sm">
-      <div className="border-b border-gray-100 px-5 py-3">
+    <div className="rounded-xl border border-border-primary border-l-4 border-l-surface-tertiary bg-surface shadow-xs">
+      <div className="border-b border-border-primary px-5 py-3">
         <Skeleton className="h-5 w-16" />
       </div>
       <div className="flex flex-col gap-3 px-5 py-4">
@@ -20,7 +20,7 @@ export function SummaryCardSkeleton() {
   );
 }
 
-export function TableRowSkeleton({ cols = 6 }: { cols?: number }) {
+export function TableRowSkeleton({ cols = 5 }: { cols?: number }) {
   return (
     <tr>
       {Array.from({ length: cols }, (_, i) => (
