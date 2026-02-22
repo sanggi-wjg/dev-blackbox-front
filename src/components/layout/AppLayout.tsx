@@ -42,8 +42,8 @@ export default function AppLayout() {
           <span className="text-sm font-bold text-text-primary">Dev Blackbox</span>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 [scrollbar-gutter:stable] md:p-6 lg:p-8">
-          <div className="mx-auto max-w-5xl animate-fade-in">
+        <main className="flex-1 overflow-y-auto px-3 py-2 [scrollbar-gutter:stable] md:px-4 md:py-3 lg:px-5 lg:py-4">
+          <div className="mx-auto max-w-screen-2xl animate-fade-in">
             <Outlet />
           </div>
         </main>

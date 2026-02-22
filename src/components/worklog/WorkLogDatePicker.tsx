@@ -2,12 +2,12 @@ import dayjs from 'dayjs';
 import Button from '@/components/common/Button';
 import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
 
-interface SummaryDatePickerProps {
+interface WorkLogDatePickerProps {
   date: string;
   onChange: (date: string) => void;
 }
 
-export default function SummaryDatePicker({ date, onChange }: SummaryDatePickerProps) {
+export default function WorkLogDatePicker({ date, onChange }: WorkLogDatePickerProps) {
   const goPrev = () => onChange(dayjs(date).subtract(1, 'day').format('YYYY-MM-DD'));
   const goNext = () => onChange(dayjs(date).add(1, 'day').format('YYYY-MM-DD'));
   const goToday = () => onChange(dayjs().format('YYYY-MM-DD'));

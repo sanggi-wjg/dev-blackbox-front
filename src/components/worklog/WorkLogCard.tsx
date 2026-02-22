@@ -4,9 +4,9 @@ import Badge from '@/components/common/Badge';
 import { GitHubIcon, JiraIcon, SlackIcon } from '@/components/icons';
 import type { ReactNode } from 'react';
 
-interface SummaryCardProps {
+interface WorkLogCardProps {
   platform: string;
-  summary: string;
+  content: string;
 }
 
 const platformConfig: Record<
@@ -39,7 +39,7 @@ const platformConfig: Record<
   },
 };
 
-export default function SummaryCard({ platform, summary }: SummaryCardProps) {
+export default function WorkLogCard({ platform, content }: WorkLogCardProps) {
   const config = platformConfig[platform] ?? {
     label: platform,
     borderColor: 'border-l-border-strong',
@@ -62,7 +62,7 @@ export default function SummaryCard({ platform, summary }: SummaryCardProps) {
       </CardHeader>
       <CardBody>
         <div className="prose prose-sm max-w-none prose-headings:text-text-primary prose-p:text-text-secondary prose-strong:text-text-primary prose-ul:text-text-secondary prose-code:rounded prose-code:bg-surface-tertiary prose-code:px-1 prose-code:py-0.5 prose-code:text-text-primary prose-code:before:content-none prose-code:after:content-none">
-          <Markdown>{summary}</Markdown>
+          <Markdown>{content}</Markdown>
         </div>
       </CardBody>
     </Card>

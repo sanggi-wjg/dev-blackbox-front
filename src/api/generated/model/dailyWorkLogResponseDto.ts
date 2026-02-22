@@ -10,7 +10,7 @@ export interface DailyWorkLogResponseDto {
   /** 요약 대상 날짜 (YYYY-MM-DD) */
   target_date: string;
   /** 요약 내용 */
-  summary: string;
+  content: string;
   user_id: number;
   created_at: string;
   updated_at: string;

@@ -12,7 +12,7 @@ export interface PlatformWorkLogResponseDto {
   /** 플랫폼 이름 */
   platform: string;
   /** 요약 내용 */
-  summary: string;
+  content: string;
   /** 사용된 모델 이름 */
   model_name: string;
   /** 사용된 프롬프트 템플릿 */

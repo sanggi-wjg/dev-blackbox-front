@@ -26,10 +26,12 @@ import type {
 import type {
   BackgroundTaskResponseDto,
   DailyWorkLogResponseDto,
-  GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams,
+  GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams,
   GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams,
+  GetUserContentWorkLogsUsersUserIdUserContentGetParams,
   HTTPValidationError,
   PlatformWorkLogResponseDto,
+  UserContentCreateOrUpdateRequestDto,
   WorkLogManualSyncReqeustDto
 } from '.././model';
 
@@ -137,11 +139,173 @@ export function useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet<TData = Aw
 
 
 /**
- * @summary Get Daily Work Logs
+ * @summary Get User Content
  */
-export const getDailyWorkLogsWorkLogsUsersUserIdDailyGet = (
+export const getUserContentWorkLogsUsersUserIdUserContentGet = (
     userId: number,
-    params: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams,
+    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PlatformWorkLogResponseDto | null>(
+      {url: `/work-logs/users/${userId}/user-content`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
+
+
+
+export const getGetUserContentWorkLogsUsersUserIdUserContentGetQueryKey = (userId: number,
+    params?: GetUserContentWorkLogsUsersUserIdUserContentGetParams,) => {
+    return [
+    `/work-logs/users/${userId}/user-content`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getGetUserContentWorkLogsUsersUserIdUserContentGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(userId: number,
+    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserContentWorkLogsUsersUserIdUserContentGetQueryKey(userId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>> = ({ signal }) => getUserContentWorkLogsUsersUserIdUserContentGet(userId,params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetUserContentWorkLogsUsersUserIdUserContentGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>>
+export type GetUserContentWorkLogsUsersUserIdUserContentGetQueryError = HTTPValidationError
+
+
+export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
+ userId: number,
+    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
+ userId: number,
+    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>,
+          TError,
+          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
+ userId: number,
+    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get User Content
+ */
+
+export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
+ userId: number,
+    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetUserContentWorkLogsUsersUserIdUserContentGetQueryOptions(userId,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+/**
+ * @summary Create Or Update User Content
+ */
+export const createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut = (
+    userId: number,
+    userContentCreateOrUpdateRequestDto: UserContentCreateOrUpdateRequestDto,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PlatformWorkLogResponseDto>(
+      {url: `/work-logs/users/${userId}/user-content`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: userContentCreateOrUpdateRequestDto, signal
+    },
+      );
+    }
+  
+
+
+export const getCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, TError,{userId: number;data: UserContentCreateOrUpdateRequestDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, TError,{userId: number;data: UserContentCreateOrUpdateRequestDto}, TContext> => {
+
+const mutationKey = ['createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, {userId: number;data: UserContentCreateOrUpdateRequestDto}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut(userId,data,)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationResult = NonNullable<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>>
+    export type CreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationBody = UserContentCreateOrUpdateRequestDto
+    export type CreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationError = HTTPValidationError
+
+    /**
+ * @summary Create Or Update User Content
+ */
+export const useCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPut = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, TError,{userId: number;data: UserContentCreateOrUpdateRequestDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>,
+        TError,
+        {userId: number;data: UserContentCreateOrUpdateRequestDto},
+        TContext
+      > => {
+      return useMutation(getCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationOptions(options), queryClient);
+    }
+    /**
+ * @summary Get Daily Work Log
+ */
+export const getDailyWorkLogWorkLogsUsersUserIdDailyGet = (
+    userId: number,
+    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams,
  signal?: AbortSignal
 ) => {
       
@@ -156,75 +320,75 @@ export const getDailyWorkLogsWorkLogsUsersUserIdDailyGet = (
 
 
 
-export const getGetDailyWorkLogsWorkLogsUsersUserIdDailyGetQueryKey = (userId: number,
-    params?: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams,) => {
+export const getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryKey = (userId: number,
+    params?: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams,) => {
     return [
     `/work-logs/users/${userId}/daily`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetDailyWorkLogsWorkLogsUsersUserIdDailyGetQueryOptions = <TData = Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(userId: number,
-    params: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
+export const getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryOptions = <TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(userId: number,
+    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetDailyWorkLogsWorkLogsUsersUserIdDailyGetQueryKey(userId,params);
+  const queryKey =  queryOptions?.queryKey ?? getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryKey(userId,params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>> = ({ signal }) => getDailyWorkLogsWorkLogsUsersUserIdDailyGet(userId,params, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>> = ({ signal }) => getDailyWorkLogWorkLogsUsersUserIdDailyGet(userId,params, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetDailyWorkLogsWorkLogsUsersUserIdDailyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>>
-export type GetDailyWorkLogsWorkLogsUsersUserIdDailyGetQueryError = HTTPValidationError
+export type GetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>>
+export type GetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryError = HTTPValidationError
 
 
-export function useGetDailyWorkLogsWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
+export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
  userId: number,
-    params: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError, TData>> & Pick<
+    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>,
+          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>,
           TError,
-          Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>
+          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetDailyWorkLogsWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
+export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
  userId: number,
-    params: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError, TData>> & Pick<
+    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>,
+          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>,
           TError,
-          Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>
+          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetDailyWorkLogsWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
+export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
  userId: number,
-    params: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
+    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get Daily Work Logs
+ * @summary Get Daily Work Log
  */
 
-export function useGetDailyWorkLogsWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
+export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
  userId: number,
-    params: GetDailyWorkLogsWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogsWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
+    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetDailyWorkLogsWorkLogsUsersUserIdDailyGetQueryOptions(userId,params,options)
+  const queryOptions = getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryOptions(userId,params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

@@ -4,7 +4,7 @@ export function Skeleton({ className = '' }: { className?: string }) {
   );
 }
 
-export function SummaryCardSkeleton() {
+export function WorkLogCardSkeleton() {
   return (
     <div className="rounded-xl border border-border-primary border-l-4 border-l-surface-tertiary bg-surface shadow-xs">
       <div className="border-b border-border-primary px-5 py-3">
