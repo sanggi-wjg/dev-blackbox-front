@@ -1,13 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import dayjs from 'dayjs';
-import { useGetUsersUsersGet } from '@/api/generated/user/user';
 import {
-  useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet,
-  useGetUserContentWorkLogsUsersUserIdUserContentGet,
-  useCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPut,
-  useSyncWorkLogsWorkLogsUserIdManualSyncPost,
+  useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet,
+  useGetUserContentApiV1WorkLogsUserContentGet,
+  useCreateOrUpdateUserContentApiV1WorkLogsUserContentPut,
+  useSyncWorkLogsApiV1WorkLogsManualSyncPost,
 } from '@/api/generated/work-log/work-log';
-import UserSelect from '@/components/user/UserSelect';
 import WorkLogDatePicker from '@/components/worklog/WorkLogDatePicker';
 import WorkLogCard from '@/components/worklog/WorkLogCard';
 import ManualWorkLogEditor from '@/components/worklog/ManualWorkLogEditor';
@@ -21,50 +19,35 @@ import Button from '@/components/common/Button';
 import { ArrowPathIcon, PencilSquareIcon, ChartBarIcon } from '@/components/icons';
 
 export default function WorkLogPage() {
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
   const [syncingDate, setSyncingDate] = useState<string | null>(null);
   const [manualContent, setManualContent] = useState('');
   const [mobileTab, setMobileTab] = useState('platform');
   const { toast } = useToast();
 
-  const { data: users, isLoading: usersLoading, error: usersError } = useGetUsersUsersGet();
-
   const {
     data: workLogs,
     isLoading: workLogsLoading,
     error: workLogsError,
-  } = useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet(
-    selectedUserId!,
-    { target_date: targetDate },
-    { query: { enabled: selectedUserId != null } },
-  );
+  } = useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet({ target_date: targetDate });
 
   const {
     data: userContent,
-  } = useGetUserContentWorkLogsUsersUserIdUserContentGet(
-    selectedUserId!,
-    { target_date: targetDate },
-    { query: { enabled: selectedUserId != null } },
-  );
+  } = useGetUserContentApiV1WorkLogsUserContentGet({ target_date: targetDate });
 
-  const saveUserContent = useCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPut();
-  const manualSync = useSyncWorkLogsWorkLogsUserIdManualSyncPost();
+  const saveUserContent = useCreateOrUpdateUserContentApiV1WorkLogsUserContentPut();
+  const manualSync = useSyncWorkLogsApiV1WorkLogsManualSyncPost();
 
-  // 서버에서 직접 작성 내용 로드
-  useEffect(() => {
-    if (selectedUserId == null) {
-      setManualContent('');
-      return;
-    }
+  // userContent가 변경되면 manualContent를 동기화 (렌더 중 상태 조정)
+  const [prevUserContent, setPrevUserContent] = useState(userContent);
+  if (prevUserContent !== userContent) {
+    setPrevUserContent(userContent);
     setManualContent(userContent?.content ?? '');
-  }, [selectedUserId, userContent]);
+  }
 
   const handleSaveManual = useCallback(() => {
-    if (selectedUserId == null) return;
     saveUserContent.mutate(
       {
-        userId: selectedUserId,
         data: { target_date: targetDate, content: manualContent },
       },
       {
@@ -76,14 +59,12 @@ export default function WorkLogPage() {
         },
       },
     );
-  }, [selectedUserId, targetDate, manualContent, toast, saveUserContent]);
+  }, [targetDate, manualContent, toast, saveUserContent]);
 
   const handleCollect = () => {
-    if (selectedUserId == null) return;
     setSyncingDate(targetDate);
     manualSync.mutate(
       {
-        userId: selectedUserId,
         data: { target_date: targetDate },
       },
       {
@@ -99,18 +80,12 @@ export default function WorkLogPage() {
   };
 
   const showCollectButton =
-    selectedUserId != null &&
     !workLogsLoading &&
     ((workLogs != null && workLogs.length === 0) || syncingDate === targetDate);
 
-  // 플랫폼 요약 컨텐츠
   const platformContent = (
     <>
-      {selectedUserId == null && (
-        <EmptyState message="사용자를 선택해주세요" description="좌측 드롭다운에서 사용자를 선택하면 업무일지가 표시됩니다" />
-      )}
-
-      {selectedUserId != null && workLogsLoading && (
+      {workLogsLoading && (
         <div className="flex flex-col gap-4">
           <WorkLogCardSkeleton />
           <WorkLogCardSkeleton />
@@ -149,17 +124,6 @@ export default function WorkLogPage() {
       {/* Control bar */}
       <Card className="mb-6">
         <div className="flex flex-wrap items-center gap-4">
-          {usersLoading && (
-            <div className="h-9 w-40 animate-pulse rounded-lg bg-surface-tertiary" />
-          )}
-          {usersError != null && <ErrorMessage error={usersError} />}
-          {users && (
-            <UserSelect
-              users={users}
-              selectedUserId={selectedUserId}
-              onChange={setSelectedUserId}
-            />
-          )}
           <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
           {showCollectButton && (
             <Button
@@ -183,26 +147,22 @@ export default function WorkLogPage() {
       <div className="hidden lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
         <div>{platformContent}</div>
         <div>
-          {selectedUserId != null && (
-            <ManualWorkLogEditor
-              content={manualContent}
-              onChange={setManualContent}
-              onSave={handleSaveManual}
-              saving={saveUserContent.isPending}
-            />
-          )}
+          <ManualWorkLogEditor
+            content={manualContent}
+            onChange={setManualContent}
+            onSave={handleSaveManual}
+            saving={saveUserContent.isPending}
+          />
         </div>
       </div>
 
       {/* Mobile: Tab layout */}
       <div className="lg:hidden">
-        {selectedUserId != null && (
-          <Tabs tabs={mobileTabs} activeTab={mobileTab} onChange={setMobileTab} />
-        )}
-        <TabPanel active={mobileTab === 'platform' || selectedUserId == null}>
+        <Tabs tabs={mobileTabs} activeTab={mobileTab} onChange={setMobileTab} />
+        <TabPanel active={mobileTab === 'platform'}>
           {platformContent}
         </TabPanel>
-        <TabPanel active={mobileTab === 'manual' && selectedUserId != null}>
+        <TabPanel active={mobileTab === 'manual'}>
           <ManualWorkLogEditor
             content={manualContent}
             onChange={setManualContent}

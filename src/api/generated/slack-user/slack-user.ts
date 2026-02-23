@@ -36,14 +36,14 @@ import { customInstance } from '../../axios-instance';
 /**
  * @summary Get Slack Users
  */
-export const getSlackUsersSlackUsersGet = (
+export const getSlackUsersApiV1SlackUsersGet = (
     
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<SlackUserResponseDto[]>(
-      {url: `/slack-users`, method: 'GET', signal
+      {url: `/api/v1/slack-users`, method: 'GET', signal
     },
       );
     }
@@ -51,69 +51,69 @@ export const getSlackUsersSlackUsersGet = (
 
 
 
-export const getGetSlackUsersSlackUsersGetQueryKey = () => {
+export const getGetSlackUsersApiV1SlackUsersGetQueryKey = () => {
     return [
-    `/slack-users`
+    `/api/v1/slack-users`
     ] as const;
     }
 
     
-export const getGetSlackUsersSlackUsersGetQueryOptions = <TData = Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError, TData>>, }
+export const getGetSlackUsersApiV1SlackUsersGetQueryOptions = <TData = Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSlackUsersSlackUsersGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetSlackUsersApiV1SlackUsersGetQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>> = ({ signal }) => getSlackUsersSlackUsersGet(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>> = ({ signal }) => getSlackUsersApiV1SlackUsersGet(signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetSlackUsersSlackUsersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>>
-export type GetSlackUsersSlackUsersGetQueryError = unknown
+export type GetSlackUsersApiV1SlackUsersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>>
+export type GetSlackUsersApiV1SlackUsersGetQueryError = unknown
 
 
-export function useGetSlackUsersSlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError, TData>> & Pick<
+export function useGetSlackUsersApiV1SlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>,
+          Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>,
           TError,
-          Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>
+          Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSlackUsersSlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError, TData>> & Pick<
+export function useGetSlackUsersApiV1SlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>,
+          Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>,
           TError,
-          Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>
+          Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSlackUsersSlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError, TData>>, }
+export function useGetSlackUsersApiV1SlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Slack Users
  */
 
-export function useGetSlackUsersSlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersSlackUsersGet>>, TError, TData>>, }
+export function useGetSlackUsersApiV1SlackUsersGet<TData = Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlackUsersApiV1SlackUsersGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetSlackUsersSlackUsersGetQueryOptions(options)
+  const queryOptions = getGetSlackUsersApiV1SlackUsersGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -126,26 +126,25 @@ export function useGetSlackUsersSlackUsersGet<TData = Awaited<ReturnType<typeof 
 /**
  * @summary Assign Slack User To User
  */
-export const assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch = (
+export const assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch = (
     slackUserId: number,
-    userId: number,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<void>(
-      {url: `/slack-users/${slackUserId}/users/${userId}`, method: 'PATCH', signal
+      {url: `/api/v1/slack-users/${slackUserId}`, method: 'PATCH', signal
     },
       );
     }
   
 
 
-export const getAssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch>>, TError,{slackUserId: number;userId: number}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch>>, TError,{slackUserId: number;userId: number}, TContext> => {
+export const getAssignSlackUserToUserApiV1SlackUsersSlackUserIdPatchMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch>>, TError,{slackUserId: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch>>, TError,{slackUserId: number}, TContext> => {
 
-const mutationKey = ['assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch'];
+const mutationKey = ['assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -155,10 +154,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch>>, {slackUserId: number;userId: number}> = (props) => {
-          const {slackUserId,userId} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch>>, {slackUserId: number}> = (props) => {
+          const {slackUserId} = props ?? {};
 
-          return  assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch(slackUserId,userId,)
+          return  assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch(slackUserId,)
         }
 
 
@@ -168,46 +167,45 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch>>>
+    export type AssignSlackUserToUserApiV1SlackUsersSlackUserIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch>>>
     
-    export type AssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatchMutationError = HTTPValidationError
+    export type AssignSlackUserToUserApiV1SlackUsersSlackUserIdPatchMutationError = HTTPValidationError
 
     /**
  * @summary Assign Slack User To User
  */
-export const useAssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch>>, TError,{slackUserId: number;userId: number}, TContext>, }
+export const useAssignSlackUserToUserApiV1SlackUsersSlackUserIdPatch = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch>>, TError,{slackUserId: number}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof assignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch>>,
+        Awaited<ReturnType<typeof assignSlackUserToUserApiV1SlackUsersSlackUserIdPatch>>,
         TError,
-        {slackUserId: number;userId: number},
+        {slackUserId: number},
         TContext
       > => {
-      return useMutation(getAssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatchMutationOptions(options), queryClient);
+      return useMutation(getAssignSlackUserToUserApiV1SlackUsersSlackUserIdPatchMutationOptions(options), queryClient);
     }
     /**
  * @summary Unassign Slack User From User
  */
-export const unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete = (
+export const unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete = (
     slackUserId: number,
-    userId: number,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<void>(
-      {url: `/slack-users/${slackUserId}/users/${userId}`, method: 'DELETE', signal
+      {url: `/api/v1/slack-users/${slackUserId}`, method: 'DELETE', signal
     },
       );
     }
   
 
 
-export const getUnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete>>, TError,{slackUserId: number;userId: number}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete>>, TError,{slackUserId: number;userId: number}, TContext> => {
+export const getUnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDeleteMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete>>, TError,{slackUserId: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete>>, TError,{slackUserId: number}, TContext> => {
 
-const mutationKey = ['unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete'];
+const mutationKey = ['unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -217,10 +215,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete>>, {slackUserId: number;userId: number}> = (props) => {
-          const {slackUserId,userId} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete>>, {slackUserId: number}> = (props) => {
+          const {slackUserId} = props ?? {};
 
-          return  unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete(slackUserId,userId,)
+          return  unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete(slackUserId,)
         }
 
 
@@ -230,21 +228,21 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete>>>
+    export type UnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete>>>
     
-    export type UnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDeleteMutationError = HTTPValidationError
+    export type UnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDeleteMutationError = HTTPValidationError
 
     /**
  * @summary Unassign Slack User From User
  */
-export const useUnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete>>, TError,{slackUserId: number;userId: number}, TContext>, }
+export const useUnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete>>, TError,{slackUserId: number}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof unassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete>>,
+        Awaited<ReturnType<typeof unassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete>>,
         TError,
-        {slackUserId: number;userId: number},
+        {slackUserId: number},
         TContext
       > => {
-      return useMutation(getUnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDeleteMutationOptions(options), queryClient);
+      return useMutation(getUnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDeleteMutationOptions(options), queryClient);
     }
     

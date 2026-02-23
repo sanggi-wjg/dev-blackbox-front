@@ -1,26 +1,29 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 import {
-  useGetUserUsersUserIdGet,
-  getGetUserUsersUserIdGetQueryKey,
+  useGetUserMeApiV1UsersMeGet,
+  getGetUserMeApiV1UsersMeGetQueryKey,
 } from '@/api/generated/user/user';
 import {
-  useCreateGithubSecretGithubSecretsPost,
-  useDeleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete,
+  useCreateGithubSecretApiV1GithubSecretsPost,
+  useDeleteGithubSecretByUserIdApiV1GithubSecretsDelete,
 } from '@/api/generated/github-secret/github-secret';
 import {
-  useGetJiraUsersJiraUsersGet,
-  getGetJiraUsersJiraUsersGetQueryKey,
-  useAssignJiraUserJiraUsersJiraUserIdUsersUserIdPatch,
-  useUnassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete,
+  useGetJiraUsersApiV1JiraUsersGet,
+  getGetJiraUsersApiV1JiraUsersGetQueryKey,
+  useAssignJiraUserApiV1JiraUsersJiraUserIdPatch,
+  useUnassignJiraUserApiV1JiraUsersJiraUserIdDelete,
 } from '@/api/generated/jira-user/jira-user';
 import {
-  useGetSlackUsersSlackUsersGet,
-  getGetSlackUsersSlackUsersGetQueryKey,
-  useAssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch,
-  useUnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete,
+  useGetSlackUsersApiV1SlackUsersGet,
+  getGetSlackUsersApiV1SlackUsersGetQueryKey,
+  useAssignSlackUserToUserApiV1SlackUsersSlackUserIdPatch,
+  useUnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete,
 } from '@/api/generated/slack-user/slack-user';
+import type { GitHubSecretResponseDto } from '@/api/generated/model';
+import type { JiraUserResponseDto } from '@/api/generated/model';
+import type { SlackUserResponseDto } from '@/api/generated/model';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import Card from '@/components/common/Card';
@@ -33,20 +36,17 @@ import { ConfirmDialog } from '@/components/common/Modal';
 import SearchableSelect from '@/components/common/SearchableSelect';
 import IntegrationSection from '@/components/integration/IntegrationSection';
 import { useToast } from '@/components/common/Toast';
-import { ArrowLeftIcon, GitHubIcon, JiraIcon, SlackIcon } from '@/components/icons';
+import { GitHubIcon, JiraIcon, SlackIcon } from '@/components/icons';
 
-export default function UserDetailPage() {
-  const { userId } = useParams();
-  const numericUserId = Number(userId);
-  const navigate = useNavigate();
+export default function ProfilePage() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('github');
 
-  const { data: user, isLoading, error } = useGetUserUsersUserIdGet(numericUserId);
+  const { data: user, isLoading, error } = useGetUserMeApiV1UsersMeGet();
 
   const invalidateUser = () =>
-    queryClient.invalidateQueries({ queryKey: getGetUserUsersUserIdGetQueryKey(numericUserId) });
+    queryClient.invalidateQueries({ queryKey: getGetUserMeApiV1UsersMeGetQueryKey() });
 
   const tabs = [
     {
@@ -68,17 +68,12 @@ export default function UserDetailPage() {
 
   return (
     <div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => navigate('/users')}
-        icon={<ArrowLeftIcon className="h-4 w-4" />}
-        className="mb-4"
-      >
-        사용자 목록
-      </Button>
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-text-primary tracking-tight">내 프로필</h2>
+        <p className="mt-1 text-sm text-text-secondary">프로필 정보와 외부 서비스 연동을 관리합니다</p>
+      </div>
 
-      {isLoading && <LoadingSpinner message="사용자 정보 로딩 중..." />}
+      {isLoading && <LoadingSpinner message="프로필 정보 로딩 중..." />}
       {error != null && <ErrorMessage error={error} />}
 
       {user && (
@@ -121,7 +116,7 @@ export default function UserDetailPage() {
                         <span className="h-2 w-2 rounded-full bg-success-500" />
                       )}
                     </span>
-                  ) as unknown as string,
+                  ),
                 }))}
                 activeTab={activeTab}
                 onChange={setActiveTab}
@@ -130,7 +125,6 @@ export default function UserDetailPage() {
             <div className="p-5">
               <TabPanel active={activeTab === 'github'}>
                 <GitHubTab
-                  userId={numericUserId}
                   secret={user.github_user_secret}
                   invalidateUser={invalidateUser}
                   toast={toast}
@@ -138,7 +132,6 @@ export default function UserDetailPage() {
               </TabPanel>
               <TabPanel active={activeTab === 'jira'}>
                 <JiraTab
-                  userId={numericUserId}
                   jiraUser={user.jira_user}
                   invalidateUser={invalidateUser}
                   queryClient={queryClient}
@@ -147,7 +140,6 @@ export default function UserDetailPage() {
               </TabPanel>
               <TabPanel active={activeTab === 'slack'}>
                 <SlackTab
-                  userId={numericUserId}
                   slackUser={user.slack_user}
                   invalidateUser={invalidateUser}
                   queryClient={queryClient}
@@ -164,15 +156,11 @@ export default function UserDetailPage() {
 
 /* ── GitHub Tab ── */
 
-import type { GitHubSecretResponseDto } from '@/api/generated/model';
-
 function GitHubTab({
-  userId,
   secret,
   invalidateUser,
   toast,
 }: {
-  userId: number;
   secret: GitHubSecretResponseDto | null;
   invalidateUser: () => void;
   toast: (type: 'success' | 'error' | 'info', message: string) => void;
@@ -181,13 +169,13 @@ function GitHubTab({
   const [pat, setPat] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const createSecret = useCreateGithubSecretGithubSecretsPost();
-  const deleteSecret = useDeleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete();
+  const createSecret = useCreateGithubSecretApiV1GithubSecretsPost();
+  const deleteSecret = useDeleteGithubSecretByUserIdApiV1GithubSecretsDelete();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createSecret.mutate(
-      { data: { username, personal_access_token: pat, user_id: userId } },
+      { data: { username, personal_access_token: pat } },
       {
         onSuccess: () => {
           toast('success', 'GitHub PAT가 등록되었습니다');
@@ -201,17 +189,14 @@ function GitHubTab({
   };
 
   const handleDisconnect = () => {
-    deleteSecret.mutate(
-      { userId },
-      {
-        onSuccess: () => {
-          toast('success', 'GitHub 연동이 해제되었습니다');
-          invalidateUser();
-          setConfirmOpen(false);
-        },
-        onError: (err) => toast('error', err instanceof Error ? err.message : '연동 해제에 실패했습니다'),
+    deleteSecret.mutate(undefined, {
+      onSuccess: () => {
+        toast('success', 'GitHub 연동이 해제되었습니다');
+        invalidateUser();
+        setConfirmOpen(false);
       },
-    );
+      onError: (err) => toast('error', err instanceof Error ? err.message : '연동 해제에 실패했습니다'),
+    });
   };
 
   return (
@@ -265,17 +250,12 @@ function GitHubTab({
 
 /* ── Jira Tab ── */
 
-import type { JiraUserResponseDto } from '@/api/generated/model';
-import type { QueryClient } from '@tanstack/react-query';
-
 function JiraTab({
-  userId,
   jiraUser,
   invalidateUser,
   queryClient,
   toast,
 }: {
-  userId: number;
   jiraUser: JiraUserResponseDto | null;
   invalidateUser: () => void;
   queryClient: QueryClient;
@@ -285,23 +265,23 @@ function JiraTab({
   const [project, setProject] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const { data: jiraUsers } = useGetJiraUsersJiraUsersGet({ query: { enabled: !jiraUser } });
-  const assignJiraUser = useAssignJiraUserJiraUsersJiraUserIdUsersUserIdPatch();
-  const unassignJiraUser = useUnassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete();
+  const { data: jiraUsers } = useGetJiraUsersApiV1JiraUsersGet({ query: { enabled: !jiraUser } });
+  const assignJiraUser = useAssignJiraUserApiV1JiraUsersJiraUserIdPatch();
+  const unassignJiraUser = useUnassignJiraUserApiV1JiraUsersJiraUserIdDelete();
 
   const availableJiraUsers = jiraUsers?.filter((j) => j.user_id == null) ?? [];
 
   const refetchData = () =>
     Promise.all([
       invalidateUser(),
-      queryClient.invalidateQueries({ queryKey: getGetJiraUsersJiraUsersGetQueryKey() }),
+      queryClient.invalidateQueries({ queryKey: getGetJiraUsersApiV1JiraUsersGetQueryKey() }),
     ]);
 
   const handleAssign = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedJiraUserId) return;
     assignJiraUser.mutate(
-      { jiraUserId: Number(selectedJiraUserId), userId, data: { project } },
+      { jiraUserId: Number(selectedJiraUserId), data: { project } },
       {
         onSuccess: async () => {
           toast('success', 'Jira 계정이 연동되었습니다');
@@ -317,7 +297,7 @@ function JiraTab({
   const handleUnassign = () => {
     if (!jiraUser) return;
     unassignJiraUser.mutate(
-      { jiraUserId: jiraUser.id, userId },
+      { jiraUserId: jiraUser.id },
       {
         onSuccess: async () => {
           toast('success', 'Jira 연동이 해제되었습니다');
@@ -406,16 +386,12 @@ function JiraTab({
 
 /* ── Slack Tab ── */
 
-import type { SlackUserResponseDto } from '@/api/generated/model';
-
 function SlackTab({
-  userId,
   slackUser,
   invalidateUser,
   queryClient,
   toast,
 }: {
-  userId: number;
   slackUser: SlackUserResponseDto | null;
   invalidateUser: () => void;
   queryClient: QueryClient;
@@ -424,23 +400,23 @@ function SlackTab({
   const [selectedSlackUserId, setSelectedSlackUserId] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const { data: slackUsers } = useGetSlackUsersSlackUsersGet({ query: { enabled: !slackUser } });
-  const assignSlackUser = useAssignSlackUserToUserSlackUsersSlackUserIdUsersUserIdPatch();
-  const unassignSlackUser = useUnassignSlackUserFromUserSlackUsersSlackUserIdUsersUserIdDelete();
+  const { data: slackUsers } = useGetSlackUsersApiV1SlackUsersGet({ query: { enabled: !slackUser } });
+  const assignSlackUser = useAssignSlackUserToUserApiV1SlackUsersSlackUserIdPatch();
+  const unassignSlackUser = useUnassignSlackUserFromUserApiV1SlackUsersSlackUserIdDelete();
 
   const availableSlackUsers = slackUsers?.filter((s) => s.user_id == null) ?? [];
 
   const refetchData = () =>
     Promise.all([
       invalidateUser(),
-      queryClient.invalidateQueries({ queryKey: getGetSlackUsersSlackUsersGetQueryKey() }),
+      queryClient.invalidateQueries({ queryKey: getGetSlackUsersApiV1SlackUsersGetQueryKey() }),
     ]);
 
   const handleAssign = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedSlackUserId) return;
     assignSlackUser.mutate(
-      { slackUserId: Number(selectedSlackUserId), userId },
+      { slackUserId: Number(selectedSlackUserId) },
       {
         onSuccess: async () => {
           toast('success', 'Slack 계정이 연동되었습니다');
@@ -455,7 +431,7 @@ function SlackTab({
   const handleUnassign = () => {
     if (!slackUser) return;
     unassignSlackUser.mutate(
-      { slackUserId: slackUser.id, userId },
+      { slackUserId: slackUser.id },
       {
         onSuccess: async () => {
           toast('success', 'Slack 연동이 해제되었습니다');

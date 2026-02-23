@@ -64,6 +64,50 @@
   --animate-scale-in: scale-in 0.15s ease-out;
 }
 
+/* ── Dark Mode ── */
+.dark {
+  /* Surface */
+  --color-surface: oklch(0.16 0.014 260);
+  --color-surface-secondary: oklch(0.20 0.014 260);
+  --color-surface-tertiary: oklch(0.24 0.012 260);
+  --color-surface-hover: oklch(0.26 0.014 260);
+
+  /* Text */
+  --color-text-primary: oklch(0.95 0.006 260);
+  --color-text-secondary: oklch(0.72 0.01 260);
+  --color-text-tertiary: oklch(0.55 0.01 260);
+  --color-text-inverse: oklch(0.16 0.014 260);
+  --color-text-link: oklch(0.68 0.14 250);
+
+  /* Border */
+  --color-border-primary: oklch(0.30 0.01 260);
+  --color-border-strong: oklch(0.40 0.01 260);
+
+  /* Brand — 약간 밝게 조정하여 다크 배경에서 가독성 확보 */
+  --color-brand-50: oklch(0.22 0.04 250);
+  --color-brand-100: oklch(0.26 0.06 250);
+  --color-brand-700: oklch(0.68 0.14 250);
+
+  /* Status */
+  --color-success-50: oklch(0.22 0.03 155);
+  --color-success-500: oklch(0.62 0.16 155);
+
+  --color-danger-50: oklch(0.22 0.03 25);
+  --color-danger-500: oklch(0.65 0.18 25);
+
+  --color-warning-50: oklch(0.22 0.03 85);
+
+  /* Platform */
+  --color-platform-github: oklch(0.90 0.01 260);
+
+  /* Shadows — 다크에서 더 강한 그림자 */
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.15);
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.2), 0 1px 2px oklch(0 0 0 / 0.15);
+  --shadow-md: 0 4px 6px oklch(0 0 0 / 0.2), 0 2px 4px oklch(0 0 0 / 0.15);
+  --shadow-lg: 0 10px 15px oklch(0 0 0 / 0.25), 0 4px 6px oklch(0 0 0 / 0.15);
+  --shadow-overlay: 0 20px 25px oklch(0 0 0 / 0.3), 0 8px 10px oklch(0 0 0 / 0.2);
+}
+
 @keyframes slide-in {
   from {
     opacity: 0;

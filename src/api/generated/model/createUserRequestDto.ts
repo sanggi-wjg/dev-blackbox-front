@@ -9,5 +9,7 @@ export interface CreateUserRequestDto {
   /** @minLength 1 */
   name: string;
   email: string;
+  /** @minLength 1 */
+  password: string;
   timezone?: string;
 }

@@ -37,14 +37,14 @@ import { customInstance } from '../../axios-instance';
 /**
  * @summary Get Jira Users
  */
-export const getJiraUsersJiraUsersGet = (
+export const getJiraUsersApiV1JiraUsersGet = (
     
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<JiraUserResponseDto[]>(
-      {url: `/jira-users`, method: 'GET', signal
+      {url: `/api/v1/jira-users`, method: 'GET', signal
     },
       );
     }
@@ -52,69 +52,69 @@ export const getJiraUsersJiraUsersGet = (
 
 
 
-export const getGetJiraUsersJiraUsersGetQueryKey = () => {
+export const getGetJiraUsersApiV1JiraUsersGetQueryKey = () => {
     return [
-    `/jira-users`
+    `/api/v1/jira-users`
     ] as const;
     }
 
     
-export const getGetJiraUsersJiraUsersGetQueryOptions = <TData = Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError, TData>>, }
+export const getGetJiraUsersApiV1JiraUsersGetQueryOptions = <TData = Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetJiraUsersJiraUsersGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetJiraUsersApiV1JiraUsersGetQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>> = ({ signal }) => getJiraUsersJiraUsersGet(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>> = ({ signal }) => getJiraUsersApiV1JiraUsersGet(signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetJiraUsersJiraUsersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>>
-export type GetJiraUsersJiraUsersGetQueryError = unknown
+export type GetJiraUsersApiV1JiraUsersGetQueryResult = NonNullable<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>>
+export type GetJiraUsersApiV1JiraUsersGetQueryError = unknown
 
 
-export function useGetJiraUsersJiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError, TData>> & Pick<
+export function useGetJiraUsersApiV1JiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>,
+          Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>,
           TError,
-          Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>
+          Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetJiraUsersJiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError, TData>> & Pick<
+export function useGetJiraUsersApiV1JiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>,
+          Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>,
           TError,
-          Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>
+          Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetJiraUsersJiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError, TData>>, }
+export function useGetJiraUsersApiV1JiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Jira Users
  */
 
-export function useGetJiraUsersJiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersJiraUsersGet>>, TError, TData>>, }
+export function useGetJiraUsersApiV1JiraUsersGet<TData = Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getJiraUsersApiV1JiraUsersGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetJiraUsersJiraUsersGetQueryOptions(options)
+  const queryOptions = getGetJiraUsersApiV1JiraUsersGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -127,16 +127,15 @@ export function useGetJiraUsersJiraUsersGet<TData = Awaited<ReturnType<typeof ge
 /**
  * @summary Assign Jira User
  */
-export const assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch = (
+export const assignJiraUserApiV1JiraUsersJiraUserIdPatch = (
     jiraUserId: number,
-    userId: number,
     assignJiraUserRequestDto: AssignJiraUserRequestDto,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<void>(
-      {url: `/jira-users/${jiraUserId}/users/${userId}`, method: 'PATCH',
+      {url: `/api/v1/jira-users/${jiraUserId}`, method: 'PATCH',
       headers: {'Content-Type': 'application/json', },
       data: assignJiraUserRequestDto, signal
     },
@@ -145,11 +144,11 @@ export const assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch = (
   
 
 
-export const getAssignJiraUserJiraUsersJiraUserIdUsersUserIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch>>, TError,{jiraUserId: number;userId: number;data: AssignJiraUserRequestDto}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch>>, TError,{jiraUserId: number;userId: number;data: AssignJiraUserRequestDto}, TContext> => {
+export const getAssignJiraUserApiV1JiraUsersJiraUserIdPatchMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignJiraUserApiV1JiraUsersJiraUserIdPatch>>, TError,{jiraUserId: number;data: AssignJiraUserRequestDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof assignJiraUserApiV1JiraUsersJiraUserIdPatch>>, TError,{jiraUserId: number;data: AssignJiraUserRequestDto}, TContext> => {
 
-const mutationKey = ['assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch'];
+const mutationKey = ['assignJiraUserApiV1JiraUsersJiraUserIdPatch'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -159,10 +158,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch>>, {jiraUserId: number;userId: number;data: AssignJiraUserRequestDto}> = (props) => {
-          const {jiraUserId,userId,data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof assignJiraUserApiV1JiraUsersJiraUserIdPatch>>, {jiraUserId: number;data: AssignJiraUserRequestDto}> = (props) => {
+          const {jiraUserId,data} = props ?? {};
 
-          return  assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch(jiraUserId,userId,data,)
+          return  assignJiraUserApiV1JiraUsersJiraUserIdPatch(jiraUserId,data,)
         }
 
 
@@ -172,46 +171,45 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type AssignJiraUserJiraUsersJiraUserIdUsersUserIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch>>>
-    export type AssignJiraUserJiraUsersJiraUserIdUsersUserIdPatchMutationBody = AssignJiraUserRequestDto
-    export type AssignJiraUserJiraUsersJiraUserIdUsersUserIdPatchMutationError = HTTPValidationError
+    export type AssignJiraUserApiV1JiraUsersJiraUserIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof assignJiraUserApiV1JiraUsersJiraUserIdPatch>>>
+    export type AssignJiraUserApiV1JiraUsersJiraUserIdPatchMutationBody = AssignJiraUserRequestDto
+    export type AssignJiraUserApiV1JiraUsersJiraUserIdPatchMutationError = HTTPValidationError
 
     /**
  * @summary Assign Jira User
  */
-export const useAssignJiraUserJiraUsersJiraUserIdUsersUserIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch>>, TError,{jiraUserId: number;userId: number;data: AssignJiraUserRequestDto}, TContext>, }
+export const useAssignJiraUserApiV1JiraUsersJiraUserIdPatch = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignJiraUserApiV1JiraUsersJiraUserIdPatch>>, TError,{jiraUserId: number;data: AssignJiraUserRequestDto}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof assignJiraUserJiraUsersJiraUserIdUsersUserIdPatch>>,
+        Awaited<ReturnType<typeof assignJiraUserApiV1JiraUsersJiraUserIdPatch>>,
         TError,
-        {jiraUserId: number;userId: number;data: AssignJiraUserRequestDto},
+        {jiraUserId: number;data: AssignJiraUserRequestDto},
         TContext
       > => {
-      return useMutation(getAssignJiraUserJiraUsersJiraUserIdUsersUserIdPatchMutationOptions(options), queryClient);
+      return useMutation(getAssignJiraUserApiV1JiraUsersJiraUserIdPatchMutationOptions(options), queryClient);
     }
     /**
  * @summary Unassign Jira User
  */
-export const unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete = (
+export const unassignJiraUserApiV1JiraUsersJiraUserIdDelete = (
     jiraUserId: number,
-    userId: number,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<void>(
-      {url: `/jira-users/${jiraUserId}/users/${userId}`, method: 'DELETE', signal
+      {url: `/api/v1/jira-users/${jiraUserId}`, method: 'DELETE', signal
     },
       );
     }
   
 
 
-export const getUnassignJiraUserJiraUsersJiraUserIdUsersUserIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete>>, TError,{jiraUserId: number;userId: number}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete>>, TError,{jiraUserId: number;userId: number}, TContext> => {
+export const getUnassignJiraUserApiV1JiraUsersJiraUserIdDeleteMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignJiraUserApiV1JiraUsersJiraUserIdDelete>>, TError,{jiraUserId: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof unassignJiraUserApiV1JiraUsersJiraUserIdDelete>>, TError,{jiraUserId: number}, TContext> => {
 
-const mutationKey = ['unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete'];
+const mutationKey = ['unassignJiraUserApiV1JiraUsersJiraUserIdDelete'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -221,10 +219,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete>>, {jiraUserId: number;userId: number}> = (props) => {
-          const {jiraUserId,userId} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unassignJiraUserApiV1JiraUsersJiraUserIdDelete>>, {jiraUserId: number}> = (props) => {
+          const {jiraUserId} = props ?? {};
 
-          return  unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete(jiraUserId,userId,)
+          return  unassignJiraUserApiV1JiraUsersJiraUserIdDelete(jiraUserId,)
         }
 
 
@@ -234,21 +232,21 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UnassignJiraUserJiraUsersJiraUserIdUsersUserIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete>>>
+    export type UnassignJiraUserApiV1JiraUsersJiraUserIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof unassignJiraUserApiV1JiraUsersJiraUserIdDelete>>>
     
-    export type UnassignJiraUserJiraUsersJiraUserIdUsersUserIdDeleteMutationError = HTTPValidationError
+    export type UnassignJiraUserApiV1JiraUsersJiraUserIdDeleteMutationError = HTTPValidationError
 
     /**
  * @summary Unassign Jira User
  */
-export const useUnassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete>>, TError,{jiraUserId: number;userId: number}, TContext>, }
+export const useUnassignJiraUserApiV1JiraUsersJiraUserIdDelete = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unassignJiraUserApiV1JiraUsersJiraUserIdDelete>>, TError,{jiraUserId: number}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof unassignJiraUserJiraUsersJiraUserIdUsersUserIdDelete>>,
+        Awaited<ReturnType<typeof unassignJiraUserApiV1JiraUsersJiraUserIdDelete>>,
         TError,
-        {jiraUserId: number;userId: number},
+        {jiraUserId: number},
         TContext
       > => {
-      return useMutation(getUnassignJiraUserJiraUsersJiraUserIdUsersUserIdDeleteMutationOptions(options), queryClient);
+      return useMutation(getUnassignJiraUserApiV1JiraUsersJiraUserIdDeleteMutationOptions(options), queryClient);
     }
     

@@ -26,9 +26,9 @@ import type {
 import type {
   BackgroundTaskResponseDto,
   DailyWorkLogResponseDto,
-  GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams,
-  GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams,
-  GetUserContentWorkLogsUsersUserIdUserContentGetParams,
+  GetDailyWorkLogApiV1WorkLogsDailyGetParams,
+  GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams,
+  GetUserContentApiV1WorkLogsUserContentGetParams,
   HTTPValidationError,
   PlatformWorkLogResponseDto,
   UserContentCreateOrUpdateRequestDto,
@@ -43,15 +43,14 @@ import { customInstance } from '../../axios-instance';
 /**
  * @summary Get Platform Work Logs
  */
-export const getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet = (
-    userId: number,
-    params: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams,
+export const getPlatformWorkLogsApiV1WorkLogsPlatformsGet = (
+    params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<PlatformWorkLogResponseDto[]>(
-      {url: `/work-logs/users/${userId}/platforms`, method: 'GET',
+      {url: `/api/v1/work-logs/platforms`, method: 'GET',
         params, signal
     },
       );
@@ -60,75 +59,69 @@ export const getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet = (
 
 
 
-export const getGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetQueryKey = (userId: number,
-    params?: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams,) => {
+export const getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryKey = (params?: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams,) => {
     return [
-    `/work-logs/users/${userId}/platforms`, ...(params ? [params] : [])
+    `/api/v1/work-logs/platforms`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError = HTTPValidationError>(userId: number,
-    params: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError, TData>>, }
+export const getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetQueryKey(userId,params);
+  const queryKey =  queryOptions?.queryKey ?? getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>> = ({ signal }) => getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet(userId,params, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>> = ({ signal }) => getPlatformWorkLogsApiV1WorkLogsPlatformsGet(params, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>>
-export type GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetQueryError = HTTPValidationError
+export type GetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>>
+export type GetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryError = HTTPValidationError
 
 
-export function useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError, TData>> & Pick<
+export function useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(
+ params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>,
+          Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>,
           TError,
-          Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>
+          Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError, TData>> & Pick<
+export function useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(
+ params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>,
+          Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>,
           TError,
-          Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>
+          Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError, TData>>, }
+export function useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(
+ params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Platform Work Logs
  */
 
-export function useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet>>, TError, TData>>, }
+export function useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(
+ params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetQueryOptions(userId,params,options)
+  const queryOptions = getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -141,15 +134,14 @@ export function useGetPlatformWorkLogsWorkLogsUsersUserIdPlatformsGet<TData = Aw
 /**
  * @summary Get User Content
  */
-export const getUserContentWorkLogsUsersUserIdUserContentGet = (
-    userId: number,
-    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams,
+export const getUserContentApiV1WorkLogsUserContentGet = (
+    params: GetUserContentApiV1WorkLogsUserContentGetParams,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<PlatformWorkLogResponseDto | null>(
-      {url: `/work-logs/users/${userId}/user-content`, method: 'GET',
+      {url: `/api/v1/work-logs/user-content`, method: 'GET',
         params, signal
     },
       );
@@ -158,75 +150,69 @@ export const getUserContentWorkLogsUsersUserIdUserContentGet = (
 
 
 
-export const getGetUserContentWorkLogsUsersUserIdUserContentGetQueryKey = (userId: number,
-    params?: GetUserContentWorkLogsUsersUserIdUserContentGetParams,) => {
+export const getGetUserContentApiV1WorkLogsUserContentGetQueryKey = (params?: GetUserContentApiV1WorkLogsUserContentGetParams,) => {
     return [
-    `/work-logs/users/${userId}/user-content`, ...(params ? [params] : [])
+    `/api/v1/work-logs/user-content`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetUserContentWorkLogsUsersUserIdUserContentGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(userId: number,
-    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>>, }
+export const getGetUserContentApiV1WorkLogsUserContentGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(params: GetUserContentApiV1WorkLogsUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetUserContentWorkLogsUsersUserIdUserContentGetQueryKey(userId,params);
+  const queryKey =  queryOptions?.queryKey ?? getGetUserContentApiV1WorkLogsUserContentGetQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>> = ({ signal }) => getUserContentWorkLogsUsersUserIdUserContentGet(userId,params, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>> = ({ signal }) => getUserContentApiV1WorkLogsUserContentGet(params, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetUserContentWorkLogsUsersUserIdUserContentGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>>
-export type GetUserContentWorkLogsUsersUserIdUserContentGetQueryError = HTTPValidationError
+export type GetUserContentApiV1WorkLogsUserContentGetQueryResult = NonNullable<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>>
+export type GetUserContentApiV1WorkLogsUserContentGetQueryError = HTTPValidationError
 
 
-export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>> & Pick<
+export function useGetUserContentApiV1WorkLogsUserContentGet<TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(
+ params: GetUserContentApiV1WorkLogsUserContentGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>,
+          Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>,
           TError,
-          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>
+          Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>> & Pick<
+export function useGetUserContentApiV1WorkLogsUserContentGet<TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(
+ params: GetUserContentApiV1WorkLogsUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>,
+          Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>,
           TError,
-          Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>
+          Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>>, }
+export function useGetUserContentApiV1WorkLogsUserContentGet<TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(
+ params: GetUserContentApiV1WorkLogsUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get User Content
  */
 
-export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetUserContentWorkLogsUsersUserIdUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentWorkLogsUsersUserIdUserContentGet>>, TError, TData>>, }
+export function useGetUserContentApiV1WorkLogsUserContentGet<TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(
+ params: GetUserContentApiV1WorkLogsUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetUserContentWorkLogsUsersUserIdUserContentGetQueryOptions(userId,params,options)
+  const queryOptions = getGetUserContentApiV1WorkLogsUserContentGetQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -239,15 +225,14 @@ export function useGetUserContentWorkLogsUsersUserIdUserContentGet<TData = Await
 /**
  * @summary Create Or Update User Content
  */
-export const createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut = (
-    userId: number,
+export const createOrUpdateUserContentApiV1WorkLogsUserContentPut = (
     userContentCreateOrUpdateRequestDto: UserContentCreateOrUpdateRequestDto,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<PlatformWorkLogResponseDto>(
-      {url: `/work-logs/users/${userId}/user-content`, method: 'PUT',
+      {url: `/api/v1/work-logs/user-content`, method: 'PUT',
       headers: {'Content-Type': 'application/json', },
       data: userContentCreateOrUpdateRequestDto, signal
     },
@@ -256,11 +241,11 @@ export const createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut = (
   
 
 
-export const getCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, TError,{userId: number;data: UserContentCreateOrUpdateRequestDto}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, TError,{userId: number;data: UserContentCreateOrUpdateRequestDto}, TContext> => {
+export const getCreateOrUpdateUserContentApiV1WorkLogsUserContentPutMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>, TError,{data: UserContentCreateOrUpdateRequestDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>, TError,{data: UserContentCreateOrUpdateRequestDto}, TContext> => {
 
-const mutationKey = ['createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut'];
+const mutationKey = ['createOrUpdateUserContentApiV1WorkLogsUserContentPut'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -270,10 +255,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, {userId: number;data: UserContentCreateOrUpdateRequestDto}> = (props) => {
-          const {userId,data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>, {data: UserContentCreateOrUpdateRequestDto}> = (props) => {
+          const {data} = props ?? {};
 
-          return  createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut(userId,data,)
+          return  createOrUpdateUserContentApiV1WorkLogsUserContentPut(data,)
         }
 
 
@@ -283,35 +268,34 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationResult = NonNullable<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>>
-    export type CreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationBody = UserContentCreateOrUpdateRequestDto
-    export type CreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationError = HTTPValidationError
+    export type CreateOrUpdateUserContentApiV1WorkLogsUserContentPutMutationResult = NonNullable<Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>>
+    export type CreateOrUpdateUserContentApiV1WorkLogsUserContentPutMutationBody = UserContentCreateOrUpdateRequestDto
+    export type CreateOrUpdateUserContentApiV1WorkLogsUserContentPutMutationError = HTTPValidationError
 
     /**
  * @summary Create Or Update User Content
  */
-export const useCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPut = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>, TError,{userId: number;data: UserContentCreateOrUpdateRequestDto}, TContext>, }
+export const useCreateOrUpdateUserContentApiV1WorkLogsUserContentPut = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>, TError,{data: UserContentCreateOrUpdateRequestDto}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createOrUpdateUserContentWorkLogsUsersUserIdUserContentPut>>,
+        Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>,
         TError,
-        {userId: number;data: UserContentCreateOrUpdateRequestDto},
+        {data: UserContentCreateOrUpdateRequestDto},
         TContext
       > => {
-      return useMutation(getCreateOrUpdateUserContentWorkLogsUsersUserIdUserContentPutMutationOptions(options), queryClient);
+      return useMutation(getCreateOrUpdateUserContentApiV1WorkLogsUserContentPutMutationOptions(options), queryClient);
     }
     /**
  * @summary Get Daily Work Log
  */
-export const getDailyWorkLogWorkLogsUsersUserIdDailyGet = (
-    userId: number,
-    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams,
+export const getDailyWorkLogApiV1WorkLogsDailyGet = (
+    params: GetDailyWorkLogApiV1WorkLogsDailyGetParams,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<DailyWorkLogResponseDto | null>(
-      {url: `/work-logs/users/${userId}/daily`, method: 'GET',
+      {url: `/api/v1/work-logs/daily`, method: 'GET',
         params, signal
     },
       );
@@ -320,75 +304,69 @@ export const getDailyWorkLogWorkLogsUsersUserIdDailyGet = (
 
 
 
-export const getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryKey = (userId: number,
-    params?: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams,) => {
+export const getGetDailyWorkLogApiV1WorkLogsDailyGetQueryKey = (params?: GetDailyWorkLogApiV1WorkLogsDailyGetParams,) => {
     return [
-    `/work-logs/users/${userId}/daily`, ...(params ? [params] : [])
+    `/api/v1/work-logs/daily`, ...(params ? [params] : [])
     ] as const;
     }
 
     
-export const getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryOptions = <TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(userId: number,
-    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
+export const getGetDailyWorkLogApiV1WorkLogsDailyGetQueryOptions = <TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryKey(userId,params);
+  const queryKey =  queryOptions?.queryKey ?? getGetDailyWorkLogApiV1WorkLogsDailyGetQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>> = ({ signal }) => getDailyWorkLogWorkLogsUsersUserIdDailyGet(userId,params, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>> = ({ signal }) => getDailyWorkLogApiV1WorkLogsDailyGet(params, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>>
-export type GetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryError = HTTPValidationError
+export type GetDailyWorkLogApiV1WorkLogsDailyGetQueryResult = NonNullable<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>>
+export type GetDailyWorkLogApiV1WorkLogsDailyGetQueryError = HTTPValidationError
 
 
-export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>> & Pick<
+export function useGetDailyWorkLogApiV1WorkLogsDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(
+ params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>,
+          Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>,
           TError,
-          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>
+          Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>> & Pick<
+export function useGetDailyWorkLogApiV1WorkLogsDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(
+ params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>,
+          Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>,
           TError,
-          Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>
+          Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
+export function useGetDailyWorkLogApiV1WorkLogsDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(
+ params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Daily Work Log
  */
 
-export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError = HTTPValidationError>(
- userId: number,
-    params: GetDailyWorkLogWorkLogsUsersUserIdDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogWorkLogsUsersUserIdDailyGet>>, TError, TData>>, }
+export function useGetDailyWorkLogApiV1WorkLogsDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(
+ params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetDailyWorkLogWorkLogsUsersUserIdDailyGetQueryOptions(userId,params,options)
+  const queryOptions = getGetDailyWorkLogApiV1WorkLogsDailyGetQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -401,15 +379,14 @@ export function useGetDailyWorkLogWorkLogsUsersUserIdDailyGet<TData = Awaited<Re
 /**
  * @summary Sync Work Logs
  */
-export const syncWorkLogsWorkLogsUserIdManualSyncPost = (
-    userId: number,
+export const syncWorkLogsApiV1WorkLogsManualSyncPost = (
     workLogManualSyncReqeustDto: WorkLogManualSyncReqeustDto,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<BackgroundTaskResponseDto>(
-      {url: `/work-logs/${userId}/manual-sync`, method: 'POST',
+      {url: `/api/v1/work-logs/manual-sync`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: workLogManualSyncReqeustDto, signal
     },
@@ -418,11 +395,11 @@ export const syncWorkLogsWorkLogsUserIdManualSyncPost = (
   
 
 
-export const getSyncWorkLogsWorkLogsUserIdManualSyncPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof syncWorkLogsWorkLogsUserIdManualSyncPost>>, TError,{userId: number;data: WorkLogManualSyncReqeustDto}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof syncWorkLogsWorkLogsUserIdManualSyncPost>>, TError,{userId: number;data: WorkLogManualSyncReqeustDto}, TContext> => {
+export const getSyncWorkLogsApiV1WorkLogsManualSyncPostMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>, TError,{data: WorkLogManualSyncReqeustDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>, TError,{data: WorkLogManualSyncReqeustDto}, TContext> => {
 
-const mutationKey = ['syncWorkLogsWorkLogsUserIdManualSyncPost'];
+const mutationKey = ['syncWorkLogsApiV1WorkLogsManualSyncPost'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -432,10 +409,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof syncWorkLogsWorkLogsUserIdManualSyncPost>>, {userId: number;data: WorkLogManualSyncReqeustDto}> = (props) => {
-          const {userId,data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>, {data: WorkLogManualSyncReqeustDto}> = (props) => {
+          const {data} = props ?? {};
 
-          return  syncWorkLogsWorkLogsUserIdManualSyncPost(userId,data,)
+          return  syncWorkLogsApiV1WorkLogsManualSyncPost(data,)
         }
 
 
@@ -445,21 +422,21 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type SyncWorkLogsWorkLogsUserIdManualSyncPostMutationResult = NonNullable<Awaited<ReturnType<typeof syncWorkLogsWorkLogsUserIdManualSyncPost>>>
-    export type SyncWorkLogsWorkLogsUserIdManualSyncPostMutationBody = WorkLogManualSyncReqeustDto
-    export type SyncWorkLogsWorkLogsUserIdManualSyncPostMutationError = HTTPValidationError
+    export type SyncWorkLogsApiV1WorkLogsManualSyncPostMutationResult = NonNullable<Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>>
+    export type SyncWorkLogsApiV1WorkLogsManualSyncPostMutationBody = WorkLogManualSyncReqeustDto
+    export type SyncWorkLogsApiV1WorkLogsManualSyncPostMutationError = HTTPValidationError
 
     /**
  * @summary Sync Work Logs
  */
-export const useSyncWorkLogsWorkLogsUserIdManualSyncPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof syncWorkLogsWorkLogsUserIdManualSyncPost>>, TError,{userId: number;data: WorkLogManualSyncReqeustDto}, TContext>, }
+export const useSyncWorkLogsApiV1WorkLogsManualSyncPost = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>, TError,{data: WorkLogManualSyncReqeustDto}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof syncWorkLogsWorkLogsUserIdManualSyncPost>>,
+        Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>,
         TError,
-        {userId: number;data: WorkLogManualSyncReqeustDto},
+        {data: WorkLogManualSyncReqeustDto},
         TContext
       > => {
-      return useMutation(getSyncWorkLogsWorkLogsUserIdManualSyncPostMutationOptions(options), queryClient);
+      return useMutation(getSyncWorkLogsApiV1WorkLogsManualSyncPostMutationOptions(options), queryClient);
     }
     

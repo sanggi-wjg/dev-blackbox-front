@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router';
 import Sidebar from './Sidebar';
+import { useAuth } from '@/hooks/useAuth';
 import { MenuIcon } from '@/components/icons';
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <div className="flex h-screen bg-surface-secondary">
@@ -39,7 +41,10 @@ export default function AppLayout() {
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand-600 text-xs font-bold text-text-inverse">
             DB
           </div>
-          <span className="text-sm font-bold text-text-primary">Dev Blackbox</span>
+          <span className="flex-1 text-sm font-bold text-text-primary">Dev Blackbox</span>
+          {user && (
+            <span className="text-xs text-text-secondary">{user.name}</span>
+          )}
         </header>
 
         <main className="flex-1 overflow-y-auto px-3 py-2 [scrollbar-gutter:stable] md:px-4 md:py-3 lg:px-5 lg:py-4">

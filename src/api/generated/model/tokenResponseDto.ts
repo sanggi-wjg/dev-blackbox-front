@@ -5,8 +5,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface GitHubSecretResponseDto {
-  id: number;
-  username: string;
-  personal_access_token: string;
+export interface TokenResponseDto {
+  access_token: string;
+  token_type?: string;
 }

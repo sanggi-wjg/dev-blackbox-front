@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCreateUserUsersPost } from '@/api/generated/user/user';
-import { getGetUsersUsersGetQueryKey } from '@/api/generated/user/user';
+import {
+  useCreateUserAdminApiV1UsersPost,
+  getGetUsersAdminApiV1UsersGetQueryKey,
+} from '@/api/generated/user-admin/user-admin';
 import SearchableSelect from '@/components/common/SearchableSelect';
 import { useToast } from '@/components/common/Toast';
 import Modal from '@/components/common/Modal';
@@ -22,20 +24,21 @@ interface UserFormProps {
 export default function UserForm({ onClose }: UserFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [timezone, setTimezone] = useState('Asia/Seoul');
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const createUser = useCreateUserUsersPost();
+  const createUser = useCreateUserAdminApiV1UsersPost();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createUser.mutate(
-      { data: { name, email, timezone } },
+      { data: { name, email, password, timezone } },
       {
         onSuccess: () => {
           toast('success', '사용자가 생성되었습니다');
-          queryClient.invalidateQueries({ queryKey: getGetUsersUsersGetQueryKey() });
+          queryClient.invalidateQueries({ queryKey: getGetUsersAdminApiV1UsersGetQueryKey() });
           onClose();
         },
         onError: (err) => {
@@ -85,6 +88,17 @@ export default function UserForm({ onClose }: UserFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="user@example.com"
+          />
+        </FormField>
+
+        <FormField label="비밀번호" htmlFor="user-password">
+          <Input
+            id="user-password"
+            required
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호를 입력하세요"
           />
         </FormField>
 

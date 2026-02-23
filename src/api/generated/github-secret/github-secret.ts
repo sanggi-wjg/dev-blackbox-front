@@ -28,14 +28,14 @@ import { customInstance } from '../../axios-instance';
 /**
  * @summary Create Github Secret
  */
-export const createGithubSecretGithubSecretsPost = (
+export const createGithubSecretApiV1GithubSecretsPost = (
     createGitHubSecretRequestDto: CreateGitHubSecretRequestDto,
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<GitHubSecretResponseDto>(
-      {url: `/github-secrets`, method: 'POST',
+      {url: `/api/v1/github-secrets`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: createGitHubSecretRequestDto, signal
     },
@@ -44,11 +44,11 @@ export const createGithubSecretGithubSecretsPost = (
   
 
 
-export const getCreateGithubSecretGithubSecretsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGithubSecretGithubSecretsPost>>, TError,{data: CreateGitHubSecretRequestDto}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof createGithubSecretGithubSecretsPost>>, TError,{data: CreateGitHubSecretRequestDto}, TContext> => {
+export const getCreateGithubSecretApiV1GithubSecretsPostMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGithubSecretApiV1GithubSecretsPost>>, TError,{data: CreateGitHubSecretRequestDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof createGithubSecretApiV1GithubSecretsPost>>, TError,{data: CreateGitHubSecretRequestDto}, TContext> => {
 
-const mutationKey = ['createGithubSecretGithubSecretsPost'];
+const mutationKey = ['createGithubSecretApiV1GithubSecretsPost'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -58,10 +58,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGithubSecretGithubSecretsPost>>, {data: CreateGitHubSecretRequestDto}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGithubSecretApiV1GithubSecretsPost>>, {data: CreateGitHubSecretRequestDto}> = (props) => {
           const {data} = props ?? {};
 
-          return  createGithubSecretGithubSecretsPost(data,)
+          return  createGithubSecretApiV1GithubSecretsPost(data,)
         }
 
 
@@ -71,45 +71,45 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CreateGithubSecretGithubSecretsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createGithubSecretGithubSecretsPost>>>
-    export type CreateGithubSecretGithubSecretsPostMutationBody = CreateGitHubSecretRequestDto
-    export type CreateGithubSecretGithubSecretsPostMutationError = HTTPValidationError
+    export type CreateGithubSecretApiV1GithubSecretsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createGithubSecretApiV1GithubSecretsPost>>>
+    export type CreateGithubSecretApiV1GithubSecretsPostMutationBody = CreateGitHubSecretRequestDto
+    export type CreateGithubSecretApiV1GithubSecretsPostMutationError = HTTPValidationError
 
     /**
  * @summary Create Github Secret
  */
-export const useCreateGithubSecretGithubSecretsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGithubSecretGithubSecretsPost>>, TError,{data: CreateGitHubSecretRequestDto}, TContext>, }
+export const useCreateGithubSecretApiV1GithubSecretsPost = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGithubSecretApiV1GithubSecretsPost>>, TError,{data: CreateGitHubSecretRequestDto}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createGithubSecretGithubSecretsPost>>,
+        Awaited<ReturnType<typeof createGithubSecretApiV1GithubSecretsPost>>,
         TError,
         {data: CreateGitHubSecretRequestDto},
         TContext
       > => {
-      return useMutation(getCreateGithubSecretGithubSecretsPostMutationOptions(options), queryClient);
+      return useMutation(getCreateGithubSecretApiV1GithubSecretsPostMutationOptions(options), queryClient);
     }
     /**
  * @summary Delete Github Secret By User Id
  */
-export const deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete = (
-    userId: number,
+export const deleteGithubSecretByUserIdApiV1GithubSecretsDelete = (
+    
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<void>(
-      {url: `/github-secrets/users/${userId}`, method: 'DELETE', signal
+      {url: `/api/v1/github-secrets`, method: 'DELETE', signal
     },
       );
     }
   
 
 
-export const getDeleteGithubSecretByUserIdGithubSecretsUsersUserIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete>>, TError,{userId: number}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete>>, TError,{userId: number}, TContext> => {
+export const getDeleteGithubSecretByUserIdApiV1GithubSecretsDeleteMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteGithubSecretByUserIdApiV1GithubSecretsDelete>>, TError,void, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deleteGithubSecretByUserIdApiV1GithubSecretsDelete>>, TError,void, TContext> => {
 
-const mutationKey = ['deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete'];
+const mutationKey = ['deleteGithubSecretByUserIdApiV1GithubSecretsDelete'];
 const {mutation: mutationOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -119,10 +119,10 @@ const {mutation: mutationOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete>>, {userId: number}> = (props) => {
-          const {userId} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteGithubSecretByUserIdApiV1GithubSecretsDelete>>, void> = () => {
+          
 
-          return  deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete(userId,)
+          return  deleteGithubSecretByUserIdApiV1GithubSecretsDelete()
         }
 
 
@@ -132,21 +132,21 @@ const {mutation: mutationOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteGithubSecretByUserIdGithubSecretsUsersUserIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete>>>
+    export type DeleteGithubSecretByUserIdApiV1GithubSecretsDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteGithubSecretByUserIdApiV1GithubSecretsDelete>>>
     
-    export type DeleteGithubSecretByUserIdGithubSecretsUsersUserIdDeleteMutationError = HTTPValidationError
+    export type DeleteGithubSecretByUserIdApiV1GithubSecretsDeleteMutationError = unknown
 
     /**
  * @summary Delete Github Secret By User Id
  */
-export const useDeleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete>>, TError,{userId: number}, TContext>, }
+export const useDeleteGithubSecretByUserIdApiV1GithubSecretsDelete = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteGithubSecretByUserIdApiV1GithubSecretsDelete>>, TError,void, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteGithubSecretByUserIdGithubSecretsUsersUserIdDelete>>,
+        Awaited<ReturnType<typeof deleteGithubSecretByUserIdApiV1GithubSecretsDelete>>,
         TError,
-        {userId: number},
+        void,
         TContext
       > => {
-      return useMutation(getDeleteGithubSecretByUserIdGithubSecretsUsersUserIdDeleteMutationOptions(options), queryClient);
+      return useMutation(getDeleteGithubSecretByUserIdApiV1GithubSecretsDeleteMutationOptions(options), queryClient);
     }
     

@@ -1,12 +1,18 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { useGetUsersUsersGet } from '@/api/generated/user/user';
+import {
+  useGetUsersAdminApiV1UsersGet,
+  useDeleteUserAdminApiV1UsersUserIdDelete,
+  getGetUsersAdminApiV1UsersGetQueryKey,
+} from '@/api/generated/user-admin/user-admin';
+import { useQueryClient } from '@tanstack/react-query';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import EmptyState from '@/components/common/EmptyState';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
 import { TableRowSkeleton } from '@/components/common/Skeleton';
-import { PlusIcon, ChevronRightIcon } from '@/components/icons';
+import { ConfirmDialog } from '@/components/common/Modal';
+import { PlusIcon, XMarkIcon } from '@/components/icons';
+import { useToast } from '@/components/common/Toast';
 import UserForm from '@/components/user/UserForm';
 
 function UserAvatar({ name }: { name: string }) {
@@ -20,8 +26,28 @@ function UserAvatar({ name }: { name: string }) {
 
 export default function UserListPage() {
   const [showForm, setShowForm] = useState(false);
-  const navigate = useNavigate();
-  const { data: users, isLoading, error } = useGetUsersUsersGet();
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { data: users, isLoading, error } = useGetUsersAdminApiV1UsersGet();
+  const deleteUser = useDeleteUserAdminApiV1UsersUserIdDelete();
+
+  const handleDelete = () => {
+    if (!deleteTarget) return;
+    deleteUser.mutate(
+      { userId: deleteTarget.id },
+      {
+        onSuccess: () => {
+          toast('success', `${deleteTarget.name} 사용자가 삭제되었습니다`);
+          queryClient.invalidateQueries({ queryKey: getGetUsersAdminApiV1UsersGetQueryKey() });
+          setDeleteTarget(null);
+        },
+        onError: (err) => {
+          toast('error', err instanceof Error ? err.message : '사용자 삭제에 실패했습니다');
+        },
+      },
+    );
+  };
 
   return (
     <div>
@@ -92,8 +118,7 @@ export default function UserListPage() {
                 {users.map((user) => (
                   <tr
                     key={user.id}
-                    onClick={() => navigate(`/users/${user.id}`)}
-                    className="cursor-pointer transition-colors hover:bg-surface-hover"
+                    className="transition-colors hover:bg-surface-hover"
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -107,7 +132,13 @@ export default function UserListPage() {
                       {new Date(user.created_at).toLocaleDateString('ko-KR')}
                     </td>
                     <td className="px-4 py-3">
-                      <ChevronRightIcon className="h-4 w-4 text-text-tertiary" />
+                      <button
+                        onClick={() => setDeleteTarget({ id: user.id, name: user.name })}
+                        className="rounded p-1 text-text-tertiary hover:bg-danger-50 hover:text-danger-600 transition-colors"
+                        title="사용자 삭제"
+                      >
+                        <XMarkIcon className="h-4 w-4" />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -118,24 +149,39 @@ export default function UserListPage() {
           {/* Mobile cards */}
           <div className="flex flex-col gap-3 md:hidden">
             {users.map((user) => (
-              <Link
+              <div
                 key={user.id}
-                to={`/users/${user.id}`}
-                className="flex items-center gap-3 rounded-xl border border-border-primary bg-surface p-4 shadow-xs transition-shadow hover:shadow-sm active:bg-surface-hover"
+                className="flex items-center gap-3 rounded-xl border border-border-primary bg-surface p-4 shadow-xs"
               >
                 <UserAvatar name={user.name} />
                 <div className="min-w-0 flex-1">
                   <div className="font-medium text-text-primary">{user.name}</div>
                   <p className="truncate text-sm text-text-secondary">{user.email}</p>
                 </div>
-                <ChevronRightIcon className="h-4 w-4 shrink-0 text-text-tertiary" />
-              </Link>
+                <button
+                  onClick={() => setDeleteTarget({ id: user.id, name: user.name })}
+                  className="rounded p-1 text-text-tertiary hover:bg-danger-50 hover:text-danger-600 transition-colors"
+                  title="사용자 삭제"
+                >
+                  <XMarkIcon className="h-4 w-4" />
+                </button>
+              </div>
             ))}
           </div>
         </>
       )}
 
       {showForm && <UserForm onClose={() => setShowForm(false)} />}
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="사용자 삭제"
+        message={`${deleteTarget?.name ?? ''} 사용자를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`}
+        confirmLabel="삭제"
+        loading={deleteUser.isPending}
+      />
     </div>
   );
 }

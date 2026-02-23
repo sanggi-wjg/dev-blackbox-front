@@ -10,5 +10,4 @@ export interface CreateGitHubSecretRequestDto {
   username: string;
   /** @minLength 1 */
   personal_access_token: string;
-  user_id: number;
 }

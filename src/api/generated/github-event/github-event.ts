@@ -20,8 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  GitHubEventResponseDto,
-  HTTPValidationError
+  GitHubEventResponseDto
 } from '.././model';
 
 import { customInstance } from '../../axios-instance';
@@ -32,14 +31,14 @@ import { customInstance } from '../../axios-instance';
 /**
  * @summary Get Events By User Id
  */
-export const getEventsByUserIdGithubEventsUsersUserIdGet = (
-    userId: number,
+export const getEventsByUserIdApiV1GithubEventsGet = (
+    
  signal?: AbortSignal
 ) => {
       
       
       return customInstance<GitHubEventResponseDto[]>(
-      {url: `/github-events/users/${userId}`, method: 'GET', signal
+      {url: `/api/v1/github-events`, method: 'GET', signal
     },
       );
     }
@@ -47,69 +46,69 @@ export const getEventsByUserIdGithubEventsUsersUserIdGet = (
 
 
 
-export const getGetEventsByUserIdGithubEventsUsersUserIdGetQueryKey = (userId: number,) => {
+export const getGetEventsByUserIdApiV1GithubEventsGetQueryKey = () => {
     return [
-    `/github-events/users/${userId}`
+    `/api/v1/github-events`
     ] as const;
     }
 
     
-export const getGetEventsByUserIdGithubEventsUsersUserIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError = HTTPValidationError>(userId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError, TData>>, }
+export const getGetEventsByUserIdApiV1GithubEventsGetQueryOptions = <TData = Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEventsByUserIdGithubEventsUsersUserIdGetQueryKey(userId);
+  const queryKey =  queryOptions?.queryKey ?? getGetEventsByUserIdApiV1GithubEventsGetQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>> = ({ signal }) => getEventsByUserIdGithubEventsUsersUserIdGet(userId, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>> = ({ signal }) => getEventsByUserIdApiV1GithubEventsGet(signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEventsByUserIdGithubEventsUsersUserIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>>
-export type GetEventsByUserIdGithubEventsUsersUserIdGetQueryError = HTTPValidationError
+export type GetEventsByUserIdApiV1GithubEventsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>>
+export type GetEventsByUserIdApiV1GithubEventsGetQueryError = unknown
 
 
-export function useGetEventsByUserIdGithubEventsUsersUserIdGet<TData = Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError = HTTPValidationError>(
- userId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError, TData>> & Pick<
+export function useGetEventsByUserIdApiV1GithubEventsGet<TData = Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>,
+          Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>,
           TError,
-          Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>
+          Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetEventsByUserIdGithubEventsUsersUserIdGet<TData = Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError = HTTPValidationError>(
- userId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError, TData>> & Pick<
+export function useGetEventsByUserIdApiV1GithubEventsGet<TData = Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>,
+          Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>,
           TError,
-          Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>
+          Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetEventsByUserIdGithubEventsUsersUserIdGet<TData = Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError = HTTPValidationError>(
- userId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError, TData>>, }
+export function useGetEventsByUserIdApiV1GithubEventsGet<TData = Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Events By User Id
  */
 
-export function useGetEventsByUserIdGithubEventsUsersUserIdGet<TData = Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError = HTTPValidationError>(
- userId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdGithubEventsUsersUserIdGet>>, TError, TData>>, }
+export function useGetEventsByUserIdApiV1GithubEventsGet<TData = Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEventsByUserIdApiV1GithubEventsGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEventsByUserIdGithubEventsUsersUserIdGetQueryOptions(userId,options)
+  const queryOptions = getGetEventsByUserIdApiV1GithubEventsGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
