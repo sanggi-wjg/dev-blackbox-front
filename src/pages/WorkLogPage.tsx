@@ -38,10 +38,14 @@ export default function WorkLogPage() {
   const saveUserContent = useCreateOrUpdateUserContentApiV1WorkLogsUserContentPut();
   const manualSync = useSyncWorkLogsApiV1WorkLogsManualSyncPost();
 
-  // userContent가 변경되면 manualContent를 동기화 (렌더 중 상태 조정)
-  const [prevUserContent, setPrevUserContent] = useState(userContent);
-  if (prevUserContent !== userContent) {
-    setPrevUserContent(userContent);
+  // 날짜 변경 또는 서버 데이터 도착 시 manualContent를 동기화
+  // targetDate도 함께 추적하여 같은 null → null 전환도 감지
+  const [prevSync, setPrevSync] = useState({ userContent, targetDate });
+  if (
+    userContent !== undefined &&
+    (prevSync.userContent !== userContent || prevSync.targetDate !== targetDate)
+  ) {
+    setPrevSync({ userContent, targetDate });
     setManualContent(userContent?.content ?? '');
   }
 
@@ -101,7 +105,7 @@ export default function WorkLogPage() {
       {workLogs && workLogs.length > 0 && (
         <div className="flex flex-col gap-4">
           {workLogs.map((s) => (
-            <WorkLogCard key={s.id} platform={s.platform} content={s.content} />
+            <WorkLogCard key={s.id} platform={s.platform} content={s.content} modelName={s.model_name} prompt={s.prompt} />
           ))}
         </div>
       )}
