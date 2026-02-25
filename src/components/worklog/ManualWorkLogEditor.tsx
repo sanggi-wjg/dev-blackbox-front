@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Editor, rootCtx, defaultValueCtx } from '@milkdown/kit/core';
 import { commonmark } from '@milkdown/kit/preset/commonmark';
 import { listener, listenerCtx } from '@milkdown/kit/plugin/listener';
@@ -8,30 +8,33 @@ import { replaceAll } from '@milkdown/kit/utils';
 import { nord } from '@milkdown/theme-nord';
 import Card, { CardHeader, CardBody } from '@/components/common/Card';
 import Button from '@/components/common/Button';
-import { PencilSquareIcon } from '@/components/icons';
+import { PencilSquareIcon, ClipboardDocumentIcon, CheckIcon } from '@/components/icons';
 
 interface ManualWorkLogEditorProps {
   content: string;
   onChange: (content: string) => void;
   onSave: () => void;
   saving?: boolean;
+  onCopy?: () => void;
 }
 
 interface MilkdownEditorInnerProps {
-  defaultValue: string;
+  content: string;
   onChange: (markdown: string) => void;
-  editorRef: React.MutableRefObject<Editor | undefined>;
 }
 
-function MilkdownEditorInner({ defaultValue, onChange, editorRef }: MilkdownEditorInnerProps) {
-  const { get } = useEditor((root) =>
+function MilkdownEditorInner({ content, onChange }: MilkdownEditorInnerProps) {
+  const isInternalChange = useRef(false);
+
+  const { get, loading } = useEditor((root) =>
     Editor.make()
       .config(nord)
       .config((ctx) => {
         ctx.set(rootCtx, root);
-        ctx.set(defaultValueCtx, defaultValue);
+        ctx.set(defaultValueCtx, content);
         ctx.get(listenerCtx).markdownUpdated((_ctx, markdown, prevMarkdown) => {
           if (markdown !== prevMarkdown) {
+            isInternalChange.current = true;
             onChange(markdown);
           }
         });
@@ -41,40 +44,38 @@ function MilkdownEditorInner({ defaultValue, onChange, editorRef }: MilkdownEdit
       .use(history),
   );
 
+  // 외부 content 변경 시에만 에디터에 동기화 (에디터 자체 타이핑은 무시)
   useEffect(() => {
-    editorRef.current = get();
-  }, [get, editorRef]);
-
-  return <Milkdown />;
-}
-
-export default function ManualWorkLogEditor({ content, onChange, onSave, saving = false }: ManualWorkLogEditorProps) {
-  const editorRef = useRef<Editor | undefined>(undefined);
-  const prevContentRef = useRef<string>(content);
-
-  // 외부에서 content가 변경될 때 (날짜 변경 등) 에디터 내용을 교체
-  const syncContent = useCallback(() => {
-    if (editorRef.current && content !== prevContentRef.current) {
-      prevContentRef.current = content;
+    if (isInternalChange.current) {
+      isInternalChange.current = false;
+      return;
+    }
+    const editor = get();
+    if (editor) {
       try {
-        editorRef.current.action(replaceAll(content));
+        editor.action(replaceAll(content));
       } catch {
         // 에디터가 아직 준비되지 않은 경우 무시
       }
     }
-  }, [content]);
+  }, [content, get, loading]);
+
+  return <Milkdown />;
+}
+
+export default function ManualWorkLogEditor({ content, onChange, onSave, saving = false, onCopy }: ManualWorkLogEditorProps) {
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    syncContent();
-  }, [syncContent]);
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
 
-  const handleChange = useCallback(
-    (markdown: string) => {
-      prevContentRef.current = markdown;
-      onChange(markdown);
-    },
-    [onChange],
-  );
+  const handleCopy = () => {
+    setCopied(true);
+    onCopy?.();
+  };
 
   return (
     <Card padding="none" className="flex flex-col">
@@ -83,14 +84,35 @@ export default function ManualWorkLogEditor({ content, onChange, onSave, saving 
           <PencilSquareIcon className="h-4 w-4 text-text-secondary" />
           <span className="text-sm font-semibold text-text-primary">직접 작성</span>
         </div>
+        {onCopy && (
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="inline-flex items-center justify-center rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+            title="마크다운 복사"
+          >
+            {copied ? (
+              <CheckIcon className="h-4 w-4 text-success-600" />
+            ) : (
+              <ClipboardDocumentIcon className="h-4 w-4" />
+            )}
+          </button>
+        )}
       </CardHeader>
       <CardBody className="flex flex-1 flex-col gap-3">
-        <div className="milkdown-wrap min-h-[300px] resize-y overflow-auto rounded-lg border border-border-primary bg-surface-secondary focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500">
+        <div
+          className="milkdown-wrap min-h-[300px] resize-y overflow-auto rounded-lg border border-border-primary bg-surface-secondary focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500"
+          onKeyDown={(e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !saving) {
+              e.preventDefault();
+              onSave();
+            }
+          }}
+        >
           <MilkdownProvider>
             <MilkdownEditorInner
-              defaultValue={content}
-              onChange={handleChange}
-              editorRef={editorRef}
+              content={content}
+              onChange={onChange}
             />
           </MilkdownProvider>
         </div>

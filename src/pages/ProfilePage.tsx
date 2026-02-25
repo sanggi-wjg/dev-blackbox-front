@@ -204,12 +204,20 @@ function GitHubTab({
       <IntegrationSection
         connected={!!secret}
         connectedContent={
-          <div className="flex items-center gap-2 text-sm">
-            <Badge variant="success">연결됨</Badge>
-            <span className="text-text-secondary">
-              GitHub 사용자: <strong className="text-text-primary">{secret?.username}</strong>
-            </span>
-          </div>
+          secret && (
+            <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+              <dt className="text-text-tertiary">사용자명</dt>
+              <dd className="text-text-primary">{secret.username}</dd>
+              <dt className="text-text-tertiary">토큰</dt>
+              <dd className="font-mono text-xs text-text-primary">
+                {secret.personal_access_token.slice(0, 8)}{'••••••••'}
+              </dd>
+              <dt className="text-text-tertiary">상태</dt>
+              <dd>
+                <Badge variant="success">연결됨</Badge>
+              </dd>
+            </dl>
+          )
         }
         disconnectButton={
           <div>

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Markdown from 'react-markdown';
 import Card, { CardHeader, CardBody } from '@/components/common/Card';
 import Badge from '@/components/common/Badge';
 import Modal from '@/components/common/Modal';
-import { GitHubIcon, JiraIcon, SlackIcon, SparklesIcon } from '@/components/icons';
+import { GitHubIcon, JiraIcon, SlackIcon, SparklesIcon, ClipboardDocumentIcon, CheckIcon } from '@/components/icons';
 import type { ReactNode } from 'react';
 
 interface WorkLogCardProps {
@@ -11,6 +11,7 @@ interface WorkLogCardProps {
   content: string;
   modelName?: string;
   prompt?: string;
+  onCopy?: () => void;
 }
 
 const platformConfig: Record<
@@ -43,14 +44,26 @@ const platformConfig: Record<
   },
 };
 
-export default function WorkLogCard({ platform, content, modelName, prompt }: WorkLogCardProps) {
+export default function WorkLogCard({ platform, content, modelName, prompt, onCopy }: WorkLogCardProps) {
   const [showAiInfo, setShowAiInfo] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
 
   const config = platformConfig[platform] ?? {
     label: platform,
     borderColor: 'border-l-border-strong',
     badge: 'default' as const,
     icon: null,
+  };
+
+  const handleCopy = () => {
+    setCopied(true);
+    onCopy?.();
   };
 
   return (
@@ -79,6 +92,20 @@ export default function WorkLogCard({ platform, content, modelName, prompt }: Wo
               {modelName}
             </button>
           </Badge>
+        )}
+        {onCopy && (
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="ml-auto inline-flex items-center justify-center rounded-md p-1.5 text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-primary cursor-pointer"
+            title="마크다운 복사"
+          >
+            {copied ? (
+              <CheckIcon className="h-4 w-4 text-success-600" />
+            ) : (
+              <ClipboardDocumentIcon className="h-4 w-4" />
+            )}
+          </button>
         )}
       </CardHeader>
       <CardBody>

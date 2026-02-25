@@ -4,13 +4,13 @@
  * Dev Blackbox API
  * OpenAPI spec version: 0.1.0
  */
-import type { GitHubEventResponseDtoCommit } from './gitHubEventResponseDtoCommit';
-import type { GitHubEventResponseDtoEvent } from './gitHubEventResponseDtoEvent';
+import type { GithubCommitModel } from './githubCommitModel';
+import type { GithubEventModel } from './githubEventModel';
 
 export interface GitHubEventResponseDto {
   id: number;
   event_id: string;
   target_date: string;
-  event: GitHubEventResponseDtoEvent;
-  commit: GitHubEventResponseDtoCommit;
+  event: GithubEventModel;
+  commit: GithubCommitModel | null;
 }

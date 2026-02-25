@@ -16,7 +16,14 @@ import { useToast } from '@/components/common/Toast';
 import Card from '@/components/common/Card';
 import Tabs, { TabPanel } from '@/components/common/Tabs';
 import Button from '@/components/common/Button';
-import { ArrowPathIcon, PencilSquareIcon, ChartBarIcon } from '@/components/icons';
+import { ArrowPathIcon, PencilSquareIcon, ChartBarIcon, ClipboardDocumentIcon } from '@/components/icons';
+
+const platformLabelMap: Record<string, string> = {
+  GITHUB: 'GitHub',
+  JIRA: 'Jira',
+  CONFLUENCE: 'Confluence',
+  SLACK: 'Slack',
+};
 
 export default function WorkLogPage() {
   const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
@@ -83,9 +90,43 @@ export default function WorkLogPage() {
     );
   };
 
-  const showCollectButton =
-    !workLogsLoading &&
-    ((workLogs != null && workLogs.length === 0) || syncingDate === targetDate);
+  const handleCopySingle = (platform: string, content: string) => {
+    const label = platformLabelMap[platform] ?? platform;
+    navigator.clipboard.writeText(content).then(
+      () => toast('success', `${label} 요약이 복사되었습니다`),
+      () => toast('error', '복사에 실패했습니다'),
+    );
+  };
+
+  const handleCopyManual = () => {
+    navigator.clipboard.writeText(manualContent).then(
+      () => toast('success', '직접 작성 내용이 복사되었습니다'),
+      () => toast('error', '복사에 실패했습니다'),
+    );
+  };
+
+  const handleCopyAll = () => {
+    const sections: string[] = [];
+
+    if (workLogs) {
+      for (const log of workLogs) {
+        const label = platformLabelMap[log.platform] ?? log.platform;
+        sections.push(`## ${label}\n\n${log.content}`);
+      }
+    }
+
+    if (manualContent.trim()) {
+      sections.push(`## 직접 작성\n\n${manualContent}`);
+    }
+
+    const combined = `# 업무일지 (${targetDate})\n\n${sections.join('\n\n')}`;
+    navigator.clipboard.writeText(combined).then(
+      () => toast('success', '전체 업무일지가 복사되었습니다'),
+      () => toast('error', '복사에 실패했습니다'),
+    );
+  };
+
+  const hasWorkLogs = workLogs != null && workLogs.length > 0;
 
   const platformContent = (
     <>
@@ -105,7 +146,14 @@ export default function WorkLogPage() {
       {workLogs && workLogs.length > 0 && (
         <div className="flex flex-col gap-4">
           {workLogs.map((s) => (
-            <WorkLogCard key={s.id} platform={s.platform} content={s.content} modelName={s.model_name} prompt={s.prompt} />
+            <WorkLogCard
+              key={s.id}
+              platform={s.platform}
+              content={s.content}
+              modelName={s.model_name}
+              prompt={s.prompt}
+              onCopy={() => handleCopySingle(s.platform, s.content)}
+            />
           ))}
         </div>
       )}
@@ -129,7 +177,7 @@ export default function WorkLogPage() {
       <Card className="mb-6">
         <div className="flex flex-wrap items-center gap-4">
           <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
-          {showCollectButton && (
+          <div className="ml-auto flex items-center gap-2">
             <Button
               variant="primary"
               size="sm"
@@ -143,7 +191,17 @@ export default function WorkLogPage() {
             >
               {syncingDate === targetDate ? '수집 중...' : '수동 수집'}
             </Button>
-          )}
+            {hasWorkLogs && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleCopyAll}
+                icon={<ClipboardDocumentIcon className="h-4 w-4" />}
+              >
+                전체 복사
+              </Button>
+            )}
+          </div>
         </div>
       </Card>
 
@@ -156,6 +214,7 @@ export default function WorkLogPage() {
             onChange={setManualContent}
             onSave={handleSaveManual}
             saving={saveUserContent.isPending}
+            onCopy={manualContent.trim() ? handleCopyManual : undefined}
           />
         </div>
       </div>
@@ -172,6 +231,7 @@ export default function WorkLogPage() {
             onChange={setManualContent}
             onSave={handleSaveManual}
             saving={saveUserContent.isPending}
+            onCopy={manualContent.trim() ? handleCopyManual : undefined}
           />
         </TabPanel>
       </div>

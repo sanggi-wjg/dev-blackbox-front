@@ -30,6 +30,7 @@ import type {
   GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams,
   GetUserContentApiV1WorkLogsUserContentGetParams,
   HTTPValidationError,
+  PlatformWorkLogDetailResponseDto,
   PlatformWorkLogResponseDto,
   UserContentCreateOrUpdateRequestDto,
   WorkLogManualSyncReqeustDto
@@ -49,7 +50,7 @@ export const getPlatformWorkLogsApiV1WorkLogsPlatformsGet = (
 ) => {
       
       
-      return customInstance<PlatformWorkLogResponseDto[]>(
+      return customInstance<PlatformWorkLogDetailResponseDto[]>(
       {url: `/api/v1/work-logs/platforms`, method: 'GET',
         params, signal
     },
