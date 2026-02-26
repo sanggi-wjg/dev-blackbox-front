@@ -153,6 +153,9 @@ export default function WorkLogPage() {
               modelName={s.model_name}
               prompt={s.prompt}
               onCopy={() => handleCopySingle(s.platform, s.content)}
+              githubEvents={s.github_events}
+              jiraEvents={s.jira_events}
+              slackMessages={s.slack_messages}
             />
           ))}
         </div>

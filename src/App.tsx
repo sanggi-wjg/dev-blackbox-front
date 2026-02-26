@@ -5,6 +5,8 @@ import AppLayout from '@/components/layout/AppLayout';
 import LoginPage from '@/pages/LoginPage';
 import WorkLogPage from '@/pages/WorkLogPage.tsx';
 import UserListPage from '@/pages/UserListPage';
+import JiraSecretListPage from '@/pages/JiraSecretListPage';
+import SlackSecretListPage from '@/pages/SlackSecretListPage';
 import ProfilePage from '@/pages/ProfilePage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import { useAuth } from '@/hooks/useAuth';
@@ -95,6 +97,22 @@ export default function App() {
             element={
               <AdminRoute>
                 <UserListPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="jira-secrets"
+            element={
+              <AdminRoute>
+                <JiraSecretListPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="slack-secrets"
+            element={
+              <AdminRoute>
+                <SlackSecretListPage />
               </AdminRoute>
             }
           />

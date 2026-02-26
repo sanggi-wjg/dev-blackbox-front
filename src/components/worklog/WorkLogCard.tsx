@@ -4,7 +4,11 @@ import Card, { CardHeader, CardBody } from '@/components/common/Card';
 import Badge from '@/components/common/Badge';
 import Modal from '@/components/common/Modal';
 import { GitHubIcon, JiraIcon, SlackIcon, SparklesIcon, ClipboardDocumentIcon, CheckIcon } from '@/components/icons';
+import SourceDataSection from '@/components/worklog/SourceDataSection';
 import type { ReactNode } from 'react';
+import type { GitHubEventResponseDto } from '@/api/generated/model/gitHubEventResponseDto';
+import type { JiraEventResponseDto } from '@/api/generated/model/jiraEventResponseDto';
+import type { SlackMessageResponseDto } from '@/api/generated/model/slackMessageResponseDto';
 
 interface WorkLogCardProps {
   platform: string;
@@ -12,6 +16,9 @@ interface WorkLogCardProps {
   modelName?: string;
   prompt?: string;
   onCopy?: () => void;
+  githubEvents?: GitHubEventResponseDto[];
+  jiraEvents?: JiraEventResponseDto[];
+  slackMessages?: SlackMessageResponseDto[];
 }
 
 const platformConfig: Record<
@@ -44,7 +51,7 @@ const platformConfig: Record<
   },
 };
 
-export default function WorkLogCard({ platform, content, modelName, prompt, onCopy }: WorkLogCardProps) {
+export default function WorkLogCard({ platform, content, modelName, prompt, onCopy, githubEvents, jiraEvents, slackMessages }: WorkLogCardProps) {
   const [showAiInfo, setShowAiInfo] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -113,6 +120,13 @@ export default function WorkLogCard({ platform, content, modelName, prompt, onCo
           <Markdown>{content}</Markdown>
         </div>
       </CardBody>
+
+      <SourceDataSection
+        platform={platform}
+        githubEvents={githubEvents}
+        jiraEvents={jiraEvents}
+        slackMessages={slackMessages}
+      />
 
       {modelName && (
         <Modal open={showAiInfo} onClose={() => setShowAiInfo(false)} title="AI 생성 정보" size="lg">

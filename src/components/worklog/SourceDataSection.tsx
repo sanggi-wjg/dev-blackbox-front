@@ -1,0 +1,287 @@
+import { useState } from 'react';
+import {
+  GitHubIcon,
+  JiraIcon,
+  SlackIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ArrowTopRightOnSquareIcon,
+} from '@/components/icons';
+import type { GitHubEventResponseDto } from '@/api/generated/model/gitHubEventResponseDto';
+import type { JiraEventResponseDto } from '@/api/generated/model/jiraEventResponseDto';
+import type { SlackMessageResponseDto } from '@/api/generated/model/slackMessageResponseDto';
+
+interface SourceDataSectionProps {
+  platform: string;
+  githubEvents?: GitHubEventResponseDto[];
+  jiraEvents?: JiraEventResponseDto[];
+  slackMessages?: SlackMessageResponseDto[];
+}
+
+export default function SourceDataSection({
+  platform,
+  githubEvents,
+  jiraEvents,
+  slackMessages,
+}: SourceDataSectionProps) {
+  const [open, setOpen] = useState(false);
+
+  const totalCount =
+    (githubEvents?.length ?? 0) + (jiraEvents?.length ?? 0) + (slackMessages?.length ?? 0);
+
+  if (totalCount === 0) return null;
+
+  return (
+    <div className="border-t border-border-default">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-2 px-4 py-2.5 text-xs font-medium text-text-tertiary transition-colors hover:bg-surface-hover cursor-pointer"
+      >
+        {open ? (
+          <ChevronUpIcon className="h-3.5 w-3.5" />
+        ) : (
+          <ChevronDownIcon className="h-3.5 w-3.5" />
+        )}
+        이벤트 {totalCount}건
+      </button>
+
+      {open && (
+        <div className="px-4 pb-3 space-y-1">
+          {platform === 'GITHUB' &&
+            githubEvents?.map((e) => <GitHubEventRow key={e.id} data={e} />)}
+          {platform === 'JIRA' &&
+            jiraEvents?.map((e) => <JiraEventRow key={e.id} data={e} />)}
+          {platform === 'SLACK' &&
+            slackMessages?.map((e) => <SlackMessageRow key={e.id} data={e} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── GitHub ─────────────────────────────────────
+
+function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
+  const [expanded, setExpanded] = useState(false);
+  const { event, commit } = data;
+  const repoName = event.repo.name;
+  const repoUrl = `https://github.com/${repoName}`;
+  const eventLabel = event.type?.replace('Event', '') ?? 'Event';
+
+  const prPayload = event.payload as { pull_request?: { html_url?: string; title?: string } } | undefined;
+  const prUrl = prPayload?.pull_request?.html_url;
+  const prTitle = prPayload?.pull_request?.title;
+
+  return (
+    <div className="rounded-md border border-border-default text-xs">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-surface-hover cursor-pointer"
+      >
+        <GitHubIcon className="h-3.5 w-3.5 shrink-0 text-text-tertiary" />
+        <span className="font-medium text-text-primary">{eventLabel}</span>
+        <span className="text-text-tertiary truncate">{repoName}</span>
+        <ExternalLink href={repoUrl} className="ml-auto shrink-0" />
+      </button>
+
+      {expanded && (
+        <div className="border-t border-border-default px-3 py-2 space-y-2 bg-surface-secondary">
+          {/* Commit info */}
+          {commit && (
+            <>
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 font-mono text-text-tertiary">
+                  {commit.sha.slice(0, 7)}
+                </span>
+                <span className="text-text-secondary break-all">
+                  {commit.commit.message.split('\n')[0]}
+                </span>
+                <ExternalLink href={commit.html_url} className="ml-auto shrink-0" />
+              </div>
+
+              {/* Stats */}
+              <div className="flex gap-3 text-text-tertiary">
+                <span className="text-green-600">+{commit.stats.additions}</span>
+                <span className="text-red-500">-{commit.stats.deletions}</span>
+              </div>
+
+              {/* Files */}
+              {commit.files.length > 0 && (
+                <div className="space-y-0.5">
+                  {commit.files.slice(0, 5).map((f) => (
+                    <div key={f.sha} className="flex items-center gap-1.5 text-text-tertiary">
+                      <FileStatusBadge status={f.status} />
+                      <a
+                        href={f.blob_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="truncate hover:text-text-primary hover:underline"
+                      >
+                        {f.filename}
+                      </a>
+                    </div>
+                  ))}
+                  {commit.files.length > 5 && (
+                    <span className="text-text-tertiary">
+                      외 {commit.files.length - 5}개 파일
+                    </span>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* PR link */}
+          {prUrl && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-text-tertiary">PR:</span>
+              <a
+                href={prUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-secondary hover:text-text-primary hover:underline truncate"
+              >
+                {prTitle ?? 'Pull Request'}
+              </a>
+              <ArrowTopRightOnSquareIcon className="h-3 w-3 text-text-tertiary shrink-0" />
+            </div>
+          )}
+
+          {/* Fallback: no commit and no PR */}
+          {!commit && !prUrl && (
+            <span className="text-text-tertiary">상세 정보 없음</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Jira ───────────────────────────────────────
+
+function JiraEventRow({ data }: { data: JiraEventResponseDto }) {
+  const [expanded, setExpanded] = useState(false);
+  const { issue, changelog } = data;
+
+  return (
+    <div className="rounded-md border border-border-default text-xs">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-surface-hover cursor-pointer"
+      >
+        <JiraIcon className="h-3.5 w-3.5 shrink-0 text-text-tertiary" />
+        <span className="font-medium text-text-primary">{data.issue_key}</span>
+        <span className="text-text-tertiary truncate">{issue.summary}</span>
+      </button>
+
+      {expanded && (
+        <div className="border-t border-border-default px-3 py-2 space-y-2 bg-surface-secondary">
+          {/* Issue meta */}
+          <div className="flex flex-wrap gap-2 text-text-tertiary">
+            <span>상태: <span className="text-text-secondary">{issue.status}</span></span>
+            <span>유형: <span className="text-text-secondary">{issue.issue_type}</span></span>
+            {issue.priority && (
+              <span>우선순위: <span className="text-text-secondary">{issue.priority}</span></span>
+            )}
+          </div>
+
+          {/* Changelog */}
+          {changelog && changelog.length > 0 && (
+            <div className="space-y-1">
+              <span className="font-medium text-text-tertiary">변경이력</span>
+              {changelog.slice(0, 3).map((h) => (
+                <div key={h.id} className="ml-2 space-y-0.5">
+                  {h.items.map((item, i) => (
+                    <div key={i} className="text-text-tertiary">
+                      <span className="text-text-secondary">{item.field}</span>
+                      {item.from_string && <span>: {item.from_string}</span>}
+                      {item.to_string && <span> → {item.to_string}</span>}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Comments */}
+          {issue.comments && issue.comments.length > 0 && (
+            <div className="space-y-1">
+              <span className="font-medium text-text-tertiary">댓글</span>
+              {issue.comments.map((c, i) => (
+                <div key={i} className="ml-2 text-text-secondary">
+                  <span className="font-medium">{c.author_display_name}:</span>{' '}
+                  {c.body}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Slack ──────────────────────────────────────
+
+function SlackMessageRow({ data }: { data: SlackMessageResponseDto }) {
+  const [expanded, setExpanded] = useState(false);
+  const preview = data.message_text.length > 60
+    ? data.message_text.slice(0, 60) + '…'
+    : data.message_text;
+
+  return (
+    <div className="rounded-md border border-border-default text-xs">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-surface-hover cursor-pointer"
+      >
+        <SlackIcon className="h-3.5 w-3.5 shrink-0 text-text-tertiary" />
+        <span className="font-medium text-text-primary">#{data.channel_name}</span>
+        <span className="text-text-tertiary truncate">{preview}</span>
+      </button>
+
+      {expanded && (
+        <div className="border-t border-border-default px-3 py-2 space-y-1.5 bg-surface-secondary">
+          <div className="max-h-32 overflow-y-auto whitespace-pre-wrap text-text-secondary break-words">
+            {data.message_text}
+          </div>
+          {data.thread_ts && (
+            <span className="text-text-tertiary">스레드 답글</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Helpers ────────────────────────────────────
+
+function ExternalLink({ href, className = '' }: { href: string; className?: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`text-text-tertiary hover:text-text-primary transition-colors ${className}`}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <ArrowTopRightOnSquareIcon className="h-3 w-3" />
+    </a>
+  );
+}
+
+function FileStatusBadge({ status }: { status: string }) {
+  const label = status === 'added' ? 'A' : status === 'removed' ? 'D' : status === 'modified' ? 'M' : status[0]?.toUpperCase() ?? '?';
+  const color =
+    status === 'added'
+      ? 'text-green-600'
+      : status === 'removed'
+        ? 'text-red-500'
+        : 'text-yellow-600';
+
+  return <span className={`font-mono font-bold ${color}`}>{label}</span>;
+}

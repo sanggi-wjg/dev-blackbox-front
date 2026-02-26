@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
-import { ChartBarIcon, UsersIcon, UserCircleIcon, ArrowRightOnRectangleIcon, ChevronDoubleLeftIcon, SunIcon, MoonIcon, ShieldCheckIcon } from '@/components/icons';
+import { ChartBarIcon, UsersIcon, UserCircleIcon, ArrowRightOnRectangleIcon, ChevronDoubleLeftIcon, SunIcon, MoonIcon, ShieldCheckIcon, KeyIcon, SlackIcon } from '@/components/icons';
 import { useTheme } from '@/hooks/useTheme';
 import type { ReactNode } from 'react';
 
@@ -40,6 +40,8 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
   const adminNavItems: { to: string; label: string; icon: ReactNode }[] = [
     { to: '/users', label: '사용자 관리', icon: <UsersIcon className="h-5 w-5" /> },
+    { to: '/jira-secrets', label: 'Jira Secret 관리', icon: <KeyIcon className="h-5 w-5" /> },
+    { to: '/slack-secrets', label: 'Slack Secret 관리', icon: <SlackIcon className="h-5 w-5" /> },
   ];
 
   const handleLogout = () => {
