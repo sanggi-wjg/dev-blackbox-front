@@ -76,7 +76,7 @@ export default function WorkLogCard({ platform, content, modelName, prompt, onCo
   return (
     <Card
       padding="none"
-      className={`border-l-4 ${config.borderColor} transition-shadow duration-150 hover:shadow-md`}
+      className={`border-l-4 ${config.borderColor}`}
     >
       <CardHeader className="flex items-center gap-2">
         <Badge variant={config.badge as 'github' | 'jira' | 'slack' | 'confluence'}>

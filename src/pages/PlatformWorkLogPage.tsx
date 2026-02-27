@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import {
   useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet,
@@ -14,6 +14,10 @@ import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
 import { ArrowPathIcon, ClipboardDocumentIcon } from '@/components/icons';
 
+const POLL_INTERVAL = 30_000;
+
+const PLATFORM_ORDER = ['GITHUB', 'JIRA', 'CONFLUENCE', 'SLACK'];
+
 const platformLabelMap: Record<string, string> = {
   GITHUB: 'GitHub',
   JIRA: 'Jira',
@@ -25,12 +29,36 @@ export default function PlatformWorkLogPage() {
   const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
   const [syncingDate, setSyncingDate] = useState<string | null>(null);
   const { toast } = useToast();
+  const prevCountRef = useRef<number | null>(null);
+
+  // refetchInterval 콜백: 데이터가 늘었으면 폴링 중단, 아니면 계속
+  const getRefetchInterval = useCallback(
+    (query: { state: { data?: unknown[] } }) => {
+      if (syncingDate !== targetDate) {
+        prevCountRef.current = null;
+        return false;
+      }
+      const currentCount = query.state.data?.length ?? 0;
+      if (prevCountRef.current !== null && currentCount > prevCountRef.current) {
+        toast('info', '새로운 요약 데이터가 도착했습니다');
+        prevCountRef.current = currentCount;
+        setSyncingDate(null);
+        return false;
+      }
+      prevCountRef.current = currentCount;
+      return POLL_INTERVAL;
+    },
+    [syncingDate, targetDate, toast],
+  );
 
   const {
     data: workLogs,
     isLoading: workLogsLoading,
     error: workLogsError,
-  } = useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet({ target_date: targetDate });
+  } = useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet(
+    { target_date: targetDate },
+    { query: { refetchInterval: syncingDate === targetDate ? getRefetchInterval : false } },
+  );
 
   const manualSync = useSyncWorkLogsApiV1WorkLogsManualSyncPost();
 
@@ -64,20 +92,23 @@ export default function PlatformWorkLogPage() {
       const label = platformLabelMap[log.platform] ?? log.platform;
       return `## ${label}\n\n${log.content}`;
     });
-    const combined = `# 플랫폼 요약 (${targetDate})\n\n${sections.join('\n\n')}`;
+    const combined = `# 플랫폼 업무일지 (${targetDate})\n\n${sections.join('\n\n')}`;
     navigator.clipboard.writeText(combined).then(
       () => toast('success', '전체 요약이 복사되었습니다'),
       () => toast('error', '복사에 실패했습니다'),
     );
   };
 
-  const hasWorkLogs = workLogs != null && workLogs.length > 0;
+  const sortedWorkLogs = workLogs?.slice().sort(
+    (a, b) => (PLATFORM_ORDER.indexOf(a.platform) ?? 99) - (PLATFORM_ORDER.indexOf(b.platform) ?? 99),
+  );
+  const hasWorkLogs = sortedWorkLogs != null && sortedWorkLogs.length > 0;
 
   return (
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-text-primary tracking-tight">플랫폼 요약</h2>
+        <h2 className="text-xl font-semibold text-text-primary tracking-tight">플랫폼 업무일지</h2>
         <p className="mt-1 text-sm text-text-secondary">플랫폼별 일일 업무 요약을 확인합니다</p>
       </div>
 
@@ -123,13 +154,18 @@ export default function PlatformWorkLogPage() {
 
       {workLogsError != null && <ErrorMessage error={workLogsError} />}
 
-      {workLogs && workLogs.length === 0 && (
-        <EmptyState message="해당 날짜에 요약 데이터가 없습니다" description="수동 수집 버튼을 눌러 데이터를 가져올 수 있습니다" />
+      {sortedWorkLogs && sortedWorkLogs.length === 0 && (
+        <EmptyState
+          message="해당 날짜에 요약 데이터가 없습니다"
+          description="수동 수집을 시작하여 플랫폼 데이터를 가져올 수 있습니다"
+          actionLabel={syncingDate === targetDate ? '수집 중...' : '수동 수집'}
+          onAction={syncingDate === targetDate ? undefined : handleCollect}
+        />
       )}
 
-      {workLogs && workLogs.length > 0 && (
+      {sortedWorkLogs && sortedWorkLogs.length > 0 && (
         <div className="flex flex-col gap-4">
-          {workLogs.map((s) => (
+          {sortedWorkLogs.map((s) => (
             <WorkLogCard
               key={s.id}
               platform={s.platform}

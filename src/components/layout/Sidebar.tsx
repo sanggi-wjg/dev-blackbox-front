@@ -34,8 +34,8 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   }, [collapsed]);
 
   const userNavItems: { to: string; label: string; icon: ReactNode }[] = [
-    { to: '/', label: '플랫폼 요약', icon: <ChartBarIcon className="h-5 w-5" /> },
-    { to: '/manual', label: '직접 작성', icon: <PencilSquareIcon className="h-5 w-5" /> },
+    { to: '/', label: '플랫폼 업무일지', icon: <ChartBarIcon className="h-5 w-5" /> },
+    { to: '/manual', label: '수기 업무일지', icon: <PencilSquareIcon className="h-5 w-5" /> },
     { to: '/profile', label: '내 프로필', icon: <UserCircleIcon className="h-5 w-5" /> },
   ];
 
@@ -147,9 +147,19 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
             )}
           </div>
         )}
-        {collapsed && isAdmin && (
-          <div className="mb-2 flex justify-center" title="관리자">
-            <ShieldCheckIcon className="h-5 w-5 text-brand-600" />
+        {collapsed && user && (
+          <div className="mb-2 flex flex-col items-center gap-1">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700"
+              title={user.name}
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+            {isAdmin && (
+              <span title="관리자">
+                <ShieldCheckIcon className="h-4 w-4 text-brand-600" />
+              </span>
+            )}
           </div>
         )}
         <button

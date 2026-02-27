@@ -25,6 +25,7 @@ export default function WorkLogDatePicker({ date, onChange }: WorkLogDatePickerP
       <input
         type="date"
         value={date}
+        max={dayjs().format('YYYY-MM-DD')}
         onChange={(e) => onChange(e.target.value)}
         className="h-8 rounded-lg border border-border-primary bg-surface px-3 text-sm text-text-primary transition-colors focus:border-border-focus focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
       />

@@ -113,6 +113,7 @@ export default function ProfilePage() {
                   ...t,
                   label: (
                     <span className="inline-flex items-center gap-2">
+                      {t.icon}
                       {t.label}
                       {t.id === 'github' && user.github_user_secret && (
                         <span className="h-2 w-2 rounded-full bg-success-500" />

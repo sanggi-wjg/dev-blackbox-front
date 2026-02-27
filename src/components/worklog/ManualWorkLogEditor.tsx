@@ -33,7 +33,7 @@ export default function ManualWorkLogEditor({ content, onChange, onSave, saving 
       <CardHeader className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <PencilSquareIcon className="h-4 w-4 text-text-secondary" />
-          <span className="text-sm font-semibold text-text-primary">직접 작성</span>
+          <span className="text-sm font-semibold text-text-primary">수기 업무일지</span>
         </div>
         {onCopy && (
           <button
@@ -51,11 +51,11 @@ export default function ManualWorkLogEditor({ content, onChange, onSave, saving 
         )}
       </CardHeader>
       <CardBody className="flex flex-1 flex-col gap-3">
-        <div data-color-mode={theme}>
+        <div data-color-mode={theme} className="min-h-[300px] max-h-[calc(100vh-280px)]">
           <MDEditor
             value={content}
             onChange={(val) => onChange(val ?? '')}
-            height={800}
+            height="100%"
             preview="live"
             onKeyDown={(e) => {
               if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !saving) {
@@ -65,7 +65,12 @@ export default function ManualWorkLogEditor({ content, onChange, onSave, saving 
             }}
           />
         </div>
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-2">
+          <kbd className="hidden text-xs text-text-tertiary sm:inline">
+            <kbd className="rounded border border-border-primary bg-surface-secondary px-1.5 py-0.5 font-mono text-[10px]">Ctrl</kbd>
+            {' + '}
+            <kbd className="rounded border border-border-primary bg-surface-secondary px-1.5 py-0.5 font-mono text-[10px]">Enter</kbd>
+          </kbd>
           <Button variant="primary" size="sm" onClick={onSave} loading={saving} loadingText="저장 중...">
             저장
           </Button>

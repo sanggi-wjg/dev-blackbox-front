@@ -64,6 +64,11 @@
   --animate-scale-in: scale-in 0.15s ease-out;
 }
 
+/* ── Theme Transition ── */
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 /* ── Dark Mode ── */
 .dark {
   /* Surface */
