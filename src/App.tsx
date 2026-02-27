@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from 'react-router';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import AppLayout from '@/components/layout/AppLayout';
 import LoginPage from '@/pages/LoginPage';
-import WorkLogPage from '@/pages/WorkLogPage.tsx';
+import PlatformWorkLogPage from '@/pages/PlatformWorkLogPage';
+import ManualWorkLogPage from '@/pages/ManualWorkLogPage';
 import UserListPage from '@/pages/UserListPage';
 import JiraSecretListPage from '@/pages/JiraSecretListPage';
 import SlackSecretListPage from '@/pages/SlackSecretListPage';
@@ -90,7 +91,8 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<WorkLogPage />} />
+          <Route index element={<PlatformWorkLogPage />} />
+          <Route path="manual" element={<ManualWorkLogPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route
             path="users"

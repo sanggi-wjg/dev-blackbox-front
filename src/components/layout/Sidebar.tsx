@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
-import { ChartBarIcon, UsersIcon, UserCircleIcon, ArrowRightOnRectangleIcon, ChevronDoubleLeftIcon, SunIcon, MoonIcon, ShieldCheckIcon, KeyIcon, SlackIcon } from '@/components/icons';
+import { ChartBarIcon, PencilSquareIcon, UsersIcon, UserCircleIcon, ArrowRightOnRectangleIcon, ChevronDoubleLeftIcon, SunIcon, MoonIcon, ShieldCheckIcon, KeyIcon, SlackIcon } from '@/components/icons';
 import { useTheme } from '@/hooks/useTheme';
 import type { ReactNode } from 'react';
 
@@ -34,7 +34,8 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
   }, [collapsed]);
 
   const userNavItems: { to: string; label: string; icon: ReactNode }[] = [
-    { to: '/', label: '업무일지', icon: <ChartBarIcon className="h-5 w-5" /> },
+    { to: '/', label: '플랫폼 요약', icon: <ChartBarIcon className="h-5 w-5" /> },
+    { to: '/manual', label: '직접 작성', icon: <PencilSquareIcon className="h-5 w-5" /> },
     { to: '/profile', label: '내 프로필', icon: <UserCircleIcon className="h-5 w-5" /> },
   ];
 
