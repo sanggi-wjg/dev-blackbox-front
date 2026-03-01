@@ -11,7 +11,7 @@ import type { GithubRepositoryModel } from './githubRepositoryModel';
 
 export interface GithubEventModel {
   id: string;
-  type: 'PushEvent' | 'PullRequestEvent' | string;
+  type: 'PushEvent' | 'PullRequestEvent' | 'CreateEvent' | 'DeleteEvent' | string;
   actor: GithubEventModelActor;
   repo: GithubRepositoryModel;
   payload: GithubEventModelPayload;

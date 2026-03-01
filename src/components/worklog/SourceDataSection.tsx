@@ -10,6 +10,7 @@ import {
 import type { GitHubEventResponseDto } from '@/api/generated/model/gitHubEventResponseDto';
 import type { JiraEventResponseDto } from '@/api/generated/model/jiraEventResponseDto';
 import type { SlackMessageResponseDto } from '@/api/generated/model/slackMessageResponseDto';
+import type { GithubPullRequestEventPayload } from '@/api/generated/model/githubPullRequestEventPayload';
 
 interface SourceDataSectionProps {
   platform: string;
@@ -61,9 +62,12 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
   const repoUrl = `https://github.com/${repoName}`;
   const eventLabel = event.type?.replace('Event', '') ?? 'Event';
 
-  const prPayload = event.payload as { pull_request?: { html_url?: string; title?: string } } | undefined;
-  const prUrl = prPayload?.pull_request?.html_url;
-  const prTitle = prPayload?.pull_request?.title;
+  const isPrEvent = event.type === 'PullRequestEvent';
+  const prPayload = isPrEvent ? (event.payload as GithubPullRequestEventPayload) : undefined;
+
+  const isPushEvent = event.type === 'PushEvent';
+  const pushRef = isPushEvent ? (event.payload as { ref?: string })?.ref : undefined;
+  const branchName = pushRef?.replace('refs/heads/', '');
 
   return (
     <div className="rounded-md border border-border-default text-xs">
@@ -74,6 +78,9 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
       >
         <GitHubIcon className="h-3.5 w-3.5 shrink-0 text-text-tertiary" />
         <span className="font-medium text-text-primary">{eventLabel}</span>
+        {branchName && (
+          <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">{branchName}</span>
+        )}
         <span className="text-text-tertiary truncate">{repoName}</span>
         <ExternalLink href={repoUrl} className="ml-auto shrink-0" />
       </button>
@@ -119,24 +126,50 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
             </>
           )}
 
-          {/* PR link */}
-          {prUrl && (
-            <div className="flex items-center gap-1.5">
-              <span className="text-text-tertiary">PR:</span>
-              <a
-                href={prUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-secondary hover:text-text-primary hover:underline truncate"
-              >
-                {prTitle ?? 'Pull Request'}
-              </a>
-              <ArrowTopRightOnSquareIcon className="h-3 w-3 text-text-tertiary shrink-0" />
+          {/* PR detail */}
+          {prPayload && (
+            <div className="space-y-1.5">
+              {/* PR title + link */}
+              <div className="flex items-center gap-1.5">
+                <PrStateBadge state={prPayload.pull_request.state} merged={prPayload.pull_request.merged} draft={prPayload.pull_request.draft} />
+                <a
+                  href={`https://github.com/${repoName}/pull/${prPayload.number}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-text-primary hover:underline truncate"
+                >
+                  {prPayload.pull_request.title ?? `#${prPayload.number}`}
+                </a>
+                <span className="text-text-tertiary">#{prPayload.number}</span>
+              </div>
+
+              {/* Branch: head → base */}
+              <div className="flex items-center gap-1.5 text-text-tertiary">
+                <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">
+                  {prPayload.pull_request.head.ref}
+                </span>
+                <span>→</span>
+                <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">
+                  {prPayload.pull_request.base.ref}
+                </span>
+              </div>
+
+              {/* Action */}
+              <div className="text-text-tertiary">
+                액션: <span className="text-text-secondary">{prPayload.action}</span>
+              </div>
+
+              {/* Body preview */}
+              {prPayload.pull_request.body && (
+                <div className="max-h-24 overflow-y-auto rounded border border-border-default bg-surface p-2 whitespace-pre-wrap text-text-secondary break-words">
+                  {prPayload.pull_request.body}
+                </div>
+              )}
             </div>
           )}
 
           {/* Fallback: no commit and no PR */}
-          {!commit && !prUrl && <span className="text-text-tertiary">상세 정보 없음</span>}
+          {!commit && !prPayload && <span className="text-text-tertiary">상세 정보 없음</span>}
         </div>
       )}
     </div>
@@ -251,12 +284,19 @@ function ExternalLink({ href, className = '' }: { href: string; className?: stri
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`text-text-tertiary hover:text-text-primary transition-colors ${className}`}
+      className={`rounded p-1 text-text-tertiary transition-colors hover:bg-surface-tertiary hover:text-text-primary ${className}`}
       onClick={(e) => e.stopPropagation()}
     >
-      <ArrowTopRightOnSquareIcon className="h-3 w-3" />
+      <ArrowTopRightOnSquareIcon className="h-4 w-4" />
     </a>
   );
+}
+
+function PrStateBadge({ state, merged, draft }: { state?: string | null; merged?: boolean | null; draft?: boolean | null }) {
+  if (merged) return <span className="rounded-full bg-purple-100 px-1.5 py-0.5 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">Merged</span>;
+  if (state === 'closed') return <span className="rounded-full bg-danger-50 px-1.5 py-0.5 text-danger-600">Closed</span>;
+  if (draft) return <span className="rounded-full bg-surface-tertiary px-1.5 py-0.5 text-text-tertiary">Draft</span>;
+  return <span className="rounded-full bg-success-50 px-1.5 py-0.5 text-success-600">Open</span>;
 }
 
 function FileStatusBadge({ status }: { status: string }) {

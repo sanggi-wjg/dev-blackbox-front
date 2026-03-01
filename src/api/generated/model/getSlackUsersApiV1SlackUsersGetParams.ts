@@ -6,5 +6,8 @@
  */
 
 export type GetSlackUsersApiV1SlackUsersGetParams = {
+/**
+ * Slack 시크릿 ID
+ */
 slack_secret_id?: number | null;
 };

@@ -107,6 +107,7 @@ export default function ProfilePage() {
               <Tabs
                 tabs={tabs.map((t) => ({
                   ...t,
+                  icon: undefined,
                   label: (
                     <span className="inline-flex items-center gap-2">
                       {t.icon}

@@ -20,7 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  RootGet200
+  IndexGet200
 } from '.././model';
 
 import { customInstance } from '../../axios-instance';
@@ -29,15 +29,15 @@ import { customInstance } from '../../axios-instance';
 
 
 /**
- * @summary Root
+ * @summary Index
  */
-export const rootGet = (
+export const indexGet = (
     
  signal?: AbortSignal
 ) => {
       
       
-      return customInstance<RootGet200>(
+      return customInstance<IndexGet200>(
       {url: `/`, method: 'GET', signal
     },
       );
@@ -46,69 +46,69 @@ export const rootGet = (
 
 
 
-export const getRootGetQueryKey = () => {
+export const getIndexGetQueryKey = () => {
     return [
     `/`
     ] as const;
     }
 
     
-export const getRootGetQueryOptions = <TData = Awaited<ReturnType<typeof rootGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof rootGet>>, TError, TData>>, }
+export const getIndexGetQueryOptions = <TData = Awaited<ReturnType<typeof indexGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof indexGet>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getRootGetQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getIndexGetQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof rootGet>>> = ({ signal }) => rootGet(signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof indexGet>>> = ({ signal }) => indexGet(signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof rootGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof indexGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type RootGetQueryResult = NonNullable<Awaited<ReturnType<typeof rootGet>>>
-export type RootGetQueryError = unknown
+export type IndexGetQueryResult = NonNullable<Awaited<ReturnType<typeof indexGet>>>
+export type IndexGetQueryError = unknown
 
 
-export function useRootGet<TData = Awaited<ReturnType<typeof rootGet>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof rootGet>>, TError, TData>> & Pick<
+export function useIndexGet<TData = Awaited<ReturnType<typeof indexGet>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof indexGet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof rootGet>>,
+          Awaited<ReturnType<typeof indexGet>>,
           TError,
-          Awaited<ReturnType<typeof rootGet>>
+          Awaited<ReturnType<typeof indexGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useRootGet<TData = Awaited<ReturnType<typeof rootGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof rootGet>>, TError, TData>> & Pick<
+export function useIndexGet<TData = Awaited<ReturnType<typeof indexGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof indexGet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof rootGet>>,
+          Awaited<ReturnType<typeof indexGet>>,
           TError,
-          Awaited<ReturnType<typeof rootGet>>
+          Awaited<ReturnType<typeof indexGet>>
         > , 'initialData'
       >, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useRootGet<TData = Awaited<ReturnType<typeof rootGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof rootGet>>, TError, TData>>, }
+export function useIndexGet<TData = Awaited<ReturnType<typeof indexGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof indexGet>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Root
+ * @summary Index
  */
 
-export function useRootGet<TData = Awaited<ReturnType<typeof rootGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof rootGet>>, TError, TData>>, }
+export function useIndexGet<TData = Awaited<ReturnType<typeof indexGet>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof indexGet>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getRootGetQueryOptions(options)
+  const queryOptions = getIndexGetQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

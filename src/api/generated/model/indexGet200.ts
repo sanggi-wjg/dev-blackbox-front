@@ -5,9 +5,4 @@
  * OpenAPI spec version: 0.1.1
  */
 
-export type GetJiraUsersApiV1JiraUsersGetParams = {
-/**
- * Jira 시크릿 ID
- */
-jira_secret_id?: number | null;
-};
+export type IndexGet200 = {[key: string]: string};
