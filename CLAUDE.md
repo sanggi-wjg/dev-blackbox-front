@@ -13,16 +13,18 @@ Dev Blackbox Frontend — 개발자 활동 데이터(GitHub, Jira, Slack) 수집
 ## Commands
 
 ```bash
-npm run dev        # 개발 서버 (http://localhost:5173)
-npm run build      # tsc -b + vite build
-npm run lint       # eslint
-npm run generate   # orval — 백엔드 OpenAPI → React Query 훅/타입 자동 생성 (백엔드 서버 http://localhost:8000 실행 필요)
+npm run dev          # 개발 서버 (http://localhost:5173)
+npm run build        # tsc -b + vite build
+npm run lint         # eslint
+npm run format       # prettier — 코드 포매팅 적용
+npm run format:check # prettier — 포매팅 검증 (CI용)
+npm run generate     # orval — 백엔드 OpenAPI → React Query 훅/타입 자동 생성 (백엔드 서버 http://localhost:8000 실행 필요)
 ```
 
 ## Tech Stack
 
 React 19, TypeScript, Vite, TanStack React Query v5, Tailwind CSS v4, React Router v7, Orval (OpenAPI → React Query 코드
-생성), Axios, react-markdown, dayjs, Milkdown (마크다운 WYSIWYG 에디터)
+생성), Axios, react-markdown, dayjs, Milkdown (마크다운 WYSIWYG 에디터), Prettier, ESLint
 
 ## Code Style
 
@@ -31,6 +33,7 @@ React 19, TypeScript, Vite, TanStack React Query v5, Tailwind CSS v4, React Rout
 - 한국어 UI 텍스트, 한국어 주석 허용
 - 컴포넌트: `export default function` 패턴
 - 환경변수: `VITE_API_BASE_URL` (`.env` 파일, 기본값 `http://localhost:8000`)
+- **Prettier**: `singleQuote`, `trailingComma: all`, `printWidth: 120` — `src/api/generated/`는 포매팅 제외
 
 ## Design Tokens (index.css)
 

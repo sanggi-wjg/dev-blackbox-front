@@ -99,9 +99,9 @@ export default function PlatformWorkLogPage() {
     );
   };
 
-  const sortedWorkLogs = workLogs?.slice().sort(
-    (a, b) => (PLATFORM_ORDER.indexOf(a.platform) ?? 99) - (PLATFORM_ORDER.indexOf(b.platform) ?? 99),
-  );
+  const sortedWorkLogs = workLogs
+    ?.slice()
+    .sort((a, b) => (PLATFORM_ORDER.indexOf(a.platform) ?? 99) - (PLATFORM_ORDER.indexOf(b.platform) ?? 99));
   const hasWorkLogs = sortedWorkLogs != null && sortedWorkLogs.length > 0;
 
   return (
@@ -122,11 +122,7 @@ export default function PlatformWorkLogPage() {
               size="sm"
               disabled={syncingDate === targetDate}
               onClick={handleCollect}
-              icon={
-                <ArrowPathIcon
-                  className={`h-4 w-4 ${syncingDate === targetDate ? 'animate-spin' : ''}`}
-                />
-              }
+              icon={<ArrowPathIcon className={`h-4 w-4 ${syncingDate === targetDate ? 'animate-spin' : ''}`} />}
             >
               {syncingDate === targetDate ? '수집 중...' : '수동 수집'}
             </Button>

@@ -2,7 +2,13 @@ import { useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useGetUserMeApiV1UsersMeGet } from '@/api/generated/user/user';
-import { getToken, setToken, removeToken, checkIsAdmin as checkAdminToken, isAuthenticated as checkAuth } from '@/utils/auth';
+import {
+  getToken,
+  setToken,
+  removeToken,
+  checkIsAdmin as checkAdminToken,
+  isAuthenticated as checkAuth,
+} from '@/utils/auth';
 import { AuthContext } from './auth-context';
 import type { AuthContextValue } from './auth-context';
 
@@ -12,7 +18,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState(checkAuth);
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading, error: userError } = useGetUserMeApiV1UsersMeGet({
+  const {
+    data: user,
+    isLoading,
+    error: userError,
+  } = useGetUserMeApiV1UsersMeGet({
     query: { enabled: authenticated },
   });
 
@@ -52,7 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: authenticated,
     isAdmin,
     isLoading: authenticated && isLoading,
-    error: authenticated && userError ? (userError instanceof Error ? userError : new Error('프로필 정보를 가져올 수 없습니다')) : null,
+    error:
+      authenticated && userError
+        ? userError instanceof Error
+          ? userError
+          : new Error('프로필 정보를 가져올 수 없습니다')
+        : null,
     login,
     logout,
   };

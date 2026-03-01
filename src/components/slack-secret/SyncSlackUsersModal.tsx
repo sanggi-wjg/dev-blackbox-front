@@ -1,6 +1,4 @@
-import {
-  useSyncSlackUsersAdminApiV1SlackSecretsSlackSecretIdSyncPost,
-} from '@/api/generated/admin-slack-secret-management/admin-slack-secret-management';
+import { useSyncSlackUsersAdminApiV1SlackSecretsSlackSecretIdSyncPost } from '@/api/generated/admin-slack-secret-management/admin-slack-secret-management';
 import { useToast } from '@/components/common/Toast';
 import { ConfirmDialog } from '@/components/common/Modal';
 

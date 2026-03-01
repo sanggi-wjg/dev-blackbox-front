@@ -53,9 +53,7 @@ export default function AppLayout() {
             DB
           </div>
           <span className="flex-1 text-sm font-bold text-text-primary">{pageTitle}</span>
-          {user && (
-            <span className="text-xs text-text-secondary">{user.name}</span>
-          )}
+          {user && <span className="text-xs text-text-secondary">{user.name}</span>}
         </header>
 
         <main className="flex-1 overflow-y-auto px-3 py-2 [scrollbar-gutter:stable] md:px-4 md:py-3 lg:px-5 lg:py-4">

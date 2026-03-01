@@ -71,16 +71,9 @@ export default function LoginPage() {
               />
             </FormField>
 
-            {error && (
-              <p className="text-sm text-danger-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-danger-600">{error}</p>}
 
-            <Button
-              type="submit"
-              className="w-full"
-              loading={loginMutation.isPending}
-              loadingText="로그인 중..."
-            >
+            <Button type="submit" className="w-full" loading={loginMutation.isPending} loadingText="로그인 중...">
               로그인
             </Button>
           </form>

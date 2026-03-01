@@ -49,12 +49,7 @@ export default function SlackSecretForm({ onClose }: SlackSecretFormProps) {
           <Button variant="secondary" onClick={onClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            form="slack-secret-form"
-            loading={createSecret.isPending}
-            loadingText="생성 중..."
-          >
+          <Button type="submit" form="slack-secret-form" loading={createSecret.isPending} loadingText="생성 중...">
             생성
           </Button>
         </>

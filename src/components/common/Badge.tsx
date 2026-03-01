@@ -1,14 +1,6 @@
 import type { ReactNode } from 'react';
 
-type BadgeVariant =
-  | 'default'
-  | 'success'
-  | 'danger'
-  | 'brand'
-  | 'github'
-  | 'jira'
-  | 'slack'
-  | 'confluence';
+type BadgeVariant = 'default' | 'success' | 'danger' | 'brand' | 'github' | 'jira' | 'slack' | 'confluence';
 
 interface BadgeProps {
   variant?: BadgeVariant;

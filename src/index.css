@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -12,7 +12,7 @@
   --color-brand-600: oklch(0.52 0.17 250);
   --color-brand-700: oklch(0.45 0.15 250);
   --color-brand-800: oklch(0.38 0.12 250);
-  --color-brand-900: oklch(0.30 0.09 250);
+  --color-brand-900: oklch(0.3 0.09 250);
 
   /* ── Surface ── */
   --color-surface: oklch(1 0 0);
@@ -23,7 +23,7 @@
   /* ── Text ── */
   --color-text-primary: oklch(0.21 0.02 260);
   --color-text-secondary: oklch(0.45 0.014 260);
-  --color-text-tertiary: oklch(0.60 0.01 260);
+  --color-text-tertiary: oklch(0.6 0.01 260);
   --color-text-inverse: oklch(1 0 0);
   --color-text-link: oklch(0.52 0.17 250);
 
@@ -47,7 +47,7 @@
   /* ── Platform ── */
   --color-platform-github: oklch(0.27 0.02 260);
   --color-platform-jira: oklch(0.52 0.17 250);
-  --color-platform-slack: oklch(0.50 0.17 310);
+  --color-platform-slack: oklch(0.5 0.17 310);
   --color-platform-confluence: oklch(0.58 0.13 250);
 
   /* ── Shadows ── */
@@ -66,14 +66,16 @@
 
 /* ── Theme Transition ── */
 html {
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 /* ── Dark Mode ── */
 .dark {
   /* Surface */
   --color-surface: oklch(0.16 0.014 260);
-  --color-surface-secondary: oklch(0.20 0.014 260);
+  --color-surface-secondary: oklch(0.2 0.014 260);
   --color-surface-tertiary: oklch(0.24 0.012 260);
   --color-surface-hover: oklch(0.26 0.014 260);
 
@@ -85,8 +87,8 @@ html {
   --color-text-link: oklch(0.68 0.14 250);
 
   /* Border */
-  --color-border-primary: oklch(0.30 0.01 260);
-  --color-border-strong: oklch(0.40 0.01 260);
+  --color-border-primary: oklch(0.3 0.01 260);
+  --color-border-strong: oklch(0.4 0.01 260);
 
   /* Brand — 약간 밝게 조정하여 다크 배경에서 가독성 확보 */
   --color-brand-50: oklch(0.22 0.04 250);
@@ -103,7 +105,7 @@ html {
   --color-warning-50: oklch(0.22 0.03 85);
 
   /* Platform */
-  --color-platform-github: oklch(0.90 0.01 260);
+  --color-platform-github: oklch(0.9 0.01 260);
 
   /* Shadows — 다크에서 더 강한 그림자 */
   --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.15);
@@ -136,8 +138,12 @@ html {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scale-in {

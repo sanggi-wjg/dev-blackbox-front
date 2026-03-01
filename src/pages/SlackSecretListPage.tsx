@@ -49,12 +49,11 @@ export default function SlackSecretListPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-text-primary tracking-tight">Slack Secret 관리</h2>
-          <p className="mt-1 text-sm text-text-secondary">Slack 연동 자격증명을 관리하고 워크스페이스 사용자를 동기화합니다</p>
+          <p className="mt-1 text-sm text-text-secondary">
+            Slack 연동 자격증명을 관리하고 워크스페이스 사용자를 동기화합니다
+          </p>
         </div>
-        <Button
-          onClick={() => setShowForm(true)}
-          icon={<PlusIcon className="h-4 w-4" />}
-        >
+        <Button onClick={() => setShowForm(true)} icon={<PlusIcon className="h-4 w-4" />}>
           Secret 생성
         </Button>
       </div>
@@ -106,10 +105,7 @@ export default function SlackSecretListPage() {
               </thead>
               <tbody className="divide-y divide-border-primary">
                 {secrets.map((secret) => (
-                  <tr
-                    key={secret.id}
-                    className="transition-colors hover:bg-surface-hover"
-                  >
+                  <tr key={secret.id} className="transition-colors hover:bg-surface-hover">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-platform-slack/10 text-platform-slack">
@@ -148,10 +144,7 @@ export default function SlackSecretListPage() {
           {/* Mobile cards */}
           <div className="flex flex-col gap-3 md:hidden">
             {secrets.map((secret) => (
-              <div
-                key={secret.id}
-                className="rounded-xl border border-border-primary bg-surface p-4 shadow-xs"
-              >
+              <div key={secret.id} className="rounded-xl border border-border-primary bg-surface p-4 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-platform-slack/10 text-platform-slack">

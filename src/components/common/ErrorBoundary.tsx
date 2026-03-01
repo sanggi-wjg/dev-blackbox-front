@@ -30,13 +30,8 @@ export default class ErrorBoundary extends Component<Props, State> {
             <ExclamationTriangleIcon className="h-8 w-8 text-danger-500" />
           </div>
           <h3 className="text-lg font-semibold text-text-primary">예상치 못한 오류가 발생했습니다</h3>
-          <p className="max-w-md text-center text-sm text-text-secondary">
-            {this.state.error?.message}
-          </p>
-          <Button
-            variant="primary"
-            onClick={() => this.setState({ hasError: false, error: null })}
-          >
+          <p className="max-w-md text-center text-sm text-text-secondary">{this.state.error?.message}</p>
+          <Button variant="primary" onClick={() => this.setState({ hasError: false, error: null })}>
             다시 시도
           </Button>
         </div>

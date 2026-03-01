@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
 import { CheckCircleIcon, XCircleIcon, InfoCircleIcon, XMarkIcon } from '@/components/icons';
 
 type ToastType = 'success' | 'error' | 'info';

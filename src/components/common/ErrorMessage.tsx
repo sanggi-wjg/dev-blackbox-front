@@ -7,8 +7,7 @@ interface ErrorMessageProps {
 }
 
 export default function ErrorMessage({ error, onRetry }: ErrorMessageProps) {
-  const message =
-    error instanceof Error ? error.message : 'An unexpected error occurred';
+  const message = error instanceof Error ? error.message : 'An unexpected error occurred';
 
   return (
     <div className="flex items-start gap-3 rounded-lg border border-danger-500/20 bg-danger-50 p-4">

@@ -58,12 +58,7 @@ export default function UserForm({ onClose }: UserFormProps) {
           <Button variant="secondary" onClick={onClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            form="user-form"
-            loading={createUser.isPending}
-            loadingText="생성 중..."
-          >
+          <Button type="submit" form="user-form" loading={createUser.isPending} loadingText="생성 중...">
             생성
           </Button>
         </>
@@ -71,13 +66,7 @@ export default function UserForm({ onClose }: UserFormProps) {
     >
       <form id="user-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
         <FormField label="이름" htmlFor="user-name">
-          <Input
-            id="user-name"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="홍길동"
-          />
+          <Input id="user-name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="홍길동" />
         </FormField>
 
         <FormField label="이메일" htmlFor="user-email">

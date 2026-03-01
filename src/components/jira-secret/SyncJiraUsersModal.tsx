@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import {
-  useSyncJiraUsersAdminApiV1JiraSecretsJiraSecretIdSyncPost,
-} from '@/api/generated/admin-jira-secret-management/admin-jira-secret-management';
+import { useSyncJiraUsersAdminApiV1JiraSecretsJiraSecretIdSyncPost } from '@/api/generated/admin-jira-secret-management/admin-jira-secret-management';
 import { useToast } from '@/components/common/Toast';
 import Modal from '@/components/common/Modal';
 import Input from '@/components/common/Input';
@@ -45,12 +43,7 @@ export default function SyncJiraUsersModal({ secretId, secretName, onClose }: Sy
           <Button variant="secondary" onClick={onClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            form="sync-form"
-            loading={syncUsers.isPending}
-            loadingText="동기화 중..."
-          >
+          <Button type="submit" form="sync-form" loading={syncUsers.isPending} loadingText="동기화 중...">
             동기화
           </Button>
         </>

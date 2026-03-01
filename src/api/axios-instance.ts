@@ -40,8 +40,7 @@ AXIOS_INSTANCE.interceptors.response.use(
     if (!error.response) {
       return Promise.reject(new Error('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.'));
     }
-    const message =
-      error.response?.data?.detail || '예상치 못한 오류가 발생했습니다';
+    const message = error.response?.data?.detail || '예상치 못한 오류가 발생했습니다';
     return Promise.reject(new Error(message));
   },
 );

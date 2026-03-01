@@ -51,12 +51,7 @@ export default function JiraSecretForm({ onClose }: JiraSecretFormProps) {
           <Button variant="secondary" onClick={onClose}>
             취소
           </Button>
-          <Button
-            type="submit"
-            form="jira-secret-form"
-            loading={createSecret.isPending}
-            loadingText="생성 중..."
-          >
+          <Button type="submit" form="jira-secret-form" loading={createSecret.isPending} loadingText="생성 중...">
             생성
           </Button>
         </>

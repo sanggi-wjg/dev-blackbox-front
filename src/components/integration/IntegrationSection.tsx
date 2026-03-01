@@ -18,9 +18,7 @@ export default function IntegrationSection({
   if (connected) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="rounded-lg border border-success-500/20 bg-success-50 p-4">
-          {connectedContent}
-        </div>
+        <div className="rounded-lg border border-success-500/20 bg-success-50 p-4">{connectedContent}</div>
         {disconnectButton}
       </div>
     );

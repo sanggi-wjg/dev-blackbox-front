@@ -17,14 +17,7 @@ const sizeClasses = {
   lg: 'max-w-lg',
 };
 
-export default function Modal({
-  open,
-  onClose,
-  title,
-  children,
-  footer,
-  size = 'md',
-}: ModalProps) {
+export default function Modal({ open, onClose, title, children, footer, size = 'md' }: ModalProps) {
   useEffect(() => {
     if (!open) return;
 
@@ -71,11 +64,7 @@ export default function Modal({
         <div className="px-5 py-4">{children}</div>
 
         {/* Footer */}
-        {footer && (
-          <div className="flex justify-end gap-2 border-t border-border-primary px-5 py-4">
-            {footer}
-          </div>
-        )}
+        {footer && <div className="flex justify-end gap-2 border-t border-border-primary px-5 py-4">{footer}</div>}
       </div>
     </div>
   );

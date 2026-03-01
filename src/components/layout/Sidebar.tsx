@@ -1,7 +1,19 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
-import { ChartBarIcon, PencilSquareIcon, UsersIcon, UserCircleIcon, ArrowRightOnRectangleIcon, ChevronDoubleLeftIcon, SunIcon, MoonIcon, ShieldCheckIcon, KeyIcon, SlackIcon } from '@/components/icons';
+import {
+  ChartBarIcon,
+  PencilSquareIcon,
+  UsersIcon,
+  UserCircleIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronDoubleLeftIcon,
+  SunIcon,
+  MoonIcon,
+  ShieldCheckIcon,
+  KeyIcon,
+  SlackIcon,
+} from '@/components/icons';
 import { useTheme } from '@/hooks/useTheme';
 import type { ReactNode } from 'react';
 
@@ -61,9 +73,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-xs font-bold text-text-inverse">
           DB
         </div>
-        {!collapsed && (
-          <span className="text-sm font-bold text-text-primary whitespace-nowrap">Dev Blackbox</span>
-        )}
+        {!collapsed && <span className="text-sm font-bold text-text-primary whitespace-nowrap">Dev Blackbox</span>}
       </div>
 
       {/* Nav */}
@@ -99,9 +109,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
         {isAdmin && (
           <>
             <div className="my-2 border-t border-border-primary" />
-            {!collapsed && (
-              <span className="mb-1 px-3 text-xs font-semibold text-text-tertiary">관리</span>
-            )}
+            {!collapsed && <span className="mb-1 px-3 text-xs font-semibold text-text-tertiary">관리</span>}
             {adminNavItems.map(({ to, label, icon }) => (
               <NavLink
                 key={to}

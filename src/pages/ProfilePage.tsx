@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
-import {
-  useGetUserMeApiV1UsersMeGet,
-  getGetUserMeApiV1UsersMeGetQueryKey,
-} from '@/api/generated/user/user';
+import { useGetUserMeApiV1UsersMeGet, getGetUserMeApiV1UsersMeGetQueryKey } from '@/api/generated/user/user';
 import {
   useCreateGithubSecretApiV1GithubSecretsPost,
   useDeleteGithubSecretByUserIdApiV1GithubSecretsDelete,
@@ -53,8 +50,7 @@ export default function ProfilePage() {
 
   const { data: user, isLoading, error } = useGetUserMeApiV1UsersMeGet();
 
-  const invalidateUser = () =>
-    queryClient.invalidateQueries({ queryKey: getGetUserMeApiV1UsersMeGetQueryKey() });
+  const invalidateUser = () => queryClient.invalidateQueries({ queryKey: getGetUserMeApiV1UsersMeGetQueryKey() });
 
   const tabs = [
     {
@@ -118,12 +114,8 @@ export default function ProfilePage() {
                       {t.id === 'github' && user.github_user_secret && (
                         <span className="h-2 w-2 rounded-full bg-success-500" />
                       )}
-                      {t.id === 'jira' && user.jira_user && (
-                        <span className="h-2 w-2 rounded-full bg-success-500" />
-                      )}
-                      {t.id === 'slack' && user.slack_user && (
-                        <span className="h-2 w-2 rounded-full bg-success-500" />
-                      )}
+                      {t.id === 'jira' && user.jira_user && <span className="h-2 w-2 rounded-full bg-success-500" />}
+                      {t.id === 'slack' && user.slack_user && <span className="h-2 w-2 rounded-full bg-success-500" />}
                     </span>
                   ),
                 }))}
@@ -133,11 +125,7 @@ export default function ProfilePage() {
             </div>
             <div className="p-5">
               <TabPanel active={activeTab === 'github'}>
-                <GitHubTab
-                  secret={user.github_user_secret}
-                  invalidateUser={invalidateUser}
-                  toast={toast}
-                />
+                <GitHubTab secret={user.github_user_secret} invalidateUser={invalidateUser} toast={toast} />
               </TabPanel>
               <TabPanel active={activeTab === 'jira'}>
                 <JiraTab
@@ -219,7 +207,8 @@ function GitHubTab({
               <dd className="text-text-primary">{secret.username}</dd>
               <dt className="text-text-tertiary">토큰</dt>
               <dd className="font-mono text-xs text-text-primary">
-                {secret.personal_access_token.slice(0, 8)}{'••••••••'}
+                {secret.personal_access_token.slice(0, 8)}
+                {'••••••••'}
               </dd>
               <dt className="text-text-tertiary">상태</dt>
               <dd>
@@ -238,10 +227,21 @@ function GitHubTab({
         connectForm={
           <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
             <FormField label="GitHub 사용자명">
-              <Input required value={username} onChange={(e) => setUsername(e.target.value)} placeholder="your-github-username" />
+              <Input
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="your-github-username"
+              />
             </FormField>
             <FormField label="Personal Access Token">
-              <Input required type="password" value={pat} onChange={(e) => setPat(e.target.value)} placeholder="ghp_..." />
+              <Input
+                required
+                type="password"
+                value={pat}
+                onChange={(e) => setPat(e.target.value)}
+                placeholder="ghp_..."
+              />
             </FormField>
             <div>
               <Button type="submit" loading={createSecret.isPending} loadingText="등록 중...">
@@ -380,7 +380,12 @@ function JiraTab({
             {availableJiraUsers.length > 0 && (
               <>
                 <FormField label="프로젝트 키">
-                  <Input required value={project} onChange={(e) => setProject(e.target.value)} placeholder="예: DEV, PROJ" />
+                  <Input
+                    required
+                    value={project}
+                    onChange={(e) => setProject(e.target.value)}
+                    placeholder="예: DEV, PROJ"
+                  />
                 </FormField>
                 <div>
                   <Button type="submit" loading={assignJiraUser.isPending} loadingText="연동 중...">

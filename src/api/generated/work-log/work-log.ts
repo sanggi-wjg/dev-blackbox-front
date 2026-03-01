@@ -48,15 +48,15 @@ export const getPlatformWorkLogsApiV1WorkLogsPlatformsGet = (
     params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams,
  signal?: AbortSignal
 ) => {
-      
-      
+
+
       return customInstance<PlatformWorkLogDetailResponseDto[]>(
       {url: `/api/v1/work-logs/platforms`, method: 'GET',
         params, signal
     },
       );
     }
-  
+
 
 
 
@@ -66,7 +66,7 @@ export const getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryKey = (params?:
     ] as const;
     }
 
-    
+
 export const getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryOptions = <TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>>, }
 ) => {
 
@@ -74,13 +74,13 @@ const {query: queryOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryKey(params);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>> = ({ signal }) => getPlatformWorkLogsApiV1WorkLogsPlatformsGet(params, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
@@ -119,7 +119,7 @@ export function useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet<TData = Awaited<
 
 export function useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet<TData = Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError = HTTPValidationError>(
  params: GetPlatformWorkLogsApiV1WorkLogsPlatformsGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlatformWorkLogsApiV1WorkLogsPlatformsGet>>, TError, TData>>, }
- , queryClient?: QueryClient 
+ , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetPlatformWorkLogsApiV1WorkLogsPlatformsGetQueryOptions(params,options)
@@ -139,15 +139,15 @@ export const getUserContentApiV1WorkLogsUserContentGet = (
     params: GetUserContentApiV1WorkLogsUserContentGetParams,
  signal?: AbortSignal
 ) => {
-      
-      
+
+
       return customInstance<PlatformWorkLogResponseDto | null>(
       {url: `/api/v1/work-logs/user-content`, method: 'GET',
         params, signal
     },
       );
     }
-  
+
 
 
 
@@ -157,7 +157,7 @@ export const getGetUserContentApiV1WorkLogsUserContentGetQueryKey = (params?: Ge
     ] as const;
     }
 
-    
+
 export const getGetUserContentApiV1WorkLogsUserContentGetQueryOptions = <TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(params: GetUserContentApiV1WorkLogsUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>>, }
 ) => {
 
@@ -165,13 +165,13 @@ const {query: queryOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserContentApiV1WorkLogsUserContentGetQueryKey(params);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>> = ({ signal }) => getUserContentApiV1WorkLogsUserContentGet(params, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
@@ -210,7 +210,7 @@ export function useGetUserContentApiV1WorkLogsUserContentGet<TData = Awaited<Ret
 
 export function useGetUserContentApiV1WorkLogsUserContentGet<TData = Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError = HTTPValidationError>(
  params: GetUserContentApiV1WorkLogsUserContentGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserContentApiV1WorkLogsUserContentGet>>, TError, TData>>, }
- , queryClient?: QueryClient 
+ , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetUserContentApiV1WorkLogsUserContentGetQueryOptions(params,options)
@@ -230,8 +230,8 @@ export const createOrUpdateUserContentApiV1WorkLogsUserContentPut = (
     userContentCreateOrUpdateRequestDto: UserContentCreateOrUpdateRequestDto,
  signal?: AbortSignal
 ) => {
-      
-      
+
+
       return customInstance<PlatformWorkLogResponseDto>(
       {url: `/api/v1/work-logs/user-content`, method: 'PUT',
       headers: {'Content-Type': 'application/json', },
@@ -239,7 +239,7 @@ export const createOrUpdateUserContentApiV1WorkLogsUserContentPut = (
     },
       );
     }
-  
+
 
 
 export const getCreateOrUpdateUserContentApiV1WorkLogsUserContentPutMutationOptions = <TError = HTTPValidationError,
@@ -253,7 +253,7 @@ const {mutation: mutationOptions} = options ?
       : {...options, mutation: {...options.mutation, mutationKey}}
       : {mutation: { mutationKey, }};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrUpdateUserContentApiV1WorkLogsUserContentPut>>, {data: UserContentCreateOrUpdateRequestDto}> = (props) => {
@@ -264,7 +264,7 @@ const {mutation: mutationOptions} = options ?
 
 
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -293,15 +293,15 @@ export const getDailyWorkLogApiV1WorkLogsDailyGet = (
     params: GetDailyWorkLogApiV1WorkLogsDailyGetParams,
  signal?: AbortSignal
 ) => {
-      
-      
+
+
       return customInstance<DailyWorkLogResponseDto | null>(
       {url: `/api/v1/work-logs/daily`, method: 'GET',
         params, signal
     },
       );
     }
-  
+
 
 
 
@@ -311,7 +311,7 @@ export const getGetDailyWorkLogApiV1WorkLogsDailyGetQueryKey = (params?: GetDail
     ] as const;
     }
 
-    
+
 export const getGetDailyWorkLogApiV1WorkLogsDailyGetQueryOptions = <TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>>, }
 ) => {
 
@@ -319,13 +319,13 @@ const {query: queryOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetDailyWorkLogApiV1WorkLogsDailyGetQueryKey(params);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>> = ({ signal }) => getDailyWorkLogApiV1WorkLogsDailyGet(params, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
@@ -364,7 +364,7 @@ export function useGetDailyWorkLogApiV1WorkLogsDailyGet<TData = Awaited<ReturnTy
 
 export function useGetDailyWorkLogApiV1WorkLogsDailyGet<TData = Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError = HTTPValidationError>(
  params: GetDailyWorkLogApiV1WorkLogsDailyGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDailyWorkLogApiV1WorkLogsDailyGet>>, TError, TData>>, }
- , queryClient?: QueryClient 
+ , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetDailyWorkLogApiV1WorkLogsDailyGetQueryOptions(params,options)
@@ -384,8 +384,7 @@ export const syncWorkLogsApiV1WorkLogsManualSyncPost = (
     workLogManualSyncReqeustDto: WorkLogManualSyncReqeustDto,
  signal?: AbortSignal
 ) => {
-      
-      
+
       return customInstance<BackgroundTaskResponseDto>(
       {url: `/api/v1/work-logs/manual-sync`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -393,7 +392,7 @@ export const syncWorkLogsApiV1WorkLogsManualSyncPost = (
     },
       );
     }
-  
+
 
 
 export const getSyncWorkLogsApiV1WorkLogsManualSyncPostMutationOptions = <TError = HTTPValidationError,
@@ -407,7 +406,7 @@ const {mutation: mutationOptions} = options ?
       : {...options, mutation: {...options.mutation, mutationKey}}
       : {mutation: { mutationKey, }};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof syncWorkLogsApiV1WorkLogsManualSyncPost>>, {data: WorkLogManualSyncReqeustDto}> = (props) => {
@@ -418,7 +417,7 @@ const {mutation: mutationOptions} = options ?
 
 
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}

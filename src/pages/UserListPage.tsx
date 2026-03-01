@@ -57,10 +57,7 @@ export default function UserListPage() {
           <h2 className="text-xl font-semibold text-text-primary tracking-tight">사용자 관리</h2>
           <p className="mt-1 text-sm text-text-secondary">등록된 사용자를 관리하고 새 사용자를 추가합니다</p>
         </div>
-        <Button
-          onClick={() => setShowForm(true)}
-          icon={<PlusIcon className="h-4 w-4" />}
-        >
+        <Button onClick={() => setShowForm(true)} icon={<PlusIcon className="h-4 w-4" />}>
           사용자 생성
         </Button>
       </div>
@@ -116,10 +113,7 @@ export default function UserListPage() {
               </thead>
               <tbody className="divide-y divide-border-primary">
                 {users.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="transition-colors hover:bg-surface-hover"
-                  >
+                  <tr key={user.id} className="transition-colors hover:bg-surface-hover">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <UserAvatar name={user.name} />

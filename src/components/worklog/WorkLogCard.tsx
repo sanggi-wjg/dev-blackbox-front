@@ -51,7 +51,16 @@ const platformConfig: Record<
   },
 };
 
-export default function WorkLogCard({ platform, content, modelName, prompt, onCopy, githubEvents, jiraEvents, slackMessages }: WorkLogCardProps) {
+export default function WorkLogCard({
+  platform,
+  content,
+  modelName,
+  prompt,
+  onCopy,
+  githubEvents,
+  jiraEvents,
+  slackMessages,
+}: WorkLogCardProps) {
   const [showAiInfo, setShowAiInfo] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -74,10 +83,7 @@ export default function WorkLogCard({ platform, content, modelName, prompt, onCo
   };
 
   return (
-    <Card
-      padding="none"
-      className={`border-l-4 ${config.borderColor}`}
-    >
+    <Card padding="none" className={`border-l-4 ${config.borderColor}`}>
       <CardHeader className="flex items-center gap-2">
         <Badge variant={config.badge as 'github' | 'jira' | 'slack' | 'confluence'}>
           <span className="inline-flex items-center gap-1.5">
@@ -86,10 +92,7 @@ export default function WorkLogCard({ platform, content, modelName, prompt, onCo
           </span>
         </Badge>
         {modelName && (
-          <Badge
-            variant="default"
-            className="cursor-pointer hover:bg-surface-hover transition-colors"
-          >
+          <Badge variant="default" className="cursor-pointer hover:bg-surface-hover transition-colors">
             <button
               type="button"
               className="inline-flex items-center gap-1 cursor-pointer"

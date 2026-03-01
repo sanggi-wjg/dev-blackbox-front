@@ -41,10 +41,7 @@ export default function SearchableSelect({
 
   const filtered = options.filter((o) => {
     const q = search.toLowerCase();
-    return (
-      o.label.toLowerCase().includes(q) ||
-      (o.description?.toLowerCase().includes(q) ?? false)
-    );
+    return o.label.toLowerCase().includes(q) || (o.description?.toLowerCase().includes(q) ?? false);
   });
 
   useEffect(() => {
@@ -118,9 +115,7 @@ export default function SearchableSelect({
         <span className={selectedOption ? 'text-text-primary' : 'text-text-tertiary'}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDownIcon
-          className={`h-4 w-4 text-text-tertiary transition-transform ${open ? 'rotate-180' : ''}`}
-        />
+        <ChevronDownIcon className={`h-4 w-4 text-text-tertiary transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
@@ -156,9 +151,7 @@ export default function SearchableSelect({
                     }`}
                   >
                     <span>{option.label}</span>
-                    {option.description && (
-                      <span className="text-xs text-text-tertiary">{option.description}</span>
-                    )}
+                    {option.description && <span className="text-xs text-text-tertiary">{option.description}</span>}
                   </button>
                 </li>
               ))
