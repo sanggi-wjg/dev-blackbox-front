@@ -11,6 +11,7 @@ export interface JiraEventResponseDto {
   id: number;
   issue_id: string;
   issue_key: string;
+  issue_url: string;
   target_date: string;
   issue: JiraIssueModel;
   changelog: JiraChangelogHistoryModel[] | null;

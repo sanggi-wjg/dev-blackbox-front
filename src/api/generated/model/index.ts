@@ -26,6 +26,7 @@ export * from './getPlatformWorkLogsWorkLogsUsersUserIdPlatformsGetParams';
 export * from './getSlackUsersApiV1SlackUsersGetParams';
 export * from './getUserContentApiV1WorkLogsUserContentGetParams';
 export * from './getUserContentWorkLogsUsersUserIdUserContentGetParams';
+export * from './gitHubActorModel';
 export * from './githubCommitFileModel';
 export * from './githubCommitInfoModel';
 export * from './githubCommitInfoModelAuthor';

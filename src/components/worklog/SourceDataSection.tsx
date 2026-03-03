@@ -194,6 +194,7 @@ function JiraEventRow({ data }: { data: JiraEventResponseDto }) {
         <JiraIcon className="h-3.5 w-3.5 shrink-0 text-text-tertiary" />
         <span className="font-medium text-text-primary">{data.issue_key}</span>
         <span className="text-text-tertiary truncate">{issue.summary}</span>
+        <ExternalLink href={data.issue_url} className="ml-auto shrink-0" />
       </button>
 
       {expanded && (

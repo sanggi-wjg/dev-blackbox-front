@@ -4,16 +4,16 @@
  * Dev Blackbox API
  * OpenAPI spec version: 0.1.1
  */
-import type { GithubEventModelActor } from './githubEventModelActor';
+import type { GitHubActorModel } from './gitHubActorModel';
 import type { GithubEventModelOrg } from './githubEventModelOrg';
 import type { GithubEventModelPayload } from './githubEventModelPayload';
 import type { GithubRepositoryModel } from './githubRepositoryModel';
 
 export interface GithubEventModel {
   id: string;
-  type: 'PushEvent' | 'PullRequestEvent' | 'CreateEvent' | 'DeleteEvent' | string;
-  actor: GithubEventModelActor;
+  actor: GitHubActorModel;
   repo: GithubRepositoryModel;
+  type: 'PushEvent' | 'PullRequestEvent' | 'CreateEvent' | 'DeleteEvent' | string;
   payload: GithubEventModelPayload;
   public: boolean;
   created_at: string;
