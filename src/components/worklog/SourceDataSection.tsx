@@ -1,4 +1,4 @@
-import { useState } from 'react';
+ import { useState } from 'react';
 import {
   GitHubIcon,
   JiraIcon,
@@ -65,6 +65,8 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
   const isPrEvent = event.type === 'PullRequestEvent';
   const prPayload = isPrEvent ? (event.payload as GithubPullRequestEventPayload) : undefined;
 
+  const eventUrl = isPrEvent && prPayload ? `https://github.com/${repoName}/pull/${prPayload.number}` : repoUrl;
+
   const isPushEvent = event.type === 'PushEvent';
   const pushRef = isPushEvent ? (event.payload as { ref?: string })?.ref : undefined;
   const branchName = pushRef?.replace('refs/heads/', '');
@@ -82,7 +84,7 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
           <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">{branchName}</span>
         )}
         <span className="text-text-tertiary truncate">{repoName}</span>
-        <ExternalLink href={repoUrl} className="ml-auto shrink-0" />
+        <ExternalLink href={eventUrl} className="ml-auto shrink-0" />
       </button>
 
       {expanded && (
