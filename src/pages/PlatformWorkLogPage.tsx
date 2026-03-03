@@ -107,13 +107,13 @@ export default function PlatformWorkLogPage() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-text-primary tracking-tight">플랫폼 업무일지</h2>
-        <p className="mt-1 text-sm text-text-secondary">플랫폼별 일일 업무 요약을 확인합니다</p>
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-text-primary tracking-tight">플랫폼 업무일지</h2>
+        <p className="mt-0.5 text-sm text-text-secondary">플랫폼별 일일 업무 요약을 확인합니다</p>
       </div>
 
       {/* Control bar */}
-      <Card className="mb-6">
+      <Card padding="sm" className="mb-4">
         <div className="flex flex-wrap items-center gap-4">
           <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
           <div className="ml-auto flex items-center gap-2">

@@ -61,16 +61,34 @@ export default function ManualWorkLogPage() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-text-primary tracking-tight">수기 업무일지</h2>
-        <p className="mt-1 text-sm text-text-secondary">마크다운으로 업무일지를 직접 작성합니다</p>
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-text-primary tracking-tight">수기 업무일지</h2>
+        <p className="mt-0.5 text-sm text-text-secondary">마크다운으로 업무일지를 직접 작성합니다</p>
       </div>
 
       {/* Control bar */}
-      <Card className="mb-6">
+      <Card padding="sm" className="mb-4">
         <div className="flex flex-wrap items-center gap-4">
           <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
           <div className="ml-auto flex items-center gap-2">
+            <kbd className="hidden text-xs text-text-tertiary sm:inline">
+              <kbd className="rounded border border-border-primary bg-surface-secondary px-1.5 py-0.5 font-mono text-[10px]">
+                Ctrl
+              </kbd>
+              {' + '}
+              <kbd className="rounded border border-border-primary bg-surface-secondary px-1.5 py-0.5 font-mono text-[10px]">
+                Enter
+              </kbd>
+            </kbd>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleSaveManual}
+              loading={saveUserContent.isPending}
+              loadingText="저장 중..."
+            >
+              저장
+            </Button>
             {manualContent.trim() && (
               <Button
                 variant="secondary"
@@ -81,15 +99,6 @@ export default function ManualWorkLogPage() {
                 복사
               </Button>
             )}
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleSaveManual}
-              loading={saveUserContent.isPending}
-              loadingText="저장 중..."
-            >
-              저장
-            </Button>
           </div>
         </div>
       </Card>
@@ -100,7 +109,6 @@ export default function ManualWorkLogPage() {
         onChange={setManualContent}
         onSave={handleSaveManual}
         saving={saveUserContent.isPending}
-        onCopy={manualContent.trim() ? handleCopyManual : undefined}
       />
     </div>
   );
