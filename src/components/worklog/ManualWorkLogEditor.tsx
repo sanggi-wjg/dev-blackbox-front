@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import MDEditor from '@uiw/react-md-editor';
-import Card, { CardBody } from '@/components/common/Card';
 import { useTheme } from '@/hooks/useTheme';
 
 interface ManualWorkLogEditorProps {
@@ -32,23 +31,19 @@ export default function ManualWorkLogEditor({ content, onChange, onSave, saving 
   }, [calcHeight]);
 
   return (
-    <Card padding="none" className="flex flex-col">
-      <CardBody className="flex flex-1 flex-col">
-        <div ref={editorWrapRef} data-color-mode={theme} className="[&_.wmde-markdown]:![font-size:13px]">
-          <MDEditor
-            value={content}
-            onChange={(val) => onChange(val ?? '')}
-            height={editorHeight}
-            preview="live"
-            onKeyDown={(e) => {
-              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !saving) {
-                e.preventDefault();
-                onSave();
-              }
-            }}
-          />
-        </div>
-      </CardBody>
-    </Card>
+    <div ref={editorWrapRef} data-color-mode={theme} className="[&_.wmde-markdown]:![font-size:13px]">
+      <MDEditor
+        value={content}
+        onChange={(val) => onChange(val ?? '')}
+        height={editorHeight}
+        preview="live"
+        onKeyDown={(e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !saving) {
+            e.preventDefault();
+            onSave();
+          }
+        }}
+      />
+    </div>
   );
 }
