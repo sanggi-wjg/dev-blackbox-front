@@ -25,7 +25,11 @@ export default function TaskCard({ task, selected, onSelect }: TaskCardProps) {
         <span className={`h-2 w-2 shrink-0 rounded-full ${statusCfg.dot}`} title={statusCfg.label} />
         <p
           className={`flex-1 truncate text-sm font-medium ${
-            isTerminal ? 'text-text-tertiary line-through' : task.title ? 'text-text-primary' : 'text-text-tertiary italic'
+            isTerminal
+              ? 'text-text-tertiary line-through'
+              : task.title
+                ? 'text-text-primary'
+                : 'text-text-tertiary italic'
           }`}
         >
           {task.title || '제목 없음'}
@@ -44,9 +48,7 @@ export default function TaskCard({ task, selected, onSelect }: TaskCardProps) {
 
       {/* 내용 미리보기 */}
       {task.content && (
-        <p className="mt-1 text-xs text-text-tertiary line-clamp-2">
-          {task.content.replace(/[#*`>\-]/g, '').trim()}
-        </p>
+        <p className="mt-1 text-xs text-text-tertiary line-clamp-2">{task.content.replace(/[#*`>\-]/g, '').trim()}</p>
       )}
     </div>
   );

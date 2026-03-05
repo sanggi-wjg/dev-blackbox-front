@@ -5,8 +5,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { MenuIcon } from '@/components/icons';
 
 const pageTitleMap: Record<string, string> = {
-  '/': '플랫폼 업무일지',
-  '/manual': '수기 업무일지',
+  '/': '대시보드',
+  '/platform': '플랫폼 업무일지',
   '/work-board': '업무 보드',
   '/profile': '내 프로필',
   '/users': '사용자 관리',

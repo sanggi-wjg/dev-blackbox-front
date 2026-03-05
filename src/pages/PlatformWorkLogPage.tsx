@@ -1,8 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import {
-  useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet,
-  useSyncWorkLogsApiV1WorkLogsManualSyncPost,
+  useGetPlatformWorkLogsApiV1PlatformWorkLogsGet,
+  useSyncWorkLogsApiV1PlatformWorkLogsSyncPost,
 } from '@/api/generated/work-log/work-log';
 import WorkLogDatePicker from '@/components/worklog/WorkLogDatePicker';
 import WorkLogCard from '@/components/worklog/WorkLogCard';
@@ -10,9 +10,14 @@ import ErrorMessage from '@/components/common/ErrorMessage';
 import EmptyState from '@/components/common/EmptyState';
 import { WorkLogCardSkeleton } from '@/components/common/Skeleton';
 import { useToast } from '@/components/common/Toast';
+import DailySummaryBar from '@/components/worklog/DailySummaryBar';
+import TimelineView from '@/components/worklog/TimelineView';
+import ActivityHeatmap from '@/components/worklog/ActivityHeatmap';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
-import { ArrowPathIcon, ClipboardDocumentIcon } from '@/components/icons';
+import {ArrowPathIcon, ClipboardDocumentIcon, ClockIcon, Squares2X2Icon} from '@/components/icons';
+
+type PlatformViewMode = 'card' | 'timeline';
 
 const POLL_INTERVAL = 30_000;
 
@@ -27,6 +32,7 @@ const platformLabelMap: Record<string, string> = {
 
 export default function PlatformWorkLogPage() {
   const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
+  const [viewMode, setViewMode] = useState<PlatformViewMode>('card');
   const [syncingDate, setSyncingDate] = useState<string | null>(null);
   const { toast } = useToast();
   const prevCountRef = useRef<number | null>(null);
@@ -55,12 +61,12 @@ export default function PlatformWorkLogPage() {
     data: workLogs,
     isLoading: workLogsLoading,
     error: workLogsError,
-  } = useGetPlatformWorkLogsApiV1WorkLogsPlatformsGet(
+  } = useGetPlatformWorkLogsApiV1PlatformWorkLogsGet(
     { target_date: targetDate },
     { query: { refetchInterval: syncingDate === targetDate ? getRefetchInterval : false } },
   );
 
-  const manualSync = useSyncWorkLogsApiV1WorkLogsManualSyncPost();
+  const manualSync = useSyncWorkLogsApiV1PlatformWorkLogsSyncPost();
 
   const handleCollect = () => {
     setSyncingDate(targetDate);
@@ -104,6 +110,26 @@ export default function PlatformWorkLogPage() {
     .sort((a, b) => (PLATFORM_ORDER.indexOf(a.platform) ?? 99) - (PLATFORM_ORDER.indexOf(b.platform) ?? 99));
   const hasWorkLogs = sortedWorkLogs != null && sortedWorkLogs.length > 0;
 
+  // 목록 내용이 바뀔 때만 stagger 애니메이션을 재생하기 위한 key
+  const workLogListKey = useMemo(
+    () => sortedWorkLogs?.map((w) => w.id).join(',') ?? '',
+    [sortedWorkLogs],
+  );
+
+  // 현재 날짜의 이벤트 수를 히트맵용으로 계산
+  // TODO: 날짜 범위 활동 수 API 추가 시 전체 히트맵 데이터로 교체
+  const activityData = useMemo(() => {
+    const data: Record<string, number> = {};
+    if (sortedWorkLogs) {
+      let total = 0;
+      for (const log of sortedWorkLogs) {
+        total += (log.github_events?.length ?? 0) + (log.jira_events?.length ?? 0) + (log.slack_messages?.length ?? 0);
+      }
+      if (total > 0) data[targetDate] = total;
+    }
+    return data;
+  }, [sortedWorkLogs, targetDate]);
+
   return (
     <div>
       {/* Header */}
@@ -113,32 +139,60 @@ export default function PlatformWorkLogPage() {
       </div>
 
       {/* Control bar */}
-      <Card padding="sm" className="mb-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
-          <div className="ml-auto flex items-center gap-2">
-            <Button
-              variant="primary"
-              size="sm"
-              disabled={syncingDate === targetDate}
-              onClick={handleCollect}
-              icon={<ArrowPathIcon className={`h-4 w-4 ${syncingDate === targetDate ? 'animate-spin' : ''}`} />}
-            >
-              {syncingDate === targetDate ? '수집 중...' : '수동 수집'}
-            </Button>
-            {hasWorkLogs && (
+      <div className="sticky top-0 z-10 -mx-3 px-3 pb-4 md:-mx-4 md:px-4 lg:-mx-5 lg:px-5 bg-surface-secondary">
+        <Card padding="sm">
+          <div className="flex flex-wrap items-center gap-4">
+            <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
+            <div className="ml-auto flex items-center gap-2">
+              {/* 뷰 모드 토글 */}
+              {hasWorkLogs && (
+                <div className="flex items-center rounded-lg border border-border-primary" role="group" aria-label="뷰 모드">
+                  <button
+                    onClick={() => setViewMode('card')}
+                    aria-pressed={viewMode === 'card'}
+                    className={`rounded-l-lg p-1.5 transition-colors ${viewMode === 'card' ? 'bg-brand-600 text-text-inverse' : 'text-text-secondary hover:bg-surface-hover'}`}
+                    title="카드 뷰"
+                  >
+                    <Squares2X2Icon className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('timeline')}
+                    aria-pressed={viewMode === 'timeline'}
+                    className={`rounded-r-lg p-1.5 transition-colors ${viewMode === 'timeline' ? 'bg-brand-600 text-text-inverse' : 'text-text-secondary hover:bg-surface-hover'}`}
+                    title="타임라인 뷰"
+                  >
+                    <ClockIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
               <Button
-                variant="secondary"
+                variant="primary"
                 size="sm"
-                onClick={handleCopyAll}
-                icon={<ClipboardDocumentIcon className="h-4 w-4" />}
+                disabled={syncingDate === targetDate}
+                onClick={handleCollect}
+                icon={<ArrowPathIcon className={`h-4 w-4 ${syncingDate === targetDate ? 'animate-spin' : ''}`} />}
               >
-                전체 복사
+                {syncingDate === targetDate ? '수집 중...' : '수동 수집'}
               </Button>
-            )}
+              {hasWorkLogs && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleCopyAll}
+                  icon={<ClipboardDocumentIcon className="h-4 w-4" />}
+                >
+                  전체 복사
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
+
+      {/* Activity heatmap */}
+      <div className="mb-4">
+        <ActivityHeatmap activityData={activityData} selectedDate={targetDate} onDateClick={setTargetDate} />
+      </div>
 
       {/* Work log cards */}
       {workLogsLoading && (
@@ -160,20 +214,28 @@ export default function PlatformWorkLogPage() {
       )}
 
       {sortedWorkLogs && sortedWorkLogs.length > 0 && (
-        <div className="flex flex-col gap-4">
-          {sortedWorkLogs.map((s) => (
-            <WorkLogCard
-              key={s.id}
-              platform={s.platform}
-              content={s.content}
-              modelName={s.model_name}
-              prompt={s.prompt}
-              onCopy={() => handleCopySingle(s.platform, s.content)}
-              githubEvents={s.github_events}
-              jiraEvents={s.jira_events}
-              slackMessages={s.slack_messages}
-            />
-          ))}
+        <div key={workLogListKey}>
+          <DailySummaryBar workLogs={sortedWorkLogs} />
+          {viewMode === 'timeline' ? (
+            <TimelineView workLogs={sortedWorkLogs} />
+          ) : (
+            <div className="flex flex-col gap-4">
+              {sortedWorkLogs.map((s, index) => (
+                <div key={s.id} className="animate-stagger-up" style={{ animationDelay: `${index * 80}ms` }}>
+                  <WorkLogCard
+                    platform={s.platform}
+                    content={s.content}
+                    modelName={s.model_name}
+                    prompt={s.prompt}
+                    onCopy={() => handleCopySingle(s.platform, s.content)}
+                    githubEvents={s.github_events}
+                    jiraEvents={s.jira_events}
+                    slackMessages={s.slack_messages}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Markdown from 'react-markdown';
-import Card, { CardHeader, CardBody } from '@/components/common/Card';
+import Card, { CardBody } from '@/components/common/Card';
 import Badge from '@/components/common/Badge';
 import Modal from '@/components/common/Modal';
 import { GitHubIcon, JiraIcon, SlackIcon, SparklesIcon, ClipboardDocumentIcon, CheckIcon } from '@/components/icons';
@@ -23,31 +23,41 @@ interface WorkLogCardProps {
 
 const platformConfig: Record<
   string,
-  { label: string; borderColor: string; badge: 'github' | 'jira' | 'slack' | 'confluence'; icon: ReactNode }
+  {
+    label: string;
+    badge: 'github' | 'jira' | 'slack' | 'confluence';
+    icon: ReactNode;
+    gradient: string;
+    iconBg: string;
+  }
 > = {
   GITHUB: {
     label: 'GitHub',
-    borderColor: 'border-l-platform-github',
     badge: 'github',
     icon: <GitHubIcon className="h-4 w-4" />,
+    gradient: 'bg-gradient-to-r from-platform-github/10 to-transparent',
+    iconBg: 'bg-platform-github/15 text-platform-github',
   },
   JIRA: {
     label: 'Jira',
-    borderColor: 'border-l-platform-jira',
     badge: 'jira',
     icon: <JiraIcon className="h-4 w-4" />,
+    gradient: 'bg-gradient-to-r from-platform-jira/10 to-transparent',
+    iconBg: 'bg-platform-jira/15 text-platform-jira',
   },
   CONFLUENCE: {
     label: 'Confluence',
-    borderColor: 'border-l-platform-confluence',
     badge: 'confluence',
     icon: null,
+    gradient: 'bg-gradient-to-r from-platform-confluence/10 to-transparent',
+    iconBg: 'bg-platform-confluence/15 text-platform-confluence',
   },
   SLACK: {
     label: 'Slack',
-    borderColor: 'border-l-platform-slack',
     badge: 'slack',
     icon: <SlackIcon className="h-4 w-4" />,
+    gradient: 'bg-gradient-to-r from-platform-slack/10 to-transparent',
+    iconBg: 'bg-platform-slack/15 text-platform-slack',
   },
 };
 
@@ -72,9 +82,10 @@ export default function WorkLogCard({
 
   const config = platformConfig[platform] ?? {
     label: platform,
-    borderColor: 'border-l-border-strong',
     badge: 'default' as const,
     icon: null,
+    gradient: '',
+    iconBg: 'bg-surface-tertiary text-text-secondary',
   };
 
   const handleCopy = () => {
@@ -83,14 +94,12 @@ export default function WorkLogCard({
   };
 
   return (
-    <Card padding="none" className={`border-l-4 ${config.borderColor}`}>
-      <CardHeader className="flex items-center gap-2">
-        <Badge variant={config.badge as 'github' | 'jira' | 'slack' | 'confluence'}>
-          <span className="inline-flex items-center gap-1.5">
-            {config.icon}
-            {config.label}
-          </span>
-        </Badge>
+    <Card padding="none">
+      <div className={`flex items-center gap-3 px-5 py-3 border-b border-border-primary ${config.gradient}`}>
+        <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${config.iconBg}`}>
+          {config.icon ?? <span className="text-xs font-bold">{config.label.charAt(0)}</span>}
+        </div>
+        <span className="text-sm font-semibold text-text-primary">{config.label}</span>
         {modelName && (
           <Badge variant="default" className="cursor-pointer hover:bg-surface-hover transition-colors">
             <button
@@ -117,7 +126,7 @@ export default function WorkLogCard({
             )}
           </button>
         )}
-      </CardHeader>
+      </div>
       <CardBody>
         <div className="prose prose-sm max-w-none prose-headings:text-text-primary prose-p:text-text-secondary prose-strong:text-text-primary prose-ul:text-text-secondary prose-code:rounded prose-code:bg-surface-tertiary prose-code:px-1 prose-code:py-0.5 prose-code:text-text-primary prose-code:before:content-none prose-code:after:content-none">
           <Markdown>{content}</Markdown>

@@ -3,8 +3,8 @@ import { Routes, Route, Navigate } from 'react-router';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import AppLayout from '@/components/layout/AppLayout';
 import LoginPage from '@/pages/LoginPage';
+import DashboardPage from '@/pages/DashboardPage';
 import PlatformWorkLogPage from '@/pages/PlatformWorkLogPage';
-import ManualWorkLogPage from '@/pages/ManualWorkLogPage';
 import WorkBoardPage from '@/pages/WorkBoardPage';
 import UserListPage from '@/pages/UserListPage';
 import JiraSecretListPage from '@/pages/JiraSecretListPage';
@@ -92,8 +92,9 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<PlatformWorkLogPage />} />
-          <Route path="manual" element={<ManualWorkLogPage />} />
+          <Route index element={<DashboardPage />} />
+          <Route path="platform" element={<PlatformWorkLogPage />} />
+          <Route path="manual" element={<Navigate to="/" replace />} />
           <Route path="work-board" element={<WorkBoardPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route

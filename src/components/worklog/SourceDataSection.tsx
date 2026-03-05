@@ -1,4 +1,4 @@
- import { useState } from 'react';
+import { useState } from 'react';
 import {
   GitHubIcon,
   JiraIcon,
@@ -100,8 +100,8 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
 
               {/* Stats */}
               <div className="flex gap-3 text-text-tertiary">
-                <span className="text-green-600">+{commit.stats.additions}</span>
-                <span className="text-red-500">-{commit.stats.deletions}</span>
+                <span className="text-success-600">+{commit.stats.additions}</span>
+                <span className="text-danger-500">-{commit.stats.deletions}</span>
               </div>
 
               {/* Files */}
@@ -133,7 +133,11 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
             <div className="space-y-1.5">
               {/* PR title + link */}
               <div className="flex items-center gap-1.5">
-                <PrStateBadge state={prPayload.pull_request.state} merged={prPayload.pull_request.merged} draft={prPayload.pull_request.draft} />
+                <PrStateBadge
+                  state={prPayload.pull_request.state}
+                  merged={prPayload.pull_request.merged}
+                  draft={prPayload.pull_request.draft}
+                />
                 <a
                   href={`https://github.com/${repoName}/pull/${prPayload.number}`}
                   target="_blank"
@@ -295,9 +299,23 @@ function ExternalLink({ href, className = '' }: { href: string; className?: stri
   );
 }
 
-function PrStateBadge({ state, merged, draft }: { state?: string | null; merged?: boolean | null; draft?: boolean | null }) {
-  if (merged) return <span className="rounded-full bg-purple-100 px-1.5 py-0.5 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">Merged</span>;
-  if (state === 'closed') return <span className="rounded-full bg-danger-50 px-1.5 py-0.5 text-danger-600">Closed</span>;
+function PrStateBadge({
+  state,
+  merged,
+  draft,
+}: {
+  state?: string | null;
+  merged?: boolean | null;
+  draft?: boolean | null;
+}) {
+  if (merged)
+    return (
+      <span className="rounded-full bg-brand-100 px-1.5 py-0.5 text-brand-700">
+        Merged
+      </span>
+    );
+  if (state === 'closed')
+    return <span className="rounded-full bg-danger-50 px-1.5 py-0.5 text-danger-600">Closed</span>;
   if (draft) return <span className="rounded-full bg-surface-tertiary px-1.5 py-0.5 text-text-tertiary">Draft</span>;
   return <span className="rounded-full bg-success-50 px-1.5 py-0.5 text-success-600">Open</span>;
 }
@@ -311,7 +329,7 @@ function FileStatusBadge({ status }: { status: string }) {
         : status === 'modified'
           ? 'M'
           : (status[0]?.toUpperCase() ?? '?');
-  const color = status === 'added' ? 'text-green-600' : status === 'removed' ? 'text-red-500' : 'text-yellow-600';
+  const color = status === 'added' ? 'text-success-600' : status === 'removed' ? 'text-danger-500' : 'text-warning-500';
 
   return <span className={`font-mono font-bold ${color}`}>{label}</span>;
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { TaskStatusEnum } from '@/api/generated/model';
 import type { TaskUpdateRequestDto, GetTasksApiV1TasksGetParams } from '@/api/generated/model';
@@ -12,10 +12,13 @@ import TaskStatusFilter from '@/components/workboard/TaskStatusFilter';
 import type { FilterValue } from '@/components/workboard/TaskStatusFilter';
 import TaskCard from '@/components/workboard/TaskCard';
 import TaskEditor from '@/components/workboard/TaskEditor';
+import KanbanBoard from '@/components/workboard/KanbanBoard';
 import Button from '@/components/common/Button';
 import { useToast } from '@/components/common/Toast';
-import { PlusIcon, ClipboardDocumentIcon, ArrowLeftIcon } from '@/components/icons';
+import { PlusIcon, ClipboardDocumentIcon, ArrowLeftIcon, QueueListIcon, ViewColumnsIcon } from '@/components/icons';
 import { tasksToMarkdown } from '@/utils/workboard';
+
+type ViewMode = 'list' | 'kanban';
 
 // 필터 → API query params 변환
 function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
@@ -31,6 +34,7 @@ function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
 
 export default function WorkBoardPage() {
   const [filter, setFilter] = useState<FilterValue>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -40,6 +44,9 @@ export default function WorkBoardPage() {
   const { data: tasks = [] } = useGetTasksApiV1TasksGet(filterParams);
 
   const selectedTask = tasks.find((t) => t.id === selectedTaskId) ?? null;
+
+  // 목록 내용이 바뀔 때만 stagger 애니메이션을 재생하기 위한 key
+  const taskListKey = useMemo(() => tasks.map((t) => t.id).join(','), [tasks]);
 
   // 모든 필터의 건수를 위해 전체 데이터도 조회
   const { data: allTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: false });
@@ -153,28 +160,49 @@ export default function WorkBoardPage() {
       </div>
 
       {/* Control bar */}
-      <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-border-primary bg-surface p-3 shadow-xs">
-        <TaskStatusFilter value={filter} onChange={setFilter} counts={counts} />
-        <div className="ml-auto flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleAddTask}
-            loading={createTask.isPending}
-            icon={<PlusIcon className="h-4 w-4" />}
-          >
-            업무 추가
-          </Button>
-          {tasks.length > 0 && (
+      <div className="sticky top-0 z-10 -mx-3 px-3 pb-4 md:-mx-4 md:px-4 lg:-mx-5 lg:px-5 bg-surface-secondary">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border-primary bg-surface p-3 shadow-xs">
+          <TaskStatusFilter value={filter} onChange={setFilter} counts={counts} />
+          <div className="ml-auto flex items-center gap-2">
+            {/* 뷰 모드 토글 */}
+            <div className="hidden items-center rounded-lg border border-border-primary lg:flex" role="group" aria-label="뷰 모드">
+              <button
+                onClick={() => setViewMode('list')}
+                aria-pressed={viewMode === 'list'}
+                className={`rounded-l-lg p-1.5 transition-colors ${viewMode === 'list' ? 'bg-brand-600 text-text-inverse' : 'text-text-secondary hover:bg-surface-hover'}`}
+                title="리스트 뷰"
+              >
+                <QueueListIcon className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('kanban')}
+                aria-pressed={viewMode === 'kanban'}
+                className={`rounded-r-lg p-1.5 transition-colors ${viewMode === 'kanban' ? 'bg-brand-600 text-text-inverse' : 'text-text-secondary hover:bg-surface-hover'}`}
+                title="칸반 뷰"
+              >
+                <ViewColumnsIcon className="h-4 w-4" />
+              </button>
+            </div>
             <Button
               variant="secondary"
               size="sm"
-              onClick={handleCopy}
-              icon={<ClipboardDocumentIcon className="h-4 w-4" />}
+              onClick={handleAddTask}
+              loading={createTask.isPending}
+              icon={<PlusIcon className="h-4 w-4" />}
             >
-              복사
+              업무 추가
             </Button>
-          )}
+            {tasks.length > 0 && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleCopy}
+                icon={<ClipboardDocumentIcon className="h-4 w-4" />}
+              >
+                복사
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -194,32 +222,53 @@ export default function WorkBoardPage() {
         <>
           {/* Desktop */}
           <div className="hidden flex-1 gap-4 overflow-hidden pb-4 lg:flex">
-            <div className="flex w-72 shrink-0 flex-col gap-2 overflow-y-auto pr-1 xl:w-80">
-              {tasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  selected={task.id === selectedTaskId}
-                  onSelect={() => setSelectedTaskId(task.id)}
-                />
-              ))}
-            </div>
-            <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs">
-              {selectedTask ? (
-                <TaskEditor
-                  key={selectedTask.id}
-                  task={selectedTask}
-                  onUpdate={handleUpdate}
-                  onDelete={handleDelete}
-                  onArchive={handleArchive}
-                  saving={updateTask.isPending}
-                />
-              ) : (
-                <div className="flex flex-1 items-center justify-center text-sm text-text-tertiary">
-                  카드를 선택해주세요
+            {viewMode === 'kanban' ? (
+              <div className="flex flex-1 flex-col gap-4 overflow-hidden">
+                <KanbanBoard tasks={tasks} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} />
+                {selectedTask && (
+                  <div className="flex min-h-[240px] flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs animate-stagger-up">
+                    <TaskEditor
+                      key={selectedTask.id}
+                      task={selectedTask}
+                      onUpdate={handleUpdate}
+                      onDelete={handleDelete}
+                      onArchive={handleArchive}
+                      saving={updateTask.isPending}
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <div key={taskListKey} className="flex w-72 shrink-0 flex-col gap-2 overflow-y-auto pr-1 xl:w-80">
+                  {tasks.map((task, index) => (
+                    <div key={task.id} className="animate-stagger-up" style={{ animationDelay: `${index * 80}ms` }}>
+                      <TaskCard
+                        task={task}
+                        selected={task.id === selectedTaskId}
+                        onSelect={() => setSelectedTaskId(task.id)}
+                      />
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+                <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs">
+                  {selectedTask ? (
+                    <TaskEditor
+                      key={selectedTask.id}
+                      task={selectedTask}
+                      onUpdate={handleUpdate}
+                      onDelete={handleDelete}
+                      onArchive={handleArchive}
+                      saving={updateTask.isPending}
+                    />
+                  ) : (
+                    <div className="flex flex-1 items-center justify-center text-sm text-text-tertiary">
+                      카드를 선택해주세요
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Mobile */}
@@ -245,14 +294,11 @@ export default function WorkBoardPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col gap-2 overflow-y-auto">
-                {tasks.map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    selected={false}
-                    onSelect={() => setSelectedTaskId(task.id)}
-                  />
+              <div key={taskListKey} className="flex flex-col gap-2 overflow-y-auto">
+                {tasks.map((task, index) => (
+                  <div key={task.id} className="animate-stagger-up" style={{ animationDelay: `${index * 80}ms` }}>
+                    <TaskCard task={task} selected={false} onSelect={() => setSelectedTaskId(task.id)} />
+                  </div>
                 ))}
               </div>
             )}

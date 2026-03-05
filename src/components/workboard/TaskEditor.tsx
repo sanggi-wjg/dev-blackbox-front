@@ -85,7 +85,7 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
   const calcHeight = useCallback(() => {
     if (!editorWrapRef.current) return;
     const h = editorWrapRef.current.clientHeight;
-    if (h > 0) setEditorHeight(Math.max(200, h -3 ));
+    if (h > 0) setEditorHeight(Math.max(200, h - 3));
   }, []);
 
   useEffect(() => {
