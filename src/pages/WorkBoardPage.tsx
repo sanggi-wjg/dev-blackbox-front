@@ -1,5 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { TaskStatusEnum } from '@/api/generated/model';
 import type { TaskUpdateRequestDto, GetTasksApiV1TasksGetParams } from '@/api/generated/model';
 import {
@@ -7,10 +10,11 @@ import {
   useCreateTaskApiV1TasksPost,
   useUpdateTaskApiV1TasksTaskIdPut,
   useDeleteTaskApiV1TasksTaskIdDelete,
+  useReorderTasksApiV1TasksReorderPatch,
 } from '@/api/generated/task/task';
 import TaskStatusFilter from '@/components/workboard/TaskStatusFilter';
 import type { FilterValue } from '@/components/workboard/TaskStatusFilter';
-import TaskCard from '@/components/workboard/TaskCard';
+import SortableTaskCard from '@/components/workboard/SortableTaskCard';
 import TaskEditor from '@/components/workboard/TaskEditor';
 import KanbanBoard from '@/components/workboard/KanbanBoard';
 import Button from '@/components/common/Button';
@@ -61,9 +65,12 @@ export default function WorkBoardPage() {
     counts[status] = allTasks.filter((t) => t.status === status).length;
   }
 
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
   const createTask = useCreateTaskApiV1TasksPost();
   const updateTask = useUpdateTaskApiV1TasksTaskIdPut();
   const deleteTask = useDeleteTaskApiV1TasksTaskIdDelete();
+  const reorderTasks = useReorderTasksApiV1TasksReorderPatch();
 
   const invalidateAll = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['/api/v1/tasks'] });
@@ -140,6 +147,44 @@ export default function WorkBoardPage() {
       );
     },
     [allTasks, archivedTasks, updateTask, invalidateAll, toast],
+  );
+
+  // 순서 변경
+  const handleReorder = useCallback(
+    (taskIds: number[]) => {
+      reorderTasks.mutate(
+        { data: { task_ids: taskIds } },
+        {
+          onSuccess: () => invalidateAll(),
+          onError: (err) => toast('error', err instanceof Error ? err.message : '순서 변경에 실패했습니다'),
+        },
+      );
+    },
+    [reorderTasks, invalidateAll, toast],
+  );
+
+  // 리스트 뷰 드래그 종료 핸들러
+  const handleListDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id) return;
+
+      const oldIndex = tasks.findIndex((t) => t.id === active.id);
+      const newIndex = tasks.findIndex((t) => t.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return;
+
+      // 같은 상태의 태스크끼리만 재정렬
+      const activeTask = tasks[oldIndex];
+      const overTask = tasks[newIndex];
+      if (activeTask.status !== overTask.status) return;
+
+      const statusTasks = tasks.filter((t) => t.status === activeTask.status);
+      const oldStatusIndex = statusTasks.findIndex((t) => t.id === active.id);
+      const newStatusIndex = statusTasks.findIndex((t) => t.id === over.id);
+      const reordered = arrayMove(statusTasks, oldStatusIndex, newStatusIndex);
+      handleReorder(reordered.map((t) => t.id));
+    },
+    [tasks, handleReorder],
   );
 
   // 복사
@@ -224,7 +269,7 @@ export default function WorkBoardPage() {
           <div className="hidden flex-1 gap-4 overflow-hidden pb-4 lg:flex">
             {viewMode === 'kanban' ? (
               <div className="flex flex-1 flex-col gap-4 overflow-hidden">
-                <KanbanBoard tasks={tasks} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} />
+                <KanbanBoard tasks={tasks} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} onReorder={handleReorder} />
                 {selectedTask && (
                   <div className="flex min-h-[240px] flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs animate-stagger-up">
                     <TaskEditor
@@ -240,17 +285,20 @@ export default function WorkBoardPage() {
               </div>
             ) : (
               <>
-                <div key={taskListKey} className="flex w-72 shrink-0 flex-col gap-2 overflow-y-auto pr-1 xl:w-80">
-                  {tasks.map((task, index) => (
-                    <div key={task.id} className="animate-stagger-up" style={{ animationDelay: `${index * 80}ms` }}>
-                      <TaskCard
-                        task={task}
-                        selected={task.id === selectedTaskId}
-                        onSelect={() => setSelectedTaskId(task.id)}
-                      />
-                    </div>
-                  ))}
-                </div>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleListDragEnd}>
+                  <div key={taskListKey} className="flex w-72 shrink-0 flex-col gap-2 overflow-y-auto pr-1 xl:w-80">
+                    <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+                      {tasks.map((task) => (
+                        <SortableTaskCard
+                          key={task.id}
+                          task={task}
+                          selected={task.id === selectedTaskId}
+                          onSelect={() => setSelectedTaskId(task.id)}
+                        />
+                      ))}
+                    </SortableContext>
+                  </div>
+                </DndContext>
                 <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs">
                   {selectedTask ? (
                     <TaskEditor
@@ -294,13 +342,20 @@ export default function WorkBoardPage() {
                 </div>
               </div>
             ) : (
-              <div key={taskListKey} className="flex flex-col gap-2 overflow-y-auto">
-                {tasks.map((task, index) => (
-                  <div key={task.id} className="animate-stagger-up" style={{ animationDelay: `${index * 80}ms` }}>
-                    <TaskCard task={task} selected={false} onSelect={() => setSelectedTaskId(task.id)} />
-                  </div>
-                ))}
-              </div>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleListDragEnd}>
+                <div key={taskListKey} className="flex flex-col gap-2 overflow-y-auto">
+                  <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+                    {tasks.map((task) => (
+                      <SortableTaskCard
+                        key={task.id}
+                        task={task}
+                        selected={false}
+                        onSelect={() => setSelectedTaskId(task.id)}
+                      />
+                    ))}
+                  </SortableContext>
+                </div>
+              </DndContext>
             )}
           </div>
         </>

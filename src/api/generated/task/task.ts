@@ -318,6 +318,128 @@ export const useDeleteTaskApiV1TasksTaskIdDelete = <TError = HTTPValidationError
       return useMutation(getDeleteTaskApiV1TasksTaskIdDeleteMutationOptions(options), queryClient);
     }
     /**
+ * @summary Archive Task
+ */
+export const archiveTaskApiV1TasksTaskIdArchivePatch = (
+    taskId: number,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TaskResponseDto>(
+      {url: `/api/v1/tasks/${taskId}/archive`, method: 'PATCH', signal
+    },
+      );
+    }
+  
+
+
+export const getArchiveTaskApiV1TasksTaskIdArchivePatchMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveTaskApiV1TasksTaskIdArchivePatch>>, TError,{taskId: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof archiveTaskApiV1TasksTaskIdArchivePatch>>, TError,{taskId: number}, TContext> => {
+
+const mutationKey = ['archiveTaskApiV1TasksTaskIdArchivePatch'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof archiveTaskApiV1TasksTaskIdArchivePatch>>, {taskId: number}> = (props) => {
+          const {taskId} = props ?? {};
+
+          return  archiveTaskApiV1TasksTaskIdArchivePatch(taskId,)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ArchiveTaskApiV1TasksTaskIdArchivePatchMutationResult = NonNullable<Awaited<ReturnType<typeof archiveTaskApiV1TasksTaskIdArchivePatch>>>
+    
+    export type ArchiveTaskApiV1TasksTaskIdArchivePatchMutationError = HTTPValidationError
+
+    /**
+ * @summary Archive Task
+ */
+export const useArchiveTaskApiV1TasksTaskIdArchivePatch = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveTaskApiV1TasksTaskIdArchivePatch>>, TError,{taskId: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof archiveTaskApiV1TasksTaskIdArchivePatch>>,
+        TError,
+        {taskId: number},
+        TContext
+      > => {
+      return useMutation(getArchiveTaskApiV1TasksTaskIdArchivePatchMutationOptions(options), queryClient);
+    }
+    /**
+ * @summary Unarchive Task
+ */
+export const unarchiveTaskApiV1TasksTaskIdUnarchivePatch = (
+    taskId: number,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TaskResponseDto>(
+      {url: `/api/v1/tasks/${taskId}/unarchive`, method: 'PATCH', signal
+    },
+      );
+    }
+  
+
+
+export const getUnarchiveTaskApiV1TasksTaskIdUnarchivePatchMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unarchiveTaskApiV1TasksTaskIdUnarchivePatch>>, TError,{taskId: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof unarchiveTaskApiV1TasksTaskIdUnarchivePatch>>, TError,{taskId: number}, TContext> => {
+
+const mutationKey = ['unarchiveTaskApiV1TasksTaskIdUnarchivePatch'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unarchiveTaskApiV1TasksTaskIdUnarchivePatch>>, {taskId: number}> = (props) => {
+          const {taskId} = props ?? {};
+
+          return  unarchiveTaskApiV1TasksTaskIdUnarchivePatch(taskId,)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnarchiveTaskApiV1TasksTaskIdUnarchivePatchMutationResult = NonNullable<Awaited<ReturnType<typeof unarchiveTaskApiV1TasksTaskIdUnarchivePatch>>>
+    
+    export type UnarchiveTaskApiV1TasksTaskIdUnarchivePatchMutationError = HTTPValidationError
+
+    /**
+ * @summary Unarchive Task
+ */
+export const useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unarchiveTaskApiV1TasksTaskIdUnarchivePatch>>, TError,{taskId: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof unarchiveTaskApiV1TasksTaskIdUnarchivePatch>>,
+        TError,
+        {taskId: number},
+        TContext
+      > => {
+      return useMutation(getUnarchiveTaskApiV1TasksTaskIdUnarchivePatchMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Reorder Tasks
  */
 export const reorderTasksApiV1TasksReorderPatch = (

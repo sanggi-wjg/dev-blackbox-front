@@ -63,6 +63,10 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 | 플랫폼 업무일지 (`PlatformWorkLogPage`) | **어제** | 백엔드가 전일 활동 데이터를 수집·요약하므로, 가장 최근 완성된 요약은 어제 날짜 |
 | 수기 업무일지 (`ManualWorkLogPage`)    | **오늘** | 사용자가 당일 업무를 실시간으로 기록하는 용도                     |
 
+## Playwright MCP
+
+- Playwright MCP를 사용하여 브라우저 테스트/검증을 수행한 경우, **작업 완료 후 반드시 `browser_close`를 호출하여 브라우저를 종료**해야 한다.
+
 ## Gotchas
 
 - **Axios Idempotency**: POST/PUT/PATCH 요청에 `Idempotency-Key` 헤더가 자동 추가됨

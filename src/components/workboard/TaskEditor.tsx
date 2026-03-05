@@ -15,7 +15,7 @@ interface TaskEditorProps {
   saving?: boolean;
 }
 
-const DEBOUNCE_MS = 500;
+const DEBOUNCE_MS = 1000;
 
 const STATUS_OPTIONS = [
   TaskStatusEnum.BACKLOG,

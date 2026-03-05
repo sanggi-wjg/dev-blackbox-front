@@ -1,6 +1,7 @@
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { TaskResponseDto, TaskStatusEnum } from '@/api/generated/model';
 import { STATUS_CONFIG } from '@/utils/workboard';
-import TaskCard from './TaskCard';
+import SortableTaskCard from './SortableTaskCard';
 
 interface KanbanColumnProps {
   status: TaskStatusEnum;
@@ -28,11 +29,16 @@ export default function KanbanColumn({ status, tasks, selectedTaskId, onSelectTa
         {tasks.length === 0 ? (
           <p className="py-8 text-center text-xs text-text-tertiary">항목 없음</p>
         ) : (
-          tasks.map((task, index) => (
-            <div key={task.id} className="animate-stagger-up" style={{ animationDelay: `${index * 60}ms` }}>
-              <TaskCard task={task} selected={task.id === selectedTaskId} onSelect={() => onSelectTask(task.id)} />
-            </div>
-          ))
+          <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+            {tasks.map((task) => (
+              <SortableTaskCard
+                key={task.id}
+                task={task}
+                selected={task.id === selectedTaskId}
+                onSelect={() => onSelectTask(task.id)}
+              />
+            ))}
+          </SortableContext>
         )}
       </div>
     </div>
