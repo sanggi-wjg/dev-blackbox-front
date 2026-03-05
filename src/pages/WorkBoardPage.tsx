@@ -11,6 +11,8 @@ import {
   useUpdateTaskApiV1TasksTaskIdPut,
   useDeleteTaskApiV1TasksTaskIdDelete,
   useReorderTasksApiV1TasksReorderPatch,
+  useArchiveTaskApiV1TasksTaskIdArchivePatch,
+  useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch,
 } from '@/api/generated/task/task';
 import TaskStatusFilter from '@/components/workboard/TaskStatusFilter';
 import type { FilterValue } from '@/components/workboard/TaskStatusFilter';
@@ -47,14 +49,15 @@ export default function WorkBoardPage() {
 
   const { data: tasks = [] } = useGetTasksApiV1TasksGet(filterParams);
 
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId) ?? null;
-
-  // 목록 내용이 바뀔 때만 stagger 애니메이션을 재생하기 위한 key
-  const taskListKey = useMemo(() => tasks.map((t) => t.id).join(','), [tasks]);
-
   // 모든 필터의 건수를 위해 전체 데이터도 조회
   const { data: allTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: false });
   const { data: archivedTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: true });
+
+  // 칸반 뷰에서는 상태 필터를 무시하고 전체 태스크에서 선택
+  const selectedTask = (viewMode === 'kanban' ? allTasks : tasks).find((t) => t.id === selectedTaskId) ?? null;
+
+  // 목록 내용이 바뀔 때만 stagger 애니메이션을 재생하기 위한 key
+  const taskListKey = useMemo(() => tasks.map((t) => t.id).join(','), [tasks]);
 
   const counts: Partial<Record<FilterValue, number>> = {
     all: allTasks.length,
@@ -71,6 +74,8 @@ export default function WorkBoardPage() {
   const updateTask = useUpdateTaskApiV1TasksTaskIdPut();
   const deleteTask = useDeleteTaskApiV1TasksTaskIdDelete();
   const reorderTasks = useReorderTasksApiV1TasksReorderPatch();
+  const archiveTask = useArchiveTaskApiV1TasksTaskIdArchivePatch();
+  const unarchiveTask = useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch();
 
   const invalidateAll = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['/api/v1/tasks'] });
@@ -127,26 +132,20 @@ export default function WorkBoardPage() {
     (taskId: number) => {
       const task = [...allTasks, ...archivedTasks].find((t) => t.id === taskId);
       if (!task) return;
-      updateTask.mutate(
-        {
-          taskId,
-          data: {
-            title: task.title,
-            status: task.status,
-            content: task.content,
-            tags: task.tags,
-          },
-        },
+      const mutation = task.is_archived ? unarchiveTask : archiveTask;
+      mutation.mutate(
+        { taskId },
         {
           onSuccess: () => {
             invalidateAll();
+            if (selectedTaskId === taskId) setSelectedTaskId(null);
             toast('success', task.is_archived ? '아카이브 해제되었습니다' : '아카이브되었습니다');
           },
           onError: (err) => toast('error', err instanceof Error ? err.message : '처리에 실패했습니다'),
         },
       );
     },
-    [allTasks, archivedTasks, updateTask, invalidateAll, toast],
+    [allTasks, archivedTasks, archiveTask, unarchiveTask, invalidateAll, selectedTaskId, toast],
   );
 
   // 순서 변경
@@ -269,7 +268,7 @@ export default function WorkBoardPage() {
           <div className="hidden flex-1 gap-4 overflow-hidden pb-4 lg:flex">
             {viewMode === 'kanban' ? (
               <div className="flex flex-1 flex-col gap-4 overflow-hidden">
-                <KanbanBoard tasks={tasks} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} onReorder={handleReorder} />
+                <KanbanBoard tasks={allTasks} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} onReorder={handleReorder} />
                 {selectedTask && (
                   <div className="flex min-h-[240px] flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs animate-stagger-up">
                     <TaskEditor
