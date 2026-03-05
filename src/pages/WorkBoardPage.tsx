@@ -39,7 +39,7 @@ function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
 }
 
 export default function WorkBoardPage() {
-  const [filter, setFilter] = useState<FilterValue>('all');
+  const [filter, setFilter] = useState<FilterValue>(TaskStatusEnum.IN_PROGRESS);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const { toast } = useToast();

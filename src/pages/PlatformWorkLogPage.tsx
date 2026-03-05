@@ -4,6 +4,7 @@ import {
   useGetPlatformWorkLogsApiV1PlatformWorkLogsGet,
   useSyncWorkLogsApiV1PlatformWorkLogsSyncPost,
 } from '@/api/generated/work-log/work-log';
+import { useGetEventActivityHeatmapApiV1EventActivityHeatmapGet } from '@/api/generated/event-activity/event-activity';
 import WorkLogDatePicker from '@/components/worklog/WorkLogDatePicker';
 import WorkLogCard from '@/components/worklog/WorkLogCard';
 import ErrorMessage from '@/components/common/ErrorMessage';
@@ -12,10 +13,17 @@ import { WorkLogCardSkeleton } from '@/components/common/Skeleton';
 import { useToast } from '@/components/common/Toast';
 import DailySummaryBar from '@/components/worklog/DailySummaryBar';
 import TimelineView from '@/components/worklog/TimelineView';
-import ActivityHeatmap from '@/components/worklog/ActivityHeatmap';
+import ActivityHeatmap, { WEEKS } from '@/components/worklog/ActivityHeatmap';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
-import {ArrowPathIcon, ClipboardDocumentIcon, ClockIcon, Squares2X2Icon} from '@/components/icons';
+import {
+  ArrowPathIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ClipboardDocumentIcon,
+  ClockIcon,
+  Squares2X2Icon,
+} from '@/components/icons';
 
 type PlatformViewMode = 'card' | 'timeline';
 
@@ -33,6 +41,7 @@ const platformLabelMap: Record<string, string> = {
 export default function PlatformWorkLogPage() {
   const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
   const [viewMode, setViewMode] = useState<PlatformViewMode>('card');
+  const [heatmapExpanded, setHeatmapExpanded] = useState(true);
   const [syncingDate, setSyncingDate] = useState<string | null>(null);
   const { toast } = useToast();
   const prevCountRef = useRef<number | null>(null);
@@ -116,19 +125,14 @@ export default function PlatformWorkLogPage() {
     [sortedWorkLogs],
   );
 
-  // 현재 날짜의 이벤트 수를 히트맵용으로 계산
-  // TODO: 날짜 범위 활동 수 API 추가 시 전체 히트맵 데이터로 교체
-  const activityData = useMemo(() => {
-    const data: Record<string, number> = {};
-    if (sortedWorkLogs) {
-      let total = 0;
-      for (const log of sortedWorkLogs) {
-        total += (log.github_events?.length ?? 0) + (log.jira_events?.length ?? 0) + (log.slack_messages?.length ?? 0);
-      }
-      if (total > 0) data[targetDate] = total;
-    }
-    return data;
-  }, [sortedWorkLogs, targetDate]);
+  // 히트맵 API 호출 (어제 기준 14주)
+  const heatmapParams = useMemo(() => {
+    const yesterday = dayjs().subtract(1, 'day');
+    const endOfWeek = yesterday.endOf('week');
+    const start = endOfWeek.subtract(WEEKS, 'week').add(1, 'day');
+    return { from_date: start.format('YYYY-MM-DD'), to_date: yesterday.format('YYYY-MM-DD') };
+  }, []);
+  const { data: heatmapData } = useGetEventActivityHeatmapApiV1EventActivityHeatmapGet(heatmapParams);
 
   return (
     <div>
@@ -189,9 +193,64 @@ export default function PlatformWorkLogPage() {
         </Card>
       </div>
 
-      {/* Activity heatmap */}
-      <div className="mb-4">
-        <ActivityHeatmap activityData={activityData} selectedDate={targetDate} onDateClick={setTargetDate} />
+      {/* Activity heatmap card — 전체 + 플랫폼별 */}
+      <div className="mb-4 rounded-xl border border-border-primary bg-surface shadow-xs">
+        <button
+          onClick={() => setHeatmapExpanded((prev) => !prev)}
+          className="flex w-full items-center gap-2 px-4 py-2.5 text-left transition-colors hover:bg-surface-hover rounded-xl"
+        >
+          <span className="text-xs font-medium text-text-secondary">활동 히트맵</span>
+          <span className="ml-auto text-text-tertiary">
+            {heatmapExpanded ? <ChevronUpIcon className="h-4 w-4" /> : <ChevronDownIcon className="h-4 w-4" />}
+          </span>
+        </button>
+        {heatmapExpanded && (
+          <div className="border-t border-border-primary px-4 py-3 grid grid-cols-2 xl:grid-cols-4 gap-4">
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] font-medium text-text-tertiary">전체</p>
+              <ActivityHeatmap
+                contributions={heatmapData?.contributions ?? []}
+                selectedDate={targetDate}
+                onDateClick={setTargetDate}
+                lastDate={heatmapParams.to_date}
+                alwaysExpanded
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] font-medium text-text-tertiary">GitHub</p>
+              <ActivityHeatmap
+                contributions={heatmapData?.contributions ?? []}
+                selectedDate={targetDate}
+                onDateClick={setTargetDate}
+                lastDate={heatmapParams.to_date}
+                platform="GITHUB"
+                alwaysExpanded
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] font-medium text-text-tertiary">Jira</p>
+              <ActivityHeatmap
+                contributions={heatmapData?.contributions ?? []}
+                selectedDate={targetDate}
+                onDateClick={setTargetDate}
+                lastDate={heatmapParams.to_date}
+                platform="JIRA"
+                alwaysExpanded
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] font-medium text-text-tertiary">Slack</p>
+              <ActivityHeatmap
+                contributions={heatmapData?.contributions ?? []}
+                selectedDate={targetDate}
+                onDateClick={setTargetDate}
+                lastDate={heatmapParams.to_date}
+                platform="SLACK"
+                alwaysExpanded
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Work log cards */}

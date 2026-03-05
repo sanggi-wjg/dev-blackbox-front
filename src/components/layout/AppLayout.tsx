@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from './Sidebar';
 import { useAuth } from '@/hooks/useAuth';
-import { MenuIcon } from '@/components/icons';
+import { useContentWidth } from '@/hooks/useContentWidth';
+import { MenuIcon, ArrowsRightLeftIcon } from '@/components/icons';
 
 const pageTitleMap: Record<string, string> = {
   '/': '대시보드',
@@ -19,6 +20,7 @@ export default function AppLayout() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const pageTitle = pageTitleMap[pathname] ?? 'Dev Blackbox';
+  const { widthClass, widthLabel, cycleWidth } = useContentWidth();
 
   return (
     <div className="flex h-screen bg-surface-secondary">
@@ -58,7 +60,18 @@ export default function AppLayout() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-3 py-2 [scrollbar-gutter:stable] md:px-4 md:py-3 lg:px-5 lg:py-4">
-          <div className="mx-auto h-full max-w-7xl animate-fade-in">
+          <div className={`mx-auto h-full ${widthClass} transition-[max-width] duration-300 animate-fade-in`}>
+            {/* 너비 토글 버튼 — 데스크톱 전용 */}
+            <div className="mb-1 hidden justify-end lg:flex">
+              <button
+                onClick={cycleWidth}
+                className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-secondary"
+                title={`콘텐츠 너비: ${widthLabel}`}
+              >
+                <ArrowsRightLeftIcon className="h-3.5 w-3.5" />
+                <span>{widthLabel}</span>
+              </button>
+            </div>
             <Outlet />
           </div>
         </main>

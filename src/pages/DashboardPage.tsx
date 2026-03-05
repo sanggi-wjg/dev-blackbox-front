@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import WorkLogDatePicker from '@/components/worklog/WorkLogDatePicker';
+import ActivityHeatmapWidget from '@/components/dashboard/ActivityHeatmapWidget';
 import PlatformSummaryWidget from '@/components/dashboard/PlatformSummaryWidget';
 import TaskSummaryWidget from '@/components/dashboard/TaskSummaryWidget';
 import DailyLogWidget from '@/components/dashboard/DailyLogWidget';
@@ -22,6 +23,11 @@ export default function DashboardPage() {
         <Card padding="sm">
           <WorkLogDatePicker date={targetDate} onChange={setTargetDate} />
         </Card>
+      </div>
+
+      {/* Activity Heatmap Widget — full width */}
+      <div className="mb-4 animate-stagger-up">
+        <ActivityHeatmapWidget targetDate={targetDate} onDateClick={setTargetDate} />
       </div>
 
       {/* Widget grid */}
