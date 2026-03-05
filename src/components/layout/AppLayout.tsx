@@ -7,6 +7,7 @@ import { MenuIcon } from '@/components/icons';
 const pageTitleMap: Record<string, string> = {
   '/': '플랫폼 업무일지',
   '/manual': '수기 업무일지',
+  '/work-board': '업무 보드',
   '/profile': '내 프로필',
   '/users': '사용자 관리',
   '/jira-secrets': 'Jira Secret 관리',
@@ -57,7 +58,7 @@ export default function AppLayout() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-3 py-2 [scrollbar-gutter:stable] md:px-4 md:py-3 lg:px-5 lg:py-4">
-          <div className="mx-auto max-w-7xl animate-fade-in">
+          <div className="mx-auto h-full max-w-7xl animate-fade-in">
             <Outlet />
           </div>
         </main>

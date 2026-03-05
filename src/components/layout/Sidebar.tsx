@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router';
 import { useAuth } from '@/hooks/useAuth';
 import {
   ChartBarIcon,
-  PencilSquareIcon,
+  ViewColumnsIcon,
   UsersIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
@@ -47,7 +47,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
   const userNavItems: { to: string; label: string; icon: ReactNode }[] = [
     { to: '/', label: '플랫폼 업무일지', icon: <ChartBarIcon className="h-5 w-5" /> },
-    { to: '/manual', label: '수기 업무일지', icon: <PencilSquareIcon className="h-5 w-5" /> },
+    { to: '/work-board', label: '업무 보드', icon: <ViewColumnsIcon className="h-5 w-5" /> },
     { to: '/profile', label: '내 프로필', icon: <UserCircleIcon className="h-5 w-5" /> },
   ];
 

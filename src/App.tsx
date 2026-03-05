@@ -5,6 +5,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import LoginPage from '@/pages/LoginPage';
 import PlatformWorkLogPage from '@/pages/PlatformWorkLogPage';
 import ManualWorkLogPage from '@/pages/ManualWorkLogPage';
+import WorkBoardPage from '@/pages/WorkBoardPage';
 import UserListPage from '@/pages/UserListPage';
 import JiraSecretListPage from '@/pages/JiraSecretListPage';
 import SlackSecretListPage from '@/pages/SlackSecretListPage';
@@ -93,6 +94,7 @@ export default function App() {
         >
           <Route index element={<PlatformWorkLogPage />} />
           <Route path="manual" element={<ManualWorkLogPage />} />
+          <Route path="work-board" element={<WorkBoardPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route
             path="users"

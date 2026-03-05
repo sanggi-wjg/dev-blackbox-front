@@ -6,6 +6,9 @@ export const AXIOS_INSTANCE = Axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
   timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
+  paramsSerializer: {
+    indexes: null, // 배열을 status=A&status=B 형식으로 직렬화 (FastAPI 호환)
+  },
 });
 
 AXIOS_INSTANCE.interceptors.request.use(
