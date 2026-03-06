@@ -40,7 +40,14 @@ function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
 
 export default function WorkBoardPage() {
   const [filter, setFilter] = useState<FilterValue>(TaskStatusEnum.IN_PROGRESS);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem('workboard-view-mode');
+    return saved === 'kanban' ? 'kanban' : 'list';
+  });
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    localStorage.setItem('workboard-view-mode', mode);
+  };
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -211,7 +218,7 @@ export default function WorkBoardPage() {
             {/* 뷰 모드 토글 */}
             <div className="hidden items-center rounded-lg border border-border-primary lg:flex" role="group" aria-label="뷰 모드">
               <button
-                onClick={() => setViewMode('list')}
+                onClick={() => handleViewModeChange('list')}
                 aria-pressed={viewMode === 'list'}
                 className={`rounded-l-lg p-1.5 transition-colors ${viewMode === 'list' ? 'bg-brand-600 text-text-inverse' : 'text-text-secondary hover:bg-surface-hover'}`}
                 title="리스트 뷰"
@@ -219,7 +226,7 @@ export default function WorkBoardPage() {
                 <QueueListIcon className="h-4 w-4" />
               </button>
               <button
-                onClick={() => setViewMode('kanban')}
+                onClick={() => handleViewModeChange('kanban')}
                 aria-pressed={viewMode === 'kanban'}
                 className={`rounded-r-lg p-1.5 transition-colors ${viewMode === 'kanban' ? 'bg-brand-600 text-text-inverse' : 'text-text-secondary hover:bg-surface-hover'}`}
                 title="칸반 뷰"

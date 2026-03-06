@@ -1,5 +1,8 @@
 import Markdown from 'react-markdown';
 import { useGetDailyWorkLogApiV1DailyWorkLogsGet } from '@/api/generated/work-log/work-log';
+import Card from '@/components/common/Card';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import ErrorMessage from '@/components/common/ErrorMessage';
 
 interface DailyLogWidgetProps {
   targetDate: string;
@@ -9,17 +12,17 @@ export default function DailyLogWidget({ targetDate }: DailyLogWidgetProps) {
   const { data: dailyLog, isLoading, error } = useGetDailyWorkLogApiV1DailyWorkLogsGet({ target_date: targetDate });
 
   return (
-    <div className="rounded-xl border border-border-primary bg-surface shadow-xs">
+    <Card padding="none">
       <div className="border-b border-border-primary px-4 py-3">
         <h3 className="text-sm font-semibold text-text-primary">일일 업무일지</h3>
       </div>
       <div className="p-4">
         {isLoading && (
           <div className="flex items-center justify-center py-8">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-600 border-t-transparent" />
+            <LoadingSpinner message="일지 로딩 중..." />
           </div>
         )}
-        {error && <p className="text-sm text-danger-500">데이터를 불러올 수 없습니다</p>}
+        {error && <ErrorMessage error={error} />}
         {!isLoading && !error && !dailyLog && (
           <p className="py-6 text-center text-sm text-text-tertiary">작성된 일지가 없습니다</p>
         )}
@@ -29,6 +32,6 @@ export default function DailyLogWidget({ targetDate }: DailyLogWidgetProps) {
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

@@ -44,7 +44,8 @@ export default function SortableTaskCard({ task, selected, onSelect }: SortableT
         >
           <Bars2Icon className="h-4 w-4" />
         </button>
-        <span className={`h-2 w-2 shrink-0 rounded-full ${statusCfg.dot}`} title={statusCfg.label} />
+        <span className={`h-2 w-2 shrink-0 rounded-full ${statusCfg.dot}`} aria-hidden="true" />
+        <span className="sr-only">{statusCfg.label}</span>
         <p
           className={`flex-1 truncate text-sm font-medium ${
             isTerminal

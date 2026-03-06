@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 import { useGetUserMeApiV1UsersMeGet, getGetUserMeApiV1UsersMeGetQueryKey } from '@/api/generated/user/user';
@@ -46,7 +47,11 @@ import { GitHubIcon, JiraIcon, SlackIcon } from '@/components/icons';
 export default function ProfilePage() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('github');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const validTabs = ['github', 'jira', 'slack'];
+  const rawTab = searchParams.get('tab');
+  const activeTab = rawTab && validTabs.includes(rawTab) ? rawTab : 'github';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   const { data: user, isLoading, error } = useGetUserMeApiV1UsersMeGet();
 

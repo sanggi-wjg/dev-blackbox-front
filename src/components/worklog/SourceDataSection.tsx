@@ -34,7 +34,7 @@ export default function SourceDataSection({
   if (totalCount === 0) return null;
 
   return (
-    <div className="border-t border-border-default">
+    <div className="border-t border-border-primary">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -82,7 +82,7 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
   const refPayload = createPayload ?? deletePayload;
 
   return (
-    <div className="rounded-md border border-border-default text-xs">
+    <div className="rounded-md border border-border-primary text-xs">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -117,7 +117,7 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-border-default px-3 py-2 space-y-2 bg-surface-secondary">
+        <div className="border-t border-border-primary px-3 py-2 space-y-2 bg-surface-secondary">
           {/* Commit info */}
           {commit && (
             <>
@@ -196,7 +196,7 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
 
               {/* Body preview */}
               {prPayload.pull_request.body && (
-                <div className="max-h-24 overflow-y-auto rounded border border-border-default bg-surface p-2 whitespace-pre-wrap text-text-secondary break-words">
+                <div className="max-h-24 overflow-y-auto rounded border border-border-primary bg-surface p-2 whitespace-pre-wrap text-text-secondary break-words">
                   {prPayload.pull_request.body}
                 </div>
               )}
@@ -218,7 +218,7 @@ function JiraEventRow({ data }: { data: JiraEventResponseDto }) {
   const { issue, changelog } = data;
 
   return (
-    <div className="rounded-md border border-border-default text-xs">
+    <div className="rounded-md border border-border-primary text-xs">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -231,7 +231,7 @@ function JiraEventRow({ data }: { data: JiraEventResponseDto }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-border-default px-3 py-2 space-y-2 bg-surface-secondary">
+        <div className="border-t border-border-primary px-3 py-2 space-y-2 bg-surface-secondary">
           {/* Issue meta */}
           <div className="flex flex-wrap gap-2 text-text-tertiary">
             <span>
@@ -289,7 +289,7 @@ function SlackMessageRow({ data }: { data: SlackMessageResponseDto }) {
   const preview = data.message_text.length > 60 ? data.message_text.slice(0, 60) + '…' : data.message_text;
 
   return (
-    <div className="rounded-md border border-border-default text-xs">
+    <div className="rounded-md border border-border-primary text-xs">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
@@ -301,7 +301,7 @@ function SlackMessageRow({ data }: { data: SlackMessageResponseDto }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-border-default px-3 py-2 space-y-1.5 bg-surface-secondary">
+        <div className="border-t border-border-primary px-3 py-2 space-y-1.5 bg-surface-secondary">
           <div className="max-h-32 overflow-y-auto whitespace-pre-wrap text-text-secondary break-words">
             {data.message_text}
           </div>

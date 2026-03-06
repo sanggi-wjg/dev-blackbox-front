@@ -49,9 +49,23 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
     [task.id, title, content, tags, status, onUpdate],
   );
 
-  // 컴포넌트 언마운트 시 pending 저장 실행
+  // 언마운트 시 pending 디바운스가 있으면 즉시 flush
+  const latestRef = useRef({ title, content, tags, status });
+  latestRef.current = { title, content, tags, status };
+
   useEffect(() => {
-    return () => clearTimeout(debounceRef.current);
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+        onUpdate(task.id, {
+          title: latestRef.current.title,
+          content: latestRef.current.content,
+          tags: latestRef.current.tags || null,
+          status: latestRef.current.status,
+        });
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleTitleChange = (val: string) => {
@@ -117,6 +131,7 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
           <button
             onClick={() => onArchive(task.id)}
             title={task.is_archived ? '아카이브 해제' : '아카이브'}
+            aria-label={task.is_archived ? '아카이브 해제' : '아카이브'}
             className="rounded-lg p-2 text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
           >
             {task.is_archived ? (
@@ -128,6 +143,7 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
           <button
             onClick={() => setDeleteOpen(true)}
             title="삭제"
+            aria-label="삭제"
             className="rounded-lg p-2 text-text-secondary transition-colors hover:bg-danger-50 hover:text-danger-600"
           >
             <TrashIcon className="h-4 w-4" />

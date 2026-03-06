@@ -16,7 +16,7 @@ export default function NotFoundPage() {
         icon={<ArrowLeftIcon className="h-4 w-4" />}
         className="mt-2"
       >
-        업무일지로 이동
+        대시보드로 이동
       </Button>
     </div>
   );

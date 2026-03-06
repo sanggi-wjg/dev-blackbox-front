@@ -11,7 +11,6 @@ import ErrorMessage from '@/components/common/ErrorMessage';
 import EmptyState from '@/components/common/EmptyState';
 import { WorkLogCardSkeleton } from '@/components/common/Skeleton';
 import { useToast } from '@/components/common/Toast';
-import DailySummaryBar from '@/components/worklog/DailySummaryBar';
 import TimelineView from '@/components/worklog/TimelineView';
 import ActivityHeatmap, { WEEKS } from '@/components/worklog/ActivityHeatmap';
 import Card from '@/components/common/Card';
@@ -24,19 +23,13 @@ import {
   ClockIcon,
   Squares2X2Icon,
 } from '@/components/icons';
+import { PLATFORM_LABELS } from '@/utils/platform';
 
 type PlatformViewMode = 'card' | 'timeline';
 
 const POLL_INTERVAL = 30_000;
 
 const PLATFORM_ORDER = ['GITHUB', 'JIRA', 'CONFLUENCE', 'SLACK'];
-
-const platformLabelMap: Record<string, string> = {
-  GITHUB: 'GitHub',
-  JIRA: 'Jira',
-  CONFLUENCE: 'Confluence',
-  SLACK: 'Slack',
-};
 
 export default function PlatformWorkLogPage() {
   const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
@@ -94,7 +87,7 @@ export default function PlatformWorkLogPage() {
   };
 
   const handleCopySingle = (platform: string, content: string) => {
-    const label = platformLabelMap[platform] ?? platform;
+    const label = PLATFORM_LABELS[platform] ?? platform;
     navigator.clipboard.writeText(content).then(
       () => toast('success', `${label} 요약이 복사되었습니다`),
       () => toast('error', '복사에 실패했습니다'),
@@ -104,7 +97,7 @@ export default function PlatformWorkLogPage() {
   const handleCopyAll = () => {
     if (!workLogs) return;
     const sections = workLogs.map((log) => {
-      const label = platformLabelMap[log.platform] ?? log.platform;
+      const label = PLATFORM_LABELS[log.platform] ?? log.platform;
       return `## ${label}\n\n${log.content}`;
     });
     const combined = `# 플랫폼 업무일지 (${targetDate})\n\n${sections.join('\n\n')}`;
@@ -274,7 +267,6 @@ export default function PlatformWorkLogPage() {
 
       {sortedWorkLogs && sortedWorkLogs.length > 0 && (
         <div key={workLogListKey}>
-          <DailySummaryBar workLogs={sortedWorkLogs} />
           {viewMode === 'timeline' ? (
             <TimelineView workLogs={sortedWorkLogs} />
           ) : (

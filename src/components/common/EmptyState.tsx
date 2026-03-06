@@ -12,7 +12,7 @@ interface EmptyStateProps {
 
 export default function EmptyState({
   icon,
-  message = 'No data available',
+  message = '데이터가 없습니다',
   description,
   actionLabel,
   onAction,

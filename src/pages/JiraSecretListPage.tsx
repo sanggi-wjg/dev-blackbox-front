@@ -11,7 +11,7 @@ import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
 import { TableRowSkeleton } from '@/components/common/Skeleton';
 import { ConfirmDialog } from '@/components/common/Modal';
-import { PlusIcon, XMarkIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon } from '@/components/icons';
+import { PlusIcon, XMarkIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon, JiraIcon } from '@/components/icons';
 import { useToast } from '@/components/common/Toast';
 import JiraSecretForm from '@/components/jira-secret/JiraSecretForm';
 import SyncJiraUsersModal from '@/components/jira-secret/SyncJiraUsersModal';
@@ -110,9 +110,7 @@ export default function JiraSecretListPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-platform-jira/10 text-platform-jira">
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M11.571 11.513H0a5.218 5.218 0 005.232 5.215h2.13v2.057A5.215 5.215 0 0012.575 24V12.518a1.005 1.005 0 00-1.005-1.005zm5.723-5.756H5.736a5.215 5.215 0 005.215 5.214h2.129v2.058a5.218 5.218 0 005.215 5.214V6.758a1.001 1.001 0 00-1.001-1.001zM23.013 0H11.455a5.215 5.215 0 005.215 5.215h2.129v2.057A5.215 5.215 0 0024.013 12.5V1.005A1.005 1.005 0 0023.013 0z" />
-                          </svg>
+                          <JiraIcon className="h-4 w-4" />
                         </div>
                         <span className="font-medium text-text-primary">{secret.name}</span>
                       </div>
@@ -137,6 +135,7 @@ export default function JiraSecretListPage() {
                           onClick={() => setSyncTarget({ id: secret.id, name: secret.name })}
                           className="rounded p-1 text-text-tertiary hover:bg-brand-50 hover:text-brand-600 transition-colors"
                           title="Jira 사용자 동기화"
+                          aria-label="Jira 사용자 동기화"
                         >
                           <ArrowPathIcon className="h-4 w-4" />
                         </button>
@@ -144,6 +143,7 @@ export default function JiraSecretListPage() {
                           onClick={() => setDeleteTarget({ id: secret.id, name: secret.name })}
                           className="rounded p-1 text-text-tertiary hover:bg-danger-50 hover:text-danger-600 transition-colors"
                           title="삭제"
+                          aria-label="삭제"
                         >
                           <XMarkIcon className="h-4 w-4" />
                         </button>

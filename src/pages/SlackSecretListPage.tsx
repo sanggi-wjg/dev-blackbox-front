@@ -123,6 +123,7 @@ export default function SlackSecretListPage() {
                           onClick={() => setSyncTarget({ id: secret.id, name: secret.name })}
                           className="rounded p-1 text-text-tertiary hover:bg-brand-50 hover:text-brand-600 transition-colors"
                           title="Slack 사용자 동기화"
+                          aria-label="Slack 사용자 동기화"
                         >
                           <ArrowPathIcon className="h-4 w-4" />
                         </button>
@@ -130,6 +131,7 @@ export default function SlackSecretListPage() {
                           onClick={() => setDeleteTarget({ id: secret.id, name: secret.name })}
                           className="rounded p-1 text-text-tertiary hover:bg-danger-50 hover:text-danger-600 transition-colors"
                           title="삭제"
+                          aria-label="삭제"
                         >
                           <XMarkIcon className="h-4 w-4" />
                         </button>

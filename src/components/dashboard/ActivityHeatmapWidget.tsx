@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
 import { useGetEventActivityHeatmapApiV1EventActivityHeatmapGet } from '@/api/generated/event-activity/event-activity';
 import ActivityHeatmap, { WEEKS } from '@/components/worklog/ActivityHeatmap';
+import Card from '@/components/common/Card';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import { CalendarIcon, FireIcon } from '@/components/icons';
 
 interface ActivityHeatmapWidgetProps {
@@ -25,7 +28,7 @@ export default function ActivityHeatmapWidget({ targetDate, onDateClick }: Activ
   const contributions = data?.contributions;
 
   return (
-    <div className="rounded-xl border border-border-primary bg-surface shadow-xs">
+    <Card padding="none">
       {/* Header */}
       <div className="border-b border-border-primary px-4 py-3">
         <h3 className="text-sm font-semibold text-text-primary">활동 히트맵</h3>
@@ -35,19 +38,12 @@ export default function ActivityHeatmapWidget({ targetDate, onDateClick }: Activ
         {/* 로딩 또는 초기 상태 */}
         {(isLoading || (!error && !contributions)) && (
           <div className="flex items-center justify-center py-8">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-600 border-t-transparent" />
+            <LoadingSpinner message="히트맵 로딩 중..." />
           </div>
         )}
 
         {/* 에러 */}
-        {error && (
-          <div className="space-y-1 py-4 text-center">
-            <p className="text-sm text-danger-500">히트맵 데이터를 불러올 수 없습니다</p>
-            <p className="text-xs text-text-tertiary">
-              {error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다'}
-            </p>
-          </div>
-        )}
+        {error && <ErrorMessage error={error} />}
 
         {/* 빈 상태 */}
         {contributions && contributions.length === 0 && (
@@ -99,6 +95,6 @@ export default function ActivityHeatmapWidget({ targetDate, onDateClick }: Activ
           </>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

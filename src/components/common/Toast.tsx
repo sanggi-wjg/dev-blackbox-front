@@ -7,6 +7,7 @@ interface Toast {
   id: number;
   type: ToastType;
   message: string;
+  exiting?: boolean;
 }
 
 interface ToastContextValue {
@@ -16,6 +17,8 @@ interface ToastContextValue {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 let nextId = 0;
+
+const EXIT_DURATION = 200; // slide-out 애니메이션 시간과 동일
 
 const typeConfig: Record<ToastType, { border: string; icon: ReactNode; iconColor: string }> = {
   success: {
@@ -38,17 +41,21 @@ const typeConfig: Record<ToastType, { border: string; icon: ReactNode; iconColor
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const toast = useCallback((type: ToastType, message: string) => {
-    const id = nextId++;
-    setToasts((prev) => [...prev, { id, type, message }]);
+  const startExit = useCallback((id: number) => {
+    setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)));
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
+    }, EXIT_DURATION);
   }, []);
 
-  const remove = useCallback((id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
+  const toast = useCallback(
+    (type: ToastType, message: string) => {
+      const id = nextId++;
+      setToasts((prev) => [...prev, { id, type, message }]);
+      setTimeout(() => startExit(id), 3000);
+    },
+    [startExit],
+  );
 
   return (
     <ToastContext value={{ toast }}>
@@ -60,12 +67,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <div
               key={t.id}
               role="alert"
-              className={`animate-slide-in flex max-w-sm items-start gap-3 rounded-lg border-l-4 ${config.border} bg-surface px-4 py-3 shadow-lg`}
+              className={`${t.exiting ? 'animate-slide-out' : 'animate-slide-in'} flex max-w-sm items-start gap-3 rounded-lg border-l-4 ${config.border} bg-surface px-4 py-3 shadow-lg`}
             >
               <span className={`shrink-0 ${config.iconColor}`}>{config.icon}</span>
               <p className="flex-1 text-sm font-medium text-text-primary">{t.message}</p>
               <button
-                onClick={() => remove(t.id)}
+                onClick={() => startExit(t.id)}
                 aria-label="닫기"
                 className="shrink-0 rounded p-0.5 text-text-tertiary hover:text-text-secondary transition-colors"
               >

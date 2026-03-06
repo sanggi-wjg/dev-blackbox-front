@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { ChevronDownIcon } from '@/components/icons';
 
 export interface SearchableSelectOption {
@@ -25,6 +25,8 @@ export default function SearchableSelect({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [highlightIndex, setHighlightIndex] = useState(-1);
+
+  const listboxId = useId();
 
   // open이 변경될 때 highlightIndex 리셋 (useEffect 대신 이벤트 핸들러에서 처리)
   const toggleOpen = () => {
@@ -105,11 +107,21 @@ export default function SearchableSelect({
     item?.scrollIntoView({ block: 'nearest' });
   }, [highlightIndex]);
 
+  const activeDescendant =
+    highlightIndex >= 0 && highlightIndex < filtered.length
+      ? `${listboxId}-option-${filtered[highlightIndex].value}`
+      : undefined;
+
   return (
     <div ref={containerRef} className="relative w-full max-w-sm" onKeyDown={handleKeyDown}>
       <button
         type="button"
         onClick={toggleOpen}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls={listboxId}
+        aria-haspopup="listbox"
+        aria-activedescendant={activeDescendant}
         className="flex w-full items-center justify-between rounded-lg border border-border-primary bg-surface px-3 py-2 text-left text-sm transition-colors focus:border-border-focus focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
       >
         <span className={selectedOption ? 'text-text-primary' : 'text-text-tertiary'}>
@@ -130,15 +142,21 @@ export default function SearchableSelect({
                 setHighlightIndex(-1);
               }}
               placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
               className="w-full rounded-md border border-border-primary bg-surface px-2.5 py-1.5 text-sm text-text-primary placeholder:text-text-tertiary focus:border-border-focus focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
             />
           </div>
-          <ul ref={listRef} className="max-h-60 overflow-y-auto py-1">
+          <ul ref={listRef} id={listboxId} role="listbox" className="max-h-60 overflow-y-auto py-1">
             {filtered.length === 0 ? (
               <li className="px-3 py-2 text-sm text-text-tertiary">검색 결과가 없습니다</li>
             ) : (
               filtered.map((option, idx) => (
-                <li key={option.value}>
+                <li
+                  key={option.value}
+                  id={`${listboxId}-option-${option.value}`}
+                  role="option"
+                  aria-selected={option.value === value}
+                >
                   <button
                     type="button"
                     onClick={() => selectOption(option)}
