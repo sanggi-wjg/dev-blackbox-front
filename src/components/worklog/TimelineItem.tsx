@@ -7,6 +7,8 @@ export interface TimelineEvent {
   timestamp: string;
   title: string;
   description?: string;
+  /** 브랜치 정보 (예: "feature/foo" 또는 "feature/foo → main") */
+  branch?: string;
 }
 
 const platformStyle: Record<string, { icon: ReactNode; dotBg: string }> = {
@@ -57,6 +59,13 @@ export default function TimelineItem({ event, isLast }: TimelineItemProps) {
           <span className="text-xs font-medium text-text-tertiary">{timeStr}</span>
         </div>
         <p className="mt-0.5 text-sm font-medium text-text-primary">{event.title}</p>
+        {event.branch && (
+          <p className="mt-0.5">
+            <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-[11px] text-text-secondary">
+              {event.branch}
+            </span>
+          </p>
+        )}
         {event.description && <p className="mt-0.5 text-xs text-text-tertiary line-clamp-2">{event.description}</p>}
       </div>
     </div>

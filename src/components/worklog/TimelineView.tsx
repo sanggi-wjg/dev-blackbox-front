@@ -1,6 +1,7 @@
 import TimelineItem from './TimelineItem';
 import type { TimelineEvent } from './TimelineItem';
 import type { PlatformWorkLogDetailResponseDto } from '@/api/generated/model/platformWorkLogDetailResponseDto';
+import type { GithubPullRequestEventPayload } from '@/api/generated/model/githubPullRequestEventPayload';
 
 interface TimelineViewProps {
   workLogs: PlatformWorkLogDetailResponseDto[];
@@ -18,12 +19,29 @@ function buildTimeline(workLogs: PlatformWorkLogDetailResponseDto[]): TimelineEv
         let title = `${eventType}`;
         if (repo) title += ` — ${repo}`;
 
+        // 이벤트 타입별 브랜치 정보 추출
+        let branch: string | undefined;
+        const payload = ge.event?.payload;
+        if (payload) {
+          if (eventType === 'PushEvent') {
+            const ref = (payload as { ref?: string }).ref;
+            branch = ref?.replace('refs/heads/', '');
+          } else if (eventType === 'PullRequestEvent') {
+            const pr = (payload as GithubPullRequestEventPayload).pull_request;
+            if (pr) branch = `${pr.head.ref} → ${pr.base.ref}`;
+          } else if (eventType === 'CreateEvent' || eventType === 'DeleteEvent') {
+            const ref = (payload as { ref?: string; ref_type?: string }).ref;
+            if (ref) branch = ref;
+          }
+        }
+
         events.push({
           id: `gh-${ge.id}`,
           platform: 'GITHUB',
           timestamp: ge.event?.created_at ?? log.target_date,
           title,
           description: ge.commit?.commit?.message ?? undefined,
+          branch,
         });
       }
     }

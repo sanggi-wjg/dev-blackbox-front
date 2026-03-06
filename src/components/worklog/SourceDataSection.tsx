@@ -11,6 +11,8 @@ import type { GitHubEventResponseDto } from '@/api/generated/model/gitHubEventRe
 import type { JiraEventResponseDto } from '@/api/generated/model/jiraEventResponseDto';
 import type { SlackMessageResponseDto } from '@/api/generated/model/slackMessageResponseDto';
 import type { GithubPullRequestEventPayload } from '@/api/generated/model/githubPullRequestEventPayload';
+import type { GitHubCreateEventPayloadModel } from '@/api/generated/model/gitHubCreateEventPayloadModel';
+import type { GitHubDeleteEventPayloadModel } from '@/api/generated/model/gitHubDeleteEventPayloadModel';
 
 interface SourceDataSectionProps {
   platform: string;
@@ -71,6 +73,14 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
   const pushRef = isPushEvent ? (event.payload as { ref?: string })?.ref : undefined;
   const branchName = pushRef?.replace('refs/heads/', '');
 
+  const isCreateEvent = event.type === 'CreateEvent';
+  const createPayload = isCreateEvent ? (event.payload as GitHubCreateEventPayloadModel) : undefined;
+
+  const isDeleteEvent = event.type === 'DeleteEvent';
+  const deletePayload = isDeleteEvent ? (event.payload as GitHubDeleteEventPayloadModel) : undefined;
+
+  const refPayload = createPayload ?? deletePayload;
+
   return (
     <div className="rounded-md border border-border-default text-xs">
       <button
@@ -82,6 +92,25 @@ function GitHubEventRow({ data }: { data: GitHubEventResponseDto }) {
         <span className="font-medium text-text-primary">{eventLabel}</span>
         {branchName && (
           <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">{branchName}</span>
+        )}
+        {prPayload && (
+          <span className="flex items-center gap-1 text-text-tertiary">
+            <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">
+              {prPayload.pull_request.head.ref}
+            </span>
+            <span>→</span>
+            <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">
+              {prPayload.pull_request.base.ref}
+            </span>
+          </span>
+        )}
+        {refPayload && (
+          <span className="flex items-center gap-1">
+            <span className="rounded bg-surface-tertiary px-1.5 py-0.5 font-mono text-text-secondary">
+              {refPayload.ref}
+            </span>
+            <span className="text-text-tertiary">{refPayload.ref_type}</span>
+          </span>
         )}
         <span className="text-text-tertiary truncate">{repoName}</span>
         <ExternalLink href={eventUrl} className="ml-auto shrink-0" />

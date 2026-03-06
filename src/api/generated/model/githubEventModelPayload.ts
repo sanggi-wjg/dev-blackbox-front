@@ -5,7 +5,9 @@
  * Dev Blackbox API
  * OpenAPI spec version: 0.1.1
  */
+import type { GitHubCreateEventPayloadModel } from './gitHubCreateEventPayloadModel';
+import type { GitHubDeleteEventPayloadModel } from './gitHubDeleteEventPayloadModel';
 import type { GithubPullRequestEventPayload } from './githubPullRequestEventPayload';
 import type { GithubPushEventPayloadModel } from './githubPushEventPayloadModel';
 
-export type GithubEventModelPayload = GithubPushEventPayloadModel | GithubPullRequestEventPayload | { [key: string]: unknown };
+export type GithubEventModelPayload = GithubPushEventPayloadModel | GithubPullRequestEventPayload | GitHubCreateEventPayloadModel | GitHubDeleteEventPayloadModel | { [key: string]: unknown };

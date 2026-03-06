@@ -42,6 +42,8 @@ export * from './githubCommitInfoModelAuthor';
 export * from './githubCommitInfoModelCommitter';
 export * from './githubCommitModel';
 export * from './githubCommitStatsModel';
+export * from './gitHubCreateEventPayloadModel';
+export * from './gitHubDeleteEventPayloadModel';
 export * from './githubEventModel';
 export * from './githubEventModelActor';
 export * from './githubEventModelOrg';
