@@ -9,7 +9,8 @@ Dev Blackbox Frontend — 개발자 활동 데이터(GitHub, Jira, Slack) 수집
 - **작업 전 코드 생성 우선**: API 관련 기능을 추가/수정할 때는 반드시 `npm run generate`를 먼저 실행하여 최신 백엔드 API 스펙을 반영한 후 작업한다.
 - 백엔드 서버가 실행 중이지 않으면 사용자에게 어떻게 진행할지 물어봐야 한다.
 - `src/api/generated/` 디렉토리는 Orval이 자동 생성하므로 **직접 수정 금지**. API 변경 시 `npm run generate`로 재생성한다.
-- **기능 작성 후 문서 업데이트 필수**: 새로운 기능을 추가하거나 기존 기능을 수정한 경우, 관련된 문서(`CLAUDE.md`, `README.md` 등)도 반드시 함께 업데이트한다. 페이지 추가/변경 시 페이지 구조 테이블, 새로운 패턴 도입 시 Code Style 또는 Gotchas 섹션 등을 갱신한다.
+- **기능 작성 후 문서 업데이트 필수**: 새로운 기능을 추가하거나 기존 기능을 수정한 경우, 관련된 문서(`CLAUDE.md`, `README.md` 등)도 반드시 함께 업데이트한다. 페이지 추가/변경 시
+  페이지 구조 테이블, 새로운 패턴 도입 시 Code Style 또는 Gotchas 섹션 등을 갱신한다.
 
 ## Commands
 

@@ -25,9 +25,14 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Activity Heatmap Widget — full width */}
-      <div className="mb-4 animate-stagger-up">
-        <ActivityHeatmapWidget targetDate={targetDate} onDateClick={setTargetDate} />
+      {/* Activity Heatmap + Task Summary — single row */}
+      <div className="grid grid-cols-1 gap-4 mb-4 lg:grid-cols-3">
+        <div className="lg:col-span-2 animate-stagger-up">
+          <ActivityHeatmapWidget targetDate={targetDate} onDateClick={setTargetDate} />
+        </div>
+        <div className="animate-stagger-up" style={{ animationDelay: '80ms' }}>
+          <TaskSummaryWidget />
+        </div>
       </div>
 
       {/* Widget grid */}
@@ -39,9 +44,6 @@ export default function DashboardPage() {
           <div className="animate-stagger-up" style={{ animationDelay: '160ms' }}>
             <DailyLogWidget targetDate={targetDate} />
           </div>
-        </div>
-        <div className="animate-stagger-up" style={{ animationDelay: '80ms' }}>
-          <TaskSummaryWidget />
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@ export default function ActivityHeatmapWidget({ targetDate, onDateClick }: Activ
   const contributions = data?.contributions;
 
   return (
-    <Card padding="none">
+    <Card padding="none" className="h-full">
       {/* Header */}
       <div className="border-b border-border-primary px-4 py-3">
         <h3 className="text-sm font-semibold text-text-primary">활동 히트맵</h3>

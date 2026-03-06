@@ -15,11 +15,11 @@ export default function TaskSummaryWidget() {
   }));
 
   return (
-    <Card padding="none">
+    <Card padding="none" className="h-full flex flex-col">
       <div className="border-b border-border-primary px-4 py-3">
         <h3 className="text-sm font-semibold text-text-primary">업무 현황</h3>
       </div>
-      <div className="p-4">
+      <div className="flex-1 p-4">
         {isLoading && (
           <div className="flex items-center justify-center py-8">
             <LoadingSpinner message="업무 현황 로딩 중..." />
