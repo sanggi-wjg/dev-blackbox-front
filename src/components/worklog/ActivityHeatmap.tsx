@@ -176,7 +176,7 @@ export default function ActivityHeatmap(props: ActivityHeatmapProps) {
     <div className={alwaysExpanded ? '' : 'border-t border-border-primary px-4 py-3'}>
       <div className="flex gap-1">
         {/* Day labels */}
-        <div className="flex flex-col gap-[3px] pr-1">
+        <div className="flex flex-col gap-[3px] py-[3px] pr-1">
           {DAY_LABELS.map((dayLabel, i) => (
             <div key={i} className="flex h-3 w-4 items-center justify-end text-[9px] text-text-tertiary">
               {dayLabel}
@@ -185,7 +185,7 @@ export default function ActivityHeatmap(props: ActivityHeatmapProps) {
         </div>
 
         {/* Weeks */}
-        <div className="flex flex-1 gap-[3px] overflow-x-auto">
+        <div className="flex flex-1 gap-[3px] overflow-x-auto py-[3px]">
           {grid.map((week, wi) => (
             <div key={wi} className="flex flex-col gap-[3px]">
               {week.map((day) => {
