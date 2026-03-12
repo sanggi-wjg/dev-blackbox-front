@@ -12,7 +12,9 @@ interface TaskEditorProps {
   onUpdate: (taskId: number, data: TaskUpdateRequestDto) => void;
   onDelete: (taskId: number) => void;
   onArchive: (taskId: number) => void;
+  onJiraSync?: (taskId: number) => void;
   saving?: boolean;
+  syncing?: boolean;
 }
 
 const DEBOUNCE_MS = 1000;
@@ -25,7 +27,15 @@ const STATUS_OPTIONS = [
   TaskStatusEnum.CANCELED,
 ];
 
-export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving = false }: TaskEditorProps) {
+export default function TaskEditor({
+  task,
+  onUpdate,
+  onDelete,
+  onArchive,
+  onJiraSync,
+  saving = false,
+  syncing = false,
+}: TaskEditorProps) {
   const { theme } = useTheme();
   const [editorHeight, setEditorHeight] = useState(400);
   const editorWrapRef = useRef<HTMLDivElement>(null);
@@ -245,6 +255,34 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
               </p>
             )}
           </div>
+          {onJiraSync && (
+            <button
+              onClick={() => onJiraSync(task.id)}
+              disabled={syncing}
+              title="Jira에 동기화"
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-platform-jira/30 bg-platform-jira/10 px-2.5 py-1.5 text-xs font-medium text-platform-jira transition-colors hover:bg-platform-jira/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {syncing ? (
+                <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              ) : (
+                <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.451a.75.75 0 000-1.5H4.5a.75.75 0 00-.75.75v3.75a.75.75 0 001.5 0v-2.033a7 7 0 0011.712-3.138.75.75 0 00-1.449-.394zm-10.624-2.85a5.5 5.5 0 019.201-2.465l.312.31H11.75a.75.75 0 000 1.5h3.75a.75.75 0 00.75-.75V3.42a.75.75 0 00-1.5 0v2.033A7 7 0 003.038 8.59a.75.75 0 001.45.394z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+              동기화
+            </button>
+          )}
         </div>
       )}
 

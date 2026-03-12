@@ -13,6 +13,7 @@ import {
   useReorderTasksApiV1TasksReorderPatch,
   useArchiveTaskApiV1TasksTaskIdArchivePatch,
   useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch,
+  useSyncJiraTasksApiV1TasksTaskIdJiraSyncPost,
 } from '@/api/generated/task/task';
 import TaskStatusFilter from '@/components/workboard/TaskStatusFilter';
 import type { FilterValue } from '@/components/workboard/TaskStatusFilter';
@@ -39,7 +40,7 @@ function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
 }
 
 export default function WorkBoardPage() {
-  const [filter, setFilter] = useState<FilterValue>(TaskStatusEnum.IN_PROGRESS);
+  const [filter, setFilter] = useState<FilterValue>('all');
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const saved = localStorage.getItem('workboard-view-mode');
     return saved === 'kanban' ? 'kanban' : 'list';
@@ -83,6 +84,7 @@ export default function WorkBoardPage() {
   const reorderTasks = useReorderTasksApiV1TasksReorderPatch();
   const archiveTask = useArchiveTaskApiV1TasksTaskIdArchivePatch();
   const unarchiveTask = useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch();
+  const syncJiraTask = useSyncJiraTasksApiV1TasksTaskIdJiraSyncPost();
 
   const invalidateAll = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['/api/v1/tasks'] });
@@ -153,6 +155,23 @@ export default function WorkBoardPage() {
       );
     },
     [allTasks, archivedTasks, archiveTask, unarchiveTask, invalidateAll, selectedTaskId, toast],
+  );
+
+  // Jira 동기화
+  const handleJiraSync = useCallback(
+    (taskId: number) => {
+      syncJiraTask.mutate(
+        { taskId },
+        {
+          onSuccess: () => {
+            invalidateAll();
+            toast('success', 'Jira에 동기화되었습니다');
+          },
+          onError: (err) => toast('error', err instanceof Error ? err.message : 'Jira 동기화에 실패했습니다'),
+        },
+      );
+    },
+    [syncJiraTask, invalidateAll, toast],
   );
 
   // 순서 변경
@@ -284,7 +303,9 @@ export default function WorkBoardPage() {
                       onUpdate={handleUpdate}
                       onDelete={handleDelete}
                       onArchive={handleArchive}
+                      onJiraSync={handleJiraSync}
                       saving={updateTask.isPending}
+                      syncing={syncJiraTask.isPending}
                     />
                   </div>
                 )}
@@ -313,7 +334,9 @@ export default function WorkBoardPage() {
                       onUpdate={handleUpdate}
                       onDelete={handleDelete}
                       onArchive={handleArchive}
+                      onJiraSync={handleJiraSync}
                       saving={updateTask.isPending}
+                      syncing={syncJiraTask.isPending}
                     />
                   ) : (
                     <div className="flex flex-1 items-center justify-center text-sm text-text-tertiary">

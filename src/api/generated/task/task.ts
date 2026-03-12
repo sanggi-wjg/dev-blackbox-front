@@ -193,6 +193,67 @@ export const useCreateTaskApiV1TasksPost = <TError = HTTPValidationError,
       return useMutation(getCreateTaskApiV1TasksPostMutationOptions(options), queryClient);
     }
     /**
+ * @summary Sync Jira Tasks
+ */
+export const syncJiraTasksApiV1TasksTaskIdJiraSyncPost = (
+    taskId: number,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TaskResponseDto>(
+      {url: `/api/v1/tasks/${taskId}/jira-sync`, method: 'POST', signal
+    },
+      );
+    }
+  
+
+
+export const getSyncJiraTasksApiV1TasksTaskIdJiraSyncPostMutationOptions = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof syncJiraTasksApiV1TasksTaskIdJiraSyncPost>>, TError,{taskId: number}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof syncJiraTasksApiV1TasksTaskIdJiraSyncPost>>, TError,{taskId: number}, TContext> => {
+
+const mutationKey = ['syncJiraTasksApiV1TasksTaskIdJiraSyncPost'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof syncJiraTasksApiV1TasksTaskIdJiraSyncPost>>, {taskId: number}> = (props) => {
+          const {taskId} = props ?? {};
+
+          return  syncJiraTasksApiV1TasksTaskIdJiraSyncPost(taskId,)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SyncJiraTasksApiV1TasksTaskIdJiraSyncPostMutationResult = NonNullable<Awaited<ReturnType<typeof syncJiraTasksApiV1TasksTaskIdJiraSyncPost>>>
+    
+    export type SyncJiraTasksApiV1TasksTaskIdJiraSyncPostMutationError = HTTPValidationError
+
+    /**
+ * @summary Sync Jira Tasks
+ */
+export const useSyncJiraTasksApiV1TasksTaskIdJiraSyncPost = <TError = HTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof syncJiraTasksApiV1TasksTaskIdJiraSyncPost>>, TError,{taskId: number}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof syncJiraTasksApiV1TasksTaskIdJiraSyncPost>>,
+        TError,
+        {taskId: number},
+        TContext
+      > => {
+      return useMutation(getSyncJiraTasksApiV1TasksTaskIdJiraSyncPostMutationOptions(options), queryClient);
+    }
+    /**
  * @summary Update Task
  */
 export const updateTaskApiV1TasksTaskIdPut = (
