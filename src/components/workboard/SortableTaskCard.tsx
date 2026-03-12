@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { TaskResponseDto } from '@/api/generated/model';
 import { STATUS_CONFIG, isTerminalStatus, relativeTime } from '@/utils/workboard';
-import { Bars2Icon } from '@/components/icons';
+import { Bars2Icon, JiraIcon } from '@/components/icons';
 
 interface SortableTaskCardProps {
   task: TaskResponseDto;
@@ -20,6 +20,7 @@ export default function SortableTaskCard({ task, selected, onSelect }: SortableT
 
   const statusCfg = STATUS_CONFIG[task.status];
   const isTerminal = isTerminalStatus(task.status);
+  const isJira = !!task.jira_issue_key;
 
   return (
     <div
@@ -34,7 +35,7 @@ export default function SortableTaskCard({ task, selected, onSelect }: SortableT
       } ${isTerminal ? 'opacity-60' : ''}`}
       onClick={onSelect}
     >
-      {/* 상태 + 드래그 핸들 + 제목 */}
+      {/* 상태 + 드래그 핸들 + 제목 + Jira 마크 */}
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -59,11 +60,22 @@ export default function SortableTaskCard({ task, selected, onSelect }: SortableT
         </p>
       </div>
 
-      {/* 태그 + 시간 */}
+      {/* 태그 + Jira 배지 + 시간 */}
       <div className="mt-1.5 flex items-center gap-2 pl-6">
-        {task.tags && (
-          <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-medium text-brand-700">
-            {task.tags}
+        {task.tags &&
+          task.tags
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean)
+            .map((tag) => (
+              <span key={tag} className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-medium text-brand-700">
+                {tag}
+              </span>
+            ))}
+        {isJira && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-platform-jira/10 px-2 py-0.5 text-[10px] font-medium text-platform-jira">
+            <JiraIcon className="h-2.5 w-2.5" />
+            {task.jira_issue_key}
           </span>
         )}
         <span className="ml-auto text-[10px] text-text-tertiary">{relativeTime(task.updated_at)}</span>

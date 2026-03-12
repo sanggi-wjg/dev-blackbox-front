@@ -8,7 +8,7 @@
 
 export interface GitHubDeleteEventPayloadModel {
   full_ref: string;
-  master_branch: string;
+  master_branch?: string | null;
   pusher_type: string;
   ref: string;
   ref_type: string;

@@ -16,6 +16,9 @@ export interface TaskResponseDto {
   is_archived: boolean;
   display_order: number;
   archived_at: string | null;
+  jira_issue_key: string | null;
+  jira_issue_url: string | null;
+  jira_synced_at: string | null;
   created_at: string;
   updated_at: string;
 }

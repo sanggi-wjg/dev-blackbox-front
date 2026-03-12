@@ -3,9 +3,9 @@ import MDEditor from '@uiw/react-md-editor';
 import { useTheme } from '@/hooks/useTheme';
 import { TaskStatusEnum } from '@/api/generated/model';
 import type { TaskResponseDto, TaskUpdateRequestDto } from '@/api/generated/model';
-import { CATEGORY_PRESETS, STATUS_CONFIG } from '@/utils/workboard';
+import { CATEGORY_PRESETS, STATUS_CONFIG, relativeTime } from '@/utils/workboard';
 import { ConfirmDialog } from '@/components/common/Modal';
-import { ArchiveBoxArrowDownIcon, ArchiveBoxIcon, TrashIcon } from '@/components/icons';
+import { ArchiveBoxArrowDownIcon, ArchiveBoxIcon, TrashIcon, JiraIcon, ArrowTopRightOnSquareIcon } from '@/components/icons';
 
 interface TaskEditorProps {
   task: TaskResponseDto;
@@ -82,6 +82,20 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
     setTags(val);
     debouncedSave({ tags: val || null });
   };
+
+  const togglePresetTag = (cat: string) => {
+    const current = tags
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const next = current.includes(cat) ? current.filter((t) => t !== cat) : [...current, cat];
+    handleTagsChange(next.join(', '));
+  };
+
+  const parsedTags = tags
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean);
 
   const handleStatusChange = (newStatus: TaskStatusEnum) => {
     setStatus(newStatus);
@@ -172,14 +186,14 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
         })}
       </div>
 
-      {/* 카테고리(태그) */}
+      {/* 카테고리(태그) — 다중 선택 */}
       <div className="flex flex-wrap items-center gap-1.5">
         {CATEGORY_PRESETS.map((cat: string) => (
           <button
             key={cat}
-            onClick={() => handleTagsChange(tags === cat ? '' : cat)}
+            onClick={() => togglePresetTag(cat)}
             className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
-              tags === cat
+              parsedTags.includes(cat)
                 ? 'bg-brand-600 text-text-inverse'
                 : 'bg-surface-secondary text-text-secondary hover:bg-surface-hover'
             }`}
@@ -189,12 +203,50 @@ export default function TaskEditor({ task, onUpdate, onDelete, onArchive, saving
         ))}
         <input
           type="text"
-          value={CATEGORY_PRESETS.includes(tags) ? '' : tags}
-          onChange={(e) => handleTagsChange(e.target.value)}
+          value={parsedTags.filter((t) => !CATEGORY_PRESETS.includes(t)).join(', ')}
+          onChange={(e) => {
+            const presetPart = parsedTags.filter((t) => CATEGORY_PRESETS.includes(t));
+            const customPart = e.target.value
+              .split(',')
+              .map((t) => t.trim())
+              .filter(Boolean);
+            handleTagsChange([...presetPart, ...customPart].join(', '));
+          }}
           placeholder="직접 입력"
-          className="h-6 w-20 rounded-full border border-border-primary bg-surface px-2 text-xs text-text-primary placeholder:text-text-tertiary focus:border-border-focus focus:ring-1 focus:ring-brand-500/20 focus:outline-none"
+          className="h-6 w-32 rounded-full border border-border-primary bg-surface px-2 text-xs text-text-primary placeholder:text-text-tertiary focus:border-border-focus focus:ring-1 focus:ring-brand-500/20 focus:outline-none"
         />
       </div>
+
+      {/* Jira 연동 정보 */}
+      {task.jira_issue_key && (
+        <div className="flex items-center gap-3 rounded-lg border border-platform-jira/20 bg-platform-jira/5 px-3 py-2">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-platform-jira/15 text-platform-jira">
+            <JiraIcon className="h-3.5 w-3.5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-platform-jira">{task.jira_issue_key}</span>
+              {task.jira_issue_url && (
+                <a
+                  href={task.jira_issue_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-[10px] text-text-link hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Jira에서 보기
+                  <ArrowTopRightOnSquareIcon className="h-2.5 w-2.5" />
+                </a>
+              )}
+            </div>
+            {task.jira_synced_at && (
+              <p className="text-[10px] text-text-tertiary">
+                마지막 동기화: {relativeTime(task.jira_synced_at)}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 마크다운 에디터 — 남은 공간 전체 사용 */}
       <div ref={editorWrapRef} className="min-h-0 flex-1 overflow-hidden" data-color-mode={theme}>

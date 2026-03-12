@@ -1,7 +1,7 @@
 import { TaskStatusEnum } from '@/api/generated/model';
 import type { TaskResponseDto } from '@/api/generated/model';
 
-export const CATEGORY_PRESETS = ['계획', '긴급', '버그', '회의', '기타'];
+export const CATEGORY_PRESETS = ['일감', '긴급', '버그', '회의', '기타'];
 
 export const STATUS_CONFIG: Record<TaskStatusEnum, { label: string; dot: string; textClass: string }> = {
   [TaskStatusEnum.BACKLOG]: { label: 'Backlog', dot: 'bg-text-tertiary', textClass: 'text-text-tertiary' },
