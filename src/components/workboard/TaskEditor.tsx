@@ -1,11 +1,13 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import MDEditor from '@uiw/react-md-editor';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import MDEditor, { commands as defaultCommands } from '@uiw/react-md-editor';
 import { useTheme } from '@/hooks/useTheme';
+import { useImageUpload } from '@/hooks/useImageUpload';
 import { TaskStatusEnum } from '@/api/generated/model';
 import type { TaskResponseDto, TaskUpdateRequestDto } from '@/api/generated/model';
 import { CATEGORY_PRESETS, STATUS_CONFIG, relativeTime } from '@/utils/workboard';
 import { ConfirmDialog } from '@/components/common/Modal';
 import { ArchiveBoxArrowDownIcon, ArchiveBoxIcon, TrashIcon, JiraIcon, ArrowTopRightOnSquareIcon } from '@/components/icons';
+import AuthImage from '@/components/workboard/AuthImage';
 
 interface TaskEditorProps {
   task: TaskResponseDto;
@@ -48,31 +50,29 @@ export default function TaskEditor({
   const [tags, setTags] = useState(task.tags ?? '');
   const [status, setStatus] = useState(task.status);
 
-  // 디바운스 저장
+  // 최신 로컬 상태를 항상 ref로 추적 (비동기/클린업에서 stale closure 방지)
+  const latestRef = useRef({ title, content, tags, status, display_order: task.display_order });
+  latestRef.current = { title, content, tags, status, display_order: task.display_order };
+
+  // 디바운스 저장 — latestRef에서 읽으므로 의존성 최소화
   const debouncedSave = useCallback(
     (data: Partial<TaskUpdateRequestDto>) => {
       clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
-        onUpdate(task.id, { title, content, tags: tags || null, status, ...data });
+        const { title: t, content: c, tags: tg, status: s, display_order: d } = latestRef.current;
+        onUpdate(task.id, { title: t, content: c, tags: tg || null, status: s, display_order: d, ...data });
       }, DEBOUNCE_MS);
     },
-    [task.id, title, content, tags, status, onUpdate],
+    [task.id, onUpdate],
   );
 
   // 언마운트 시 pending 디바운스가 있으면 즉시 flush
-  const latestRef = useRef({ title, content, tags, status });
-  latestRef.current = { title, content, tags, status };
-
   useEffect(() => {
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
-        onUpdate(task.id, {
-          title: latestRef.current.title,
-          content: latestRef.current.content,
-          tags: latestRef.current.tags || null,
-          status: latestRef.current.status,
-        });
+        const { title: t, content: c, tags: tg, status: s, display_order: d } = latestRef.current;
+        onUpdate(task.id, { title: t, content: c, tags: tg || null, status: s, display_order: d });
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,10 +83,21 @@ export default function TaskEditor({
     debouncedSave({ title: val });
   };
 
-  const handleContentChange = (val: string) => {
-    setContent(val);
-    debouncedSave({ content: val });
-  };
+  const handleContentChange = useCallback(
+    (val: string) => {
+      setContent(val);
+      debouncedSave({ content: val });
+    },
+    [debouncedSave],
+  );
+
+  const { handleDrop, handlePaste, imageCommand, uploading, fileInputEl } = useImageUpload({
+    content,
+    onContentChange: handleContentChange,
+    editorWrapRef,
+  });
+
+  const editorCommands = useMemo(() => [...defaultCommands.getCommands(), imageCommand], [imageCommand]);
 
   const handleTagsChange = (val: string) => {
     setTags(val);
@@ -111,12 +122,12 @@ export default function TaskEditor({
     setStatus(newStatus);
     // 상태 변경은 즉시 저장
     clearTimeout(debounceRef.current);
-    onUpdate(task.id, { title, content, tags: tags || null, status: newStatus });
+    onUpdate(task.id, { title, content, tags: tags || null, status: newStatus, display_order: task.display_order });
   };
 
   const handleImmediateSave = () => {
     clearTimeout(debounceRef.current);
-    onUpdate(task.id, { title, content, tags: tags || null, status });
+    onUpdate(task.id, { title, content, tags: tags || null, status, display_order: task.display_order });
   };
 
   // 에디터 높이 계산 — flex 레이아웃이 결정한 컨테이너 높이를 그대로 사용
@@ -151,6 +162,7 @@ export default function TaskEditor({
           className="min-w-0 flex-1 rounded-lg border border-border-primary bg-surface px-3 py-2 text-sm font-medium text-text-primary placeholder:text-text-tertiary transition-colors focus:border-border-focus focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
         />
         <div className="flex items-center gap-1">
+          {uploading && <span className="text-xs text-text-tertiary whitespace-nowrap">이미지 업로드 중...</span>}
           {saving && <span className="text-xs text-text-tertiary whitespace-nowrap">저장 중...</span>}
           <button
             onClick={() => onArchive(task.id)}
@@ -293,6 +305,16 @@ export default function TaskEditor({
           onChange={(val) => handleContentChange(val ?? '')}
           height={editorHeight}
           preview="live"
+          commands={editorCommands}
+          textareaProps={{
+            onDrop: handleDrop,
+            onPaste: handlePaste,
+          }}
+          previewOptions={{
+            components: {
+              img: AuthImage as React.ComponentType<React.ImgHTMLAttributes<HTMLImageElement>>,
+            },
+          }}
           onKeyDown={(e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !saving) {
               e.preventDefault();
@@ -300,6 +322,7 @@ export default function TaskEditor({
             }
           }}
         />
+        {fileInputEl}
       </div>
 
       <ConfirmDialog

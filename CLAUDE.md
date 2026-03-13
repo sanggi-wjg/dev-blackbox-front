@@ -66,7 +66,7 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 |---------------|-----------------------|-------------------------------------|
 | `/`           | `DashboardPage`       | 대시보드 (메인)                           |
 | `/platform`   | `PlatformWorkLogPage` | 플랫폼 업무일지 (GitHub/Jira/Slack 데이터 기반) |
-| `/work-board` | `WorkBoardPage`       | 워크보드 (칸반 보드, 드래그 앤 드롭)              |
+| `/work-board` | `WorkBoardPage`       | 워크보드 (칸반 보드, 드래그 앤 드롭, 이미지 업로드)     |
 | `/profile`    | `ProfilePage`         | 내 프로필                               |
 
 ### 어드민 페이지 (`AdminRoute` 래핑, `isAdmin` 필요)
@@ -97,6 +97,13 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 ## Gotchas
 
 - **Axios Idempotency**: POST/PUT/PATCH 요청에 `Idempotency-Key` 헤더가 자동 추가됨
+- **Axios FormData**: `AXIOS_INSTANCE` 기본 헤더가 `Content-Type: application/json`이므로, 인터셉터에서 `data instanceof FormData`일 때
+  `Content-Type`을 삭제하여 브라우저가 `multipart/form-data; boundary=...`를 자동 설정하도록 처리됨
 - **Axios 에러 처리**: `error.response.data.detail`을 메시지로 추출 → `Error` 객체로 래핑. 컴포넌트에서 `err.message`로 접근
 - **401 처리 예외**: `/api/v1/auth/token` 엔드포인트의 401은 인터셉터가 가로채지 않음 (잘못된 자격 증명 에러를 그대로 전달)
 - **Axios timeout**: 30초
+- **이미지 업로드 (워크보드)**: `useImageUpload` 훅이 드래그&드롭, 클립보드 붙여넣기, 툴바 버튼을 통한 이미지 업로드를 처리. 업로드 후
+  `![filename](BASE_URL/api/v1/images/{id})` 형태로 마크다운에 삽입. 프리뷰 시 `AuthImage` 컴포넌트가 인증 헤더를 포함한 요청으로 이미지를 blob URL로 변환하여
+  표시
+- **인증된 이미지 프리뷰**: `GET /api/v1/images/{id}`는 Bearer 토큰이 필요. `<img src>`는 토큰을 포함하지 않으므로, `AuthImage`가 `AXIOS_INSTANCE`로
+  blob 요청 후 `URL.createObjectURL`로 렌더링 (`customInstance`는 `response.data`만 반환하므로 blob 응답에 부적합)

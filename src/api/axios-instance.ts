@@ -17,6 +17,10 @@ AXIOS_INSTANCE.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // FormData 전송 시 Content-Type 제거 → 브라우저가 boundary 포함 multipart/form-data를 자동 설정
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
     if (config.method && ['post', 'put', 'patch'].includes(config.method)) {
       config.headers['Idempotency-Key'] = crypto.randomUUID();
     }
