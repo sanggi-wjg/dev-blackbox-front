@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
@@ -42,6 +42,7 @@ import { ConfirmDialog } from '@/components/common/Modal';
 import SearchableSelect from '@/components/common/SearchableSelect';
 import IntegrationSection from '@/components/integration/IntegrationSection';
 import { useToast } from '@/components/common/Toast';
+import { useFormValidation, validators } from '@/hooks/useFormValidation';
 import { GitHubIcon, JiraIcon, SlackIcon } from '@/components/icons';
 
 export default function ProfilePage() {
@@ -166,7 +167,7 @@ function GitHubTab({
 }: {
   secret: GitHubSecretResponseDto | null;
   invalidateUser: () => void;
-  toast: (type: 'success' | 'error' | 'info', message: string) => void;
+  toast: (type: 'success' | 'error' | 'info' | 'warning', message: string) => void;
 }) {
   const [username, setUsername] = useState('');
   const [pat, setPat] = useState('');
@@ -175,8 +176,18 @@ function GitHubTab({
   const createSecret = useCreateGithubSecretApiV1GithubSecretsPost();
   const deleteSecret = useDeleteGithubSecretByUserIdApiV1GithubSecretsDelete();
 
+  const rules = useMemo(
+    () => ({
+      username: validators.required('GitHub 사용자명'),
+      pat: validators.required('Personal Access Token'),
+    }),
+    [],
+  );
+  const { errors, serverError, validate, validateField, setServerError } = useFormValidation(rules);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate({ username, pat })) return;
     createSecret.mutate(
       { data: { username, personal_access_token: pat } },
       {
@@ -186,7 +197,7 @@ function GitHubTab({
           setUsername('');
           setPat('');
         },
-        onError: (err) => toast('error', err instanceof Error ? err.message : 'PAT 등록에 실패했습니다'),
+        onError: (err) => setServerError(err instanceof Error ? err.message : 'PAT 등록에 실패했습니다'),
       },
     );
   };
@@ -232,20 +243,27 @@ function GitHubTab({
         }
         connectForm={
           <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
-            <FormField label="GitHub 사용자명">
+            {serverError && (
+              <div className="rounded-lg border border-danger-500/20 bg-danger-50 px-3 py-2 text-sm text-danger-600">
+                {serverError}
+              </div>
+            )}
+            <FormField label="GitHub 사용자명" error={errors.username}>
               <Input
-                required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onBlur={() => validateField('username', username)}
+                error={!!errors.username}
                 placeholder="your-github-username"
               />
             </FormField>
-            <FormField label="Personal Access Token">
+            <FormField label="Personal Access Token" error={errors.pat}>
               <Input
-                required
                 type="password"
                 value={pat}
                 onChange={(e) => setPat(e.target.value)}
+                onBlur={() => validateField('pat', pat)}
+                error={!!errors.pat}
                 placeholder="ghp_..."
               />
             </FormField>
@@ -282,7 +300,7 @@ function JiraTab({
   jiraUser: JiraUserResponseDto | null;
   invalidateUser: () => void;
   queryClient: QueryClient;
-  toast: (type: 'success' | 'error' | 'info', message: string) => void;
+  toast: (type: 'success' | 'error' | 'info' | 'warning', message: string) => void;
 }) {
   const [selectedSecretId, setSelectedSecretId] = useState('');
   const [selectedJiraUserId, setSelectedJiraUserId] = useState('');
@@ -464,7 +482,7 @@ function SlackTab({
   slackUser: SlackUserResponseDto | null;
   invalidateUser: () => void;
   queryClient: QueryClient;
-  toast: (type: 'success' | 'error' | 'info', message: string) => void;
+  toast: (type: 'success' | 'error' | 'info' | 'warning', message: string) => void;
 }) {
   const [selectedSecretId, setSelectedSecretId] = useState('');
   const [selectedSlackUserId, setSelectedSlackUserId] = useState('');

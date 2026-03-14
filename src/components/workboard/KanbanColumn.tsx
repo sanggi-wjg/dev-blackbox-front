@@ -24,8 +24,8 @@ export default function KanbanColumn({ status, tasks, selectedTaskId, onSelectTa
         </span>
       </div>
 
-      {/* Cards */}
-      <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-2">
+      {/* Cards — 최대 3개 카드 높이로 제한 (72px × 3 + gap 8px × 2 + padding 16px = 248px) */}
+      <div className="flex max-h-[248px] flex-col gap-2 overflow-y-auto p-2">
         {tasks.length === 0 ? (
           <p className="py-8 text-center text-xs text-text-tertiary">항목 없음</p>
         ) : (
@@ -36,6 +36,7 @@ export default function KanbanColumn({ status, tasks, selectedTaskId, onSelectTa
                 task={task}
                 selected={task.id === selectedTaskId}
                 onSelect={() => onSelectTask(task.id)}
+                compact
               />
             ))}
           </SortableContext>

@@ -1,16 +1,18 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { TaskResponseDto } from '@/api/generated/model';
-import { STATUS_CONFIG, isTerminalStatus, relativeTime } from '@/utils/workboard';
-import { Bars2Icon, JiraIcon } from '@/components/icons';
+import { Bars2Icon } from '@/components/icons';
+import TaskCard from './TaskCard';
 
 interface SortableTaskCardProps {
   task: TaskResponseDto;
   selected: boolean;
   onSelect: () => void;
+  /** 칸반 뷰용 컴팩트 모드: 고정 높이, 콘텐츠 미리보기 숨김 */
+  compact?: boolean;
 }
 
-export default function SortableTaskCard({ task, selected, onSelect }: SortableTaskCardProps) {
+export default function SortableTaskCard({ task, selected, onSelect, compact }: SortableTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
 
   const style = {
@@ -18,75 +20,27 @@ export default function SortableTaskCard({ task, selected, onSelect }: SortableT
     transition,
   };
 
-  const statusCfg = STATUS_CONFIG[task.status];
-  const isTerminal = isTerminalStatus(task.status);
-  const isJira = !!task.jira_issue_key;
+  const dragHandle = (
+    <button
+      type="button"
+      className="shrink-0 cursor-grab touch-none text-text-tertiary opacity-0 transition-opacity hover:text-text-secondary active:cursor-grabbing group-hover:opacity-100"
+      {...attributes}
+      {...listeners}
+    >
+      <Bars2Icon className="h-4 w-4" />
+    </button>
+  );
 
   return (
-    <div
+    <TaskCard
       ref={setNodeRef}
       style={style}
-      className={`group relative cursor-pointer rounded-lg border p-3 transition-colors ${
-        isDragging ? 'z-50 opacity-50' : ''
-      } ${
-        selected
-          ? 'border-brand-500 bg-brand-50 shadow-sm'
-          : 'border-border-primary bg-surface hover:border-border-strong hover:bg-surface-hover'
-      } ${isTerminal ? 'opacity-60' : ''}`}
-      onClick={onSelect}
-    >
-      {/* 상태 + 드래그 핸들 + 제목 + Jira 마크 */}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="shrink-0 cursor-grab touch-none text-text-tertiary opacity-0 transition-opacity hover:text-text-secondary active:cursor-grabbing group-hover:opacity-100"
-          {...attributes}
-          {...listeners}
-        >
-          <Bars2Icon className="h-4 w-4" />
-        </button>
-        <span className={`h-2 w-2 shrink-0 rounded-full ${statusCfg.dot}`} aria-hidden="true" />
-        <span className="sr-only">{statusCfg.label}</span>
-        <p
-          className={`flex-1 truncate text-sm font-medium ${
-            isTerminal
-              ? 'text-text-tertiary line-through'
-              : task.title
-                ? 'text-text-primary'
-                : 'text-text-tertiary italic'
-          }`}
-        >
-          {task.title || '제목 없음'}
-        </p>
-      </div>
-
-      {/* 태그 + Jira 배지 + 시간 */}
-      <div className="mt-1.5 flex items-center gap-2 pl-6">
-        {task.tags &&
-          task.tags
-            .split(',')
-            .map((t) => t.trim())
-            .filter(Boolean)
-            .map((tag) => (
-              <span key={tag} className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-medium text-brand-700">
-                {tag}
-              </span>
-            ))}
-        {isJira && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-platform-jira/10 px-2 py-0.5 text-[10px] font-medium text-platform-jira">
-            <JiraIcon className="h-2.5 w-2.5" />
-            {task.jira_issue_key}
-          </span>
-        )}
-        <span className="ml-auto text-[10px] text-text-tertiary">{relativeTime(task.updated_at)}</span>
-      </div>
-
-      {/* 내용 미리보기 */}
-      {task.content && (
-        <p className="mt-1 pl-6 text-xs text-text-tertiary line-clamp-2">
-          {task.content.replace(/[#*`>\-]/g, '').trim()}
-        </p>
-      )}
-    </div>
+      task={task}
+      selected={selected}
+      onSelect={onSelect}
+      compact={compact}
+      dragHandle={dragHandle}
+      className={isDragging ? 'z-50 opacity-50' : ''}
+    />
   );
 }

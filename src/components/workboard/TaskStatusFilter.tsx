@@ -1,8 +1,8 @@
 import { TaskStatusEnum } from '@/api/generated/model';
 import { STATUS_CONFIG } from '@/utils/workboard';
 
-// 개별 상태 + 전체 + 아카이브
-export type FilterValue = 'all' | TaskStatusEnum | 'archived';
+// 개별 상태 + 활성(기본) + 아카이브
+export type FilterValue = 'active' | TaskStatusEnum | 'archived';
 
 interface TaskStatusFilterProps {
   value: FilterValue;
@@ -11,7 +11,7 @@ interface TaskStatusFilterProps {
 }
 
 const FILTER_TABS: { id: FilterValue; label: string; dot?: string }[] = [
-  { id: 'all', label: '전체' },
+  { id: 'active', label: '활성' },
   ...Object.values(TaskStatusEnum).map((status) => ({
     id: status as FilterValue,
     label: STATUS_CONFIG[status].label,

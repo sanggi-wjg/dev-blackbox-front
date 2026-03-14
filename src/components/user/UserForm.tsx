@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   useCreateUserAdminApiV1UsersPost,
   getGetUsersAdminApiV1UsersGetQueryKey,
 } from '@/api/generated/user-admin/user-admin';
+import { useFormValidation, validators } from '@/hooks/useFormValidation';
 import SearchableSelect from '@/components/common/SearchableSelect';
 import { useToast } from '@/components/common/Toast';
 import Modal from '@/components/common/Modal';
@@ -31,8 +32,19 @@ export default function UserForm({ onClose }: UserFormProps) {
   const { toast } = useToast();
   const createUser = useCreateUserAdminApiV1UsersPost();
 
+  const rules = useMemo(
+    () => ({
+      name: validators.required('이름'),
+      email: validators.email('이메일'),
+      password: validators.minLength('비밀번호', 4),
+    }),
+    [],
+  );
+  const { errors, serverError, validate, validateField, setServerError } = useFormValidation(rules);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate({ name, email, password })) return;
     createUser.mutate(
       { data: { name, email, password, timezone } },
       {
@@ -42,7 +54,7 @@ export default function UserForm({ onClose }: UserFormProps) {
           onClose();
         },
         onError: (err) => {
-          toast('error', err instanceof Error ? err.message : '사용자 생성에 실패했습니다');
+          setServerError(err instanceof Error ? err.message : '사용자 생성에 실패했습니다');
         },
       },
     );
@@ -65,28 +77,43 @@ export default function UserForm({ onClose }: UserFormProps) {
       }
     >
       <form id="user-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <FormField label="이름" htmlFor="user-name">
-          <Input id="user-name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="홍길동" />
+        {serverError && (
+          <div className="rounded-lg border border-danger-500/20 bg-danger-50 px-3 py-2 text-sm text-danger-600">
+            {serverError}
+          </div>
+        )}
+
+        <FormField label="이름" htmlFor="user-name" error={errors.name}>
+          <Input
+            id="user-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={() => validateField('name', name)}
+            error={!!errors.name}
+            placeholder="홍길동"
+          />
         </FormField>
 
-        <FormField label="이메일" htmlFor="user-email">
+        <FormField label="이메일" htmlFor="user-email" error={errors.email}>
           <Input
             id="user-email"
-            required
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => validateField('email', email)}
+            error={!!errors.email}
             placeholder="user@example.com"
           />
         </FormField>
 
-        <FormField label="비밀번호" htmlFor="user-password">
+        <FormField label="비밀번호" htmlFor="user-password" error={errors.password}>
           <Input
             id="user-password"
-            required
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={() => validateField('password', password)}
+            error={!!errors.password}
             placeholder="비밀번호를 입력하세요"
           />
         </FormField>

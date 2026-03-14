@@ -79,10 +79,11 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 
 ### 기타
 
-| 라우트      | 페이지            | 설명               |
-|----------|----------------|------------------|
-| `/login` | `LoginPage`    | 로그인 (GuestRoute) |
-| `*`      | `NotFoundPage` | 404              |
+| 라우트      | 페이지             | 설명                        |
+|----------|-----------------|---------------------------|
+| `/login` | `LoginPage`     | 로그인 (GuestRoute)          |
+| `*`      | `NotFoundPage`  | 404                       |
+| (인라인)    | `ForbiddenPage` | 403 — 비관리자가 어드민 페이지 접근 시 표시 |
 
 ## 페이지별 기본 날짜
 
@@ -93,6 +94,16 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 ## Playwright MCP
 
 - Playwright MCP를 사용하여 브라우저 테스트/검증을 수행한 경우, **작업 완료 후 반드시 `browser_close`를 호출하여 브라우저를 종료**해야 한다.
+
+## UX 패턴
+
+- **폼 유효성 검사**: `useFormValidation` 훅 + `validators` 유틸리티로 인라인 에러 표시. `FormField`의 `error` prop과 `Input`의 `error` prop을 연결.
+  모달 내 폼은 서버 에러를 `serverError` 인라인 배너로 표시 (토스트 대신)
+- **토스트 타입**: `success`, `error`, `info`, `warning` — `warning` 타입은 `warning-500` 색상 + `ExclamationTriangleIcon`
+- **키보드 단축키**: `useGlobalHotkeys` 훅으로 전역 단축키 등록. `?` (도움말), `N` (WorkBoard에서 태스크 추가). 입력 필드 포커스 시 무시
+- **document.title**: `AppLayout`에서 `pageTitleMap` 기반으로 `{페이지명} | Dev Blackbox` 형식 자동 설정
+- **Tooltip**: CSS-only (`group` + `group-hover`) 툴팁 컴포넌트
+- **403 페이지**: `AdminRoute`에서 비관리자 접근 시 `ForbiddenPage` 렌더링 (리다이렉트 대신)
 
 ## Gotchas
 

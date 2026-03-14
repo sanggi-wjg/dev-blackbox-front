@@ -22,15 +22,19 @@ import TaskEditor from '@/components/workboard/TaskEditor';
 import KanbanBoard from '@/components/workboard/KanbanBoard';
 import Button from '@/components/common/Button';
 import { useToast } from '@/components/common/Toast';
+import { useGlobalHotkeys } from '@/hooks/useGlobalHotkeys';
 import { PlusIcon, ClipboardDocumentIcon, ArrowLeftIcon, QueueListIcon, ViewColumnsIcon } from '@/components/icons';
-import { tasksToMarkdown } from '@/utils/workboard';
+import { tasksToMarkdown, TERMINAL_STATUSES } from '@/utils/workboard';
 
 type ViewMode = 'list' | 'kanban';
 
+// 활성 상태 목록 (DONE, CANCELED 제외)
+const ACTIVE_STATUSES = Object.values(TaskStatusEnum).filter((s) => !TERMINAL_STATUSES.includes(s)) as TaskStatusEnum[];
+
 // 필터 → API query params 변환
 function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
-  if (filter === 'all') {
-    return { is_archived: false };
+  if (filter === 'active') {
+    return { status: ACTIVE_STATUSES, is_archived: false };
   }
   if (filter === 'archived') {
     return { is_archived: true };
@@ -40,7 +44,7 @@ function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
 }
 
 export default function WorkBoardPage() {
-  const [filter, setFilter] = useState<FilterValue>('all');
+  const [filter, setFilter] = useState<FilterValue>('active');
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const saved = localStorage.getItem('workboard-view-mode');
     return saved === 'kanban' ? 'kanban' : 'list';
@@ -68,7 +72,7 @@ export default function WorkBoardPage() {
   const taskListKey = useMemo(() => tasks.map((t) => t.id).join(','), [tasks]);
 
   const counts: Partial<Record<FilterValue, number>> = {
-    all: allTasks.length,
+    active: allTasks.filter((t) => !TERMINAL_STATUSES.includes(t.status)).length,
     archived: archivedTasks.length,
   };
   // 개별 상태별 건수
@@ -90,8 +94,19 @@ export default function WorkBoardPage() {
     queryClient.invalidateQueries({ queryKey: ['/api/v1/tasks'] });
   }, [queryClient]);
 
+  // 모바일 칸반 안내 배너
+  const [showMobileHint, setShowMobileHint] = useState(() => {
+    const savedMode = localStorage.getItem('workboard-view-mode');
+    return savedMode === 'kanban' && !localStorage.getItem('kanban-mobile-hint-dismissed');
+  });
+
+  const dismissMobileHint = useCallback(() => {
+    setShowMobileHint(false);
+    localStorage.setItem('kanban-mobile-hint-dismissed', '1');
+  }, []);
+
   // 업무 추가
-  const handleAddTask = () => {
+  const handleAddTask = useCallback(() => {
     createTask.mutate(
       { data: { title: '', status: TaskStatusEnum.BACKLOG } },
       {
@@ -102,7 +117,11 @@ export default function WorkBoardPage() {
         onError: (err) => toast('error', err instanceof Error ? err.message : '생성에 실패했습니다'),
       },
     );
-  };
+  }, [createTask, invalidateAll, toast]);
+
+  // N 키로 태스크 추가
+  const hotkeys = useMemo(() => [{ key: 'n', handler: handleAddTask }], [handleAddTask]);
+  useGlobalHotkeys(hotkeys);
 
   // 업무 수정
   const handleUpdate = useCallback(
@@ -229,13 +248,29 @@ export default function WorkBoardPage() {
         <p className="mt-0.5 text-sm text-text-secondary">업무를 카드 단위로 관리하고 상세 내용을 기록합니다</p>
       </div>
 
+      {/* 모바일 칸반 안내 배너 */}
+      {showMobileHint && (
+        <div className="mb-3 flex items-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-700 lg:hidden">
+          <span className="flex-1">
+            칸반 뷰는 데스크톱에서 이용할 수 있습니다. 모바일에서는 리스트 뷰가 제공됩니다.
+          </span>
+          <button onClick={dismissMobileHint} className="shrink-0 text-xs font-medium text-brand-600 hover:underline">
+            닫기
+          </button>
+        </div>
+      )}
+
       {/* Control bar */}
       <div className="sticky top-0 z-10 -mx-3 px-3 pb-4 md:-mx-4 md:px-4 lg:-mx-5 lg:px-5 bg-surface-secondary">
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border-primary bg-surface p-3 shadow-xs">
           <TaskStatusFilter value={filter} onChange={setFilter} counts={counts} />
           <div className="ml-auto flex items-center gap-2">
             {/* 뷰 모드 토글 */}
-            <div className="hidden items-center rounded-lg border border-border-primary lg:flex" role="group" aria-label="뷰 모드">
+            <div
+              className="hidden items-center rounded-lg border border-border-primary lg:flex"
+              role="group"
+              aria-label="뷰 모드"
+            >
               <button
                 onClick={() => handleViewModeChange('list')}
                 aria-pressed={viewMode === 'list'}
@@ -294,9 +329,16 @@ export default function WorkBoardPage() {
           <div className="hidden flex-1 gap-4 overflow-hidden pb-4 lg:flex">
             {viewMode === 'kanban' ? (
               <div className="flex flex-1 flex-col gap-4 overflow-hidden">
-                <KanbanBoard tasks={allTasks} selectedTaskId={selectedTaskId} onSelectTask={setSelectedTaskId} onReorder={handleReorder} />
-                {selectedTask && (
-                  <div className="flex min-h-[240px] flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs animate-stagger-up">
+                <div className="shrink-0">
+                  <KanbanBoard
+                    tasks={allTasks}
+                    selectedTaskId={selectedTaskId}
+                    onSelectTask={setSelectedTaskId}
+                    onReorder={handleReorder}
+                  />
+                </div>
+                {selectedTask ? (
+                  <div className="flex min-h-0 flex-1 flex-col rounded-xl border border-border-primary bg-surface p-4 shadow-xs animate-stagger-up">
                     <TaskEditor
                       key={selectedTask.id}
                       task={selectedTask}
@@ -307,6 +349,10 @@ export default function WorkBoardPage() {
                       saving={updateTask.isPending}
                       syncing={syncJiraTask.isPending}
                     />
+                  </div>
+                ) : (
+                  <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-border-primary bg-surface shadow-xs">
+                    <span className="text-sm text-text-tertiary">카드를 선택해주세요</span>
                   </div>
                 )}
               </div>

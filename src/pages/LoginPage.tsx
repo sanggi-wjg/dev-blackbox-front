@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useTokenLoginApiV1AuthTokenPost } from '@/api/generated/auth/auth';
 import { useAuth } from '@/hooks/useAuth';
+import { useFormValidation, validators } from '@/hooks/useFormValidation';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import FormField from '@/components/common/FormField';
@@ -9,14 +10,22 @@ import FormField from '@/components/common/FormField';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
   const loginMutation = useTokenLoginApiV1AuthTokenPost();
 
+  const rules = useMemo(
+    () => ({
+      email: validators.email('이메일'),
+      password: validators.required('비밀번호'),
+    }),
+    [],
+  );
+  const { errors, serverError, validate, validateField, setServerError } = useFormValidation(rules);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    if (!validate({ email, password })) return;
     loginMutation.mutate(
       {
         data: {
@@ -30,7 +39,7 @@ export default function LoginPage() {
           navigate('/', { replace: true });
         },
         onError: (err) => {
-          setError(err instanceof Error ? err.message : '로그인에 실패했습니다');
+          setServerError(err instanceof Error ? err.message : '로그인에 실패했습니다');
         },
       },
     );
@@ -49,29 +58,35 @@ export default function LoginPage() {
 
         <div className="rounded-xl border border-border-primary bg-surface p-6 shadow-sm">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <FormField label="이메일" htmlFor="login-email">
+            <FormField label="이메일" htmlFor="login-email" error={errors.email}>
               <Input
                 id="login-email"
-                required
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => validateField('email', email)}
+                error={!!errors.email}
                 placeholder="user@example.com"
               />
             </FormField>
 
-            <FormField label="비밀번호" htmlFor="login-password">
+            <FormField label="비밀번호" htmlFor="login-password" error={errors.password}>
               <Input
                 id="login-password"
-                required
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => validateField('password', password)}
+                error={!!errors.password}
                 placeholder="비밀번호를 입력하세요"
               />
             </FormField>
 
-            {error && <p className="text-sm text-danger-600">{error}</p>}
+            {serverError && (
+              <div className="rounded-lg border border-danger-500/20 bg-danger-50 px-3 py-2 text-sm text-danger-600">
+                {serverError}
+              </div>
+            )}
 
             <Button type="submit" className="w-full" loading={loginMutation.isPending} loadingText="로그인 중...">
               로그인

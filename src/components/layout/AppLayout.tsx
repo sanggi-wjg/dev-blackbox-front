@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from './Sidebar';
 import { useAuth } from '@/hooks/useAuth';
 import { useContentWidth } from '@/hooks/useContentWidth';
+import { useGlobalHotkeys } from '@/hooks/useGlobalHotkeys';
+import KeyboardShortcutsHelp from '@/components/common/KeyboardShortcutsHelp';
+import Tooltip from '@/components/common/Tooltip';
 import { MenuIcon, ArrowsRightLeftIcon } from '@/components/icons';
 
 const pageTitleMap: Record<string, string> = {
@@ -21,6 +24,27 @@ export default function AppLayout() {
   const { pathname } = useLocation();
   const pageTitle = pageTitleMap[pathname] ?? 'Dev Blackbox';
   const { widthClass, widthLabel, cycleWidth } = useContentWidth();
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [showWidthHint, setShowWidthHint] = useState(() => !localStorage.getItem('width-hint-dismissed'));
+
+  const toggleShortcuts = useCallback(() => setShortcutsOpen((prev) => !prev), []);
+  const hotkeys = useMemo(() => [{ key: '?', handler: toggleShortcuts }], [toggleShortcuts]);
+  useGlobalHotkeys(hotkeys);
+
+  // 너비 토글 힌트 3초 후 자동 해제
+  useEffect(() => {
+    if (!showWidthHint) return;
+    const timer = setTimeout(() => {
+      setShowWidthHint(false);
+      localStorage.setItem('width-hint-dismissed', '1');
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [showWidthHint]);
+
+  useEffect(() => {
+    const title = pageTitleMap[pathname];
+    document.title = title ? `${title} | Dev Blackbox` : 'Dev Blackbox';
+  }, [pathname]);
 
   return (
     <div className="flex h-screen bg-surface-secondary">
@@ -63,19 +87,23 @@ export default function AppLayout() {
           <div className={`mx-auto h-full ${widthClass} transition-[max-width] duration-300 animate-fade-in`}>
             {/* 너비 토글 버튼 — 데스크톱 전용 */}
             <div className="mb-1 hidden justify-end lg:flex">
-              <button
-                onClick={cycleWidth}
-                className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-secondary"
-                title={`콘텐츠 너비: ${widthLabel}`}
-              >
-                <ArrowsRightLeftIcon className="h-3.5 w-3.5" />
-                <span>{widthLabel}</span>
-              </button>
+              <Tooltip content="콘텐츠 영역 너비를 변경합니다">
+                <button
+                  onClick={cycleWidth}
+                  className={`flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-text-tertiary transition-colors hover:bg-surface-hover hover:text-text-secondary ${showWidthHint ? 'animate-pulse' : ''}`}
+                  title={`콘텐츠 너비: ${widthLabel}`}
+                >
+                  <ArrowsRightLeftIcon className="h-3.5 w-3.5" />
+                  <span>{widthLabel}</span>
+                </button>
+              </Tooltip>
             </div>
             <Outlet />
           </div>
         </main>
       </div>
+
+      <KeyboardShortcutsHelp open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>
   );
 }

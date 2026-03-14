@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 import AppLayout from '@/components/layout/AppLayout';
@@ -11,8 +10,8 @@ import JiraSecretListPage from '@/pages/JiraSecretListPage';
 import SlackSecretListPage from '@/pages/SlackSecretListPage';
 import ProfilePage from '@/pages/ProfilePage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import ForbiddenPage from '@/pages/ForbiddenPage';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/components/common/Toast';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, error } = useAuth();
@@ -48,16 +47,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { isAdmin } = useAuth();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    if (!isAdmin) {
-      toast('error', '관리자 권한이 필요합니다');
-    }
-  }, [isAdmin, toast]);
 
   if (!isAdmin) {
-    return <Navigate to="/" replace />;
+    return <ForbiddenPage />;
   }
 
   return children;

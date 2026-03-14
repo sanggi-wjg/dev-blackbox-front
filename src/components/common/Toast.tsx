@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
-import { CheckCircleIcon, XCircleIcon, InfoCircleIcon, XMarkIcon } from '@/components/icons';
+import { CheckCircleIcon, XCircleIcon, InfoCircleIcon, ExclamationTriangleIcon, XMarkIcon } from '@/components/icons';
 
-type ToastType = 'success' | 'error' | 'info';
+type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 interface Toast {
   id: number;
@@ -35,6 +35,11 @@ const typeConfig: Record<ToastType, { border: string; icon: ReactNode; iconColor
     border: 'border-l-brand-500',
     icon: <InfoCircleIcon className="h-5 w-5" />,
     iconColor: 'text-brand-500',
+  },
+  warning: {
+    border: 'border-l-warning-500',
+    icon: <ExclamationTriangleIcon className="h-5 w-5" />,
+    iconColor: 'text-warning-500',
   },
 };
 
