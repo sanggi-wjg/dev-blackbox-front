@@ -5,6 +5,7 @@ import LoginPage from '@/pages/LoginPage';
 import DashboardPage from '@/pages/DashboardPage';
 import PlatformWorkLogPage from '@/pages/PlatformWorkLogPage';
 import WorkBoardPage from '@/pages/WorkBoardPage';
+import SearchPage from '@/pages/SearchPage';
 import UserListPage from '@/pages/UserListPage';
 import JiraSecretListPage from '@/pages/JiraSecretListPage';
 import SlackSecretListPage from '@/pages/SlackSecretListPage';
@@ -86,6 +87,7 @@ export default function App() {
         >
           <Route index element={<DashboardPage />} />
           <Route path="platform" element={<PlatformWorkLogPage />} />
+          <Route path="search" element={<SearchPage />} />
           <Route path="manual" element={<Navigate to="/" replace />} />
           <Route path="work-board" element={<WorkBoardPage />} />
           <Route path="profile" element={<ProfilePage />} />

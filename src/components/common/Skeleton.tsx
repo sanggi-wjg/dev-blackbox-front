@@ -18,6 +18,24 @@ export function WorkLogCardSkeleton() {
   );
 }
 
+export function SearchResultSkeleton() {
+  return (
+    <div className="rounded-xl border border-border-primary bg-surface shadow-xs">
+      <div className="flex items-center gap-3 border-b border-border-primary px-5 py-3">
+        <Skeleton className="h-8 w-8 rounded-lg" />
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="ml-auto h-4 w-20" />
+        <Skeleton className="h-5 w-10 rounded-md" />
+      </div>
+      <div className="flex flex-col gap-3 px-5 py-4">
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+      </div>
+    </div>
+  );
+}
+
 export function TableRowSkeleton({ cols = 5 }: { cols?: number }) {
   return (
     <tr>

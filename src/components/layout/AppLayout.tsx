@@ -11,6 +11,7 @@ import { MenuIcon, ArrowsRightLeftIcon } from '@/components/icons';
 const pageTitleMap: Record<string, string> = {
   '/': '대시보드',
   '/platform': '플랫폼 업무일지',
+  '/search': '검색',
   '/work-board': '업무 보드',
   '/profile': '내 프로필',
   '/users': '사용자 관리',

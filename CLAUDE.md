@@ -66,6 +66,7 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 |---------------|-----------------------|-------------------------------------|
 | `/`           | `DashboardPage`       | 대시보드 (메인)                           |
 | `/platform`   | `PlatformWorkLogPage` | 플랫폼 업무일지 (GitHub/Jira/Slack 데이터 기반) |
+| `/search`     | `SearchPage`          | 검색 (업무 일지 의미 기반 벡터 검색)              |
 | `/work-board` | `WorkBoardPage`       | 워크보드 (칸반 보드, 드래그 앤 드롭, 이미지 업로드)     |
 | `/profile`    | `ProfilePage`         | 내 프로필                               |
 
@@ -104,6 +105,8 @@ UI 작성 시 반드시 디자인 토큰 색상을 사용한다. Tailwind 클래
 - **document.title**: `AppLayout`에서 `pageTitleMap` 기반으로 `{페이지명} | Dev Blackbox` 형식 자동 설정
 - **Tooltip**: CSS-only (`group` + `group-hover`) 툴팁 컴포넌트
 - **403 페이지**: `AdminRoute`에서 비관리자 접근 시 `ForbiddenPage` 렌더링 (리다이렉트 대신)
+- **검색 디바운스**: `useDebounce` 훅 (300ms)으로 검색 입력 디바운스. `useSearchParams`로 URL 상태 관리 (`/search?q=...`).
+  React Query `enabled`로 빈 쿼리 요청 방지. 재요청 시 `isFetching && !isLoading`으로 배경 로딩 인디케이터 표시
 
 ## Gotchas
 

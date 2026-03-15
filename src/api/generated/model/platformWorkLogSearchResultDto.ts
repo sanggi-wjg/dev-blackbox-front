@@ -6,13 +6,16 @@
  * OpenAPI spec version: 0.1.1
  */
 
-export interface DailyWorkLogResponseDto {
+export interface PlatformWorkLogSearchResultDto {
   id: number;
   /** 요약 대상 날짜 (YYYY-MM-DD) */
   target_date: string;
+  /** 플랫폼 이름 */
+  platform: string;
   /** 요약 내용 */
   content: string;
-  user_id: number;
+  /** 유사도 점수 (1에 가까울수록 유사) */
+  score: number;
   created_at: string;
   updated_at: string;
 }

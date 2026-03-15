@@ -51,7 +51,7 @@ const TaskCard = forwardRef<HTMLDivElement, TaskCardProps>(
           {dragHandle}
           <span className={`h-2 w-2 shrink-0 rounded-full ${statusCfg.dot}`} title={statusCfg.label} />
           <p
-            className={`flex-1 truncate text-sm font-medium ${
+            className={`flex-1 truncate font-medium ${compact ? 'text-xs' : 'text-sm'} ${
               isTerminal
                 ? 'text-text-tertiary line-through'
                 : task.title
