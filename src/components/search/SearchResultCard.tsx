@@ -5,6 +5,7 @@ import Card, { CardBody } from '@/components/common/Card';
 import Badge from '@/components/common/Badge';
 import { GitHubIcon, JiraIcon, SlackIcon, ClipboardDocumentIcon, CheckIcon, CalendarIcon } from '@/components/icons';
 import { PLATFORM_LABELS } from '@/utils/platform';
+import type { PlatformWorkLogChunkSearchResultDto } from '@/api/generated/model';
 import type { ReactNode } from 'react';
 
 interface SearchResultCardProps {
@@ -12,6 +13,9 @@ interface SearchResultCardProps {
   content: string;
   targetDate: string;
   score: number;
+  chunkResult?: PlatformWorkLogChunkSearchResultDto[];
+  chunkCount?: number;
+  debugMode?: boolean;
   onCopy?: () => void;
 }
 
@@ -50,7 +54,16 @@ const platformConfig: Record<
   },
 };
 
-export default function SearchResultCard({ platform, content, targetDate, score, onCopy }: SearchResultCardProps) {
+export default function SearchResultCard({
+  platform,
+  content,
+  targetDate,
+  score,
+  chunkResult,
+  chunkCount,
+  debugMode,
+  onCopy,
+}: SearchResultCardProps) {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
@@ -121,6 +134,36 @@ export default function SearchResultCard({ platform, content, targetDate, score,
           <Markdown>{content}</Markdown>
         </div>
       </CardBody>
+
+      {/* 디버그: 청크 검색 결과 */}
+      {debugMode && chunkResult && chunkResult.length > 0 && (
+        <div className="border-t border-border-primary bg-surface-tertiary px-5 py-3">
+          <p className="mb-2 text-xs font-medium text-text-tertiary">
+            청크 검색 결과 ({chunkCount ?? chunkResult.length}개)
+          </p>
+          <div className="flex flex-col gap-2">
+            {chunkResult.map((chunk) => (
+              <ChunkItem key={chunk.chunk_index} chunk={chunk} />
+            ))}
+          </div>
+        </div>
+      )}
     </Card>
+  );
+}
+
+function ChunkItem({ chunk }: { chunk: PlatformWorkLogChunkSearchResultDto }) {
+  const scorePercent = Math.round(chunk.score * 100);
+
+  return (
+    <div className="rounded-md border border-border-primary bg-surface p-2.5">
+      <div className="flex items-center gap-2">
+        <span className="shrink-0 text-xs font-mono text-text-tertiary">#{chunk.chunk_index}</span>
+        <Badge variant="default">{scorePercent}%</Badge>
+      </div>
+      <pre className="mt-2 max-h-60 overflow-auto whitespace-pre-wrap break-words rounded bg-surface-tertiary p-2 text-xs text-text-secondary">
+        {chunk.chunk_text}
+      </pre>
+    </div>
   );
 }

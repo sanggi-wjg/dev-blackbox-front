@@ -16,4 +16,8 @@ status?: TaskStatusEnum[] | null;
  * 아카이브 여부
  */
 is_archived?: boolean;
+/**
+ * 검색 키워드
+ */
+keyword?: string | null;
 };

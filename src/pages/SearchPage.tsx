@@ -76,6 +76,7 @@ export default function SearchPage() {
   const [filtersOpen, setFiltersOpen] = useState(
     () => !!(searchParams.get('platform') || searchParams.get('from') || searchParams.get('to')),
   );
+  const [debugMode, setDebugMode] = useState(false);
 
   const debouncedQuery = useDebounce(inputValue, 300);
   const { toast } = useToast();
@@ -291,11 +292,22 @@ export default function SearchPage() {
       {/* 결과 목록 */}
       {hasQuery && !error && hasResults && (
         <div>
-          <p className="mb-3 text-xs text-text-tertiary">
-            {results.length >= RESULT_LIMIT
-              ? `최대 ${RESULT_LIMIT}건 표시`
-              : `${results.length}건의 결과`}
-          </p>
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-xs text-text-tertiary">
+              {results.length >= RESULT_LIMIT
+                ? `최대 ${RESULT_LIMIT}건 표시`
+                : `${results.length}건의 결과`}
+            </p>
+            <label className="flex items-center gap-1.5 text-xs text-text-tertiary cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={debugMode}
+                onChange={(e) => setDebugMode(e.target.checked)}
+                className="h-3.5 w-3.5 rounded border-border-primary accent-brand-600"
+              />
+              디버그
+            </label>
+          </div>
           <div key={resultListKey} className={`flex flex-col gap-4 ${showRefetching ? 'opacity-60 transition-opacity' : ''}`}>
             {results.map((r, index) => (
               <div key={r.id} className="animate-stagger-up" style={{ animationDelay: `${index * 80}ms` }}>
@@ -304,6 +316,9 @@ export default function SearchPage() {
                   content={r.content}
                   targetDate={r.target_date}
                   score={r.score}
+                  chunkResult={r.chunk_result}
+                  chunkCount={r.chunk_count}
+                  debugMode={debugMode}
                   onCopy={() => handleCopy(r.platform, r.content)}
                 />
               </div>

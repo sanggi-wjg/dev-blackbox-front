@@ -1,30 +1,39 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
-import { TaskStatusEnum } from '@/api/generated/model';
-import type { TaskUpdateRequestDto, GetTasksApiV1TasksGetParams } from '@/api/generated/model';
+import {useCallback, useMemo, useState} from 'react';
+import {useQueryClient} from '@tanstack/react-query';
+import type {DragEndEvent} from '@dnd-kit/core';
+import {closestCenter, DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
+import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable';
+import type {GetTasksApiV1TasksGetParams, TaskUpdateRequestDto} from '@/api/generated/model';
+import {TaskStatusEnum} from '@/api/generated/model';
 import {
-  useGetTasksApiV1TasksGet,
-  useCreateTaskApiV1TasksPost,
-  useUpdateTaskApiV1TasksTaskIdPut,
-  useDeleteTaskApiV1TasksTaskIdDelete,
-  useReorderTasksApiV1TasksReorderPatch,
-  useArchiveTaskApiV1TasksTaskIdArchivePatch,
-  useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch,
-  useSyncJiraTasksApiV1TasksTaskIdJiraSyncPost,
+    useArchiveTaskApiV1TasksTaskIdArchivePatch,
+    useCreateTaskApiV1TasksPost,
+    useDeleteTaskApiV1TasksTaskIdDelete,
+    useGetTasksApiV1TasksGet,
+    useReorderTasksApiV1TasksReorderPatch,
+    useSyncJiraTasksApiV1TasksTaskIdJiraSyncPost,
+    useUnarchiveTaskApiV1TasksTaskIdUnarchivePatch,
+    useUpdateTaskApiV1TasksTaskIdPut,
 } from '@/api/generated/task/task';
+import type {FilterValue} from '@/components/workboard/TaskStatusFilter';
 import TaskStatusFilter from '@/components/workboard/TaskStatusFilter';
-import type { FilterValue } from '@/components/workboard/TaskStatusFilter';
 import SortableTaskCard from '@/components/workboard/SortableTaskCard';
 import TaskEditor from '@/components/workboard/TaskEditor';
 import KanbanBoard from '@/components/workboard/KanbanBoard';
 import Button from '@/components/common/Button';
-import { useToast } from '@/components/common/Toast';
-import { useGlobalHotkeys } from '@/hooks/useGlobalHotkeys';
-import { PlusIcon, ClipboardDocumentIcon, ArrowLeftIcon, QueueListIcon, ViewColumnsIcon } from '@/components/icons';
-import { tasksToMarkdown, TERMINAL_STATUSES } from '@/utils/workboard';
+import {useToast} from '@/components/common/Toast';
+import {useGlobalHotkeys} from '@/hooks/useGlobalHotkeys';
+import {
+    ArrowLeftIcon,
+    ClipboardDocumentIcon,
+    MagnifyingGlassIcon,
+    PlusIcon,
+    QueueListIcon,
+    ViewColumnsIcon,
+    XMarkIcon,
+} from '@/components/icons';
+import {useDebounce} from '@/hooks/useDebounce';
+import {tasksToMarkdown, TERMINAL_STATUSES} from '@/utils/workboard';
 
 type ViewMode = 'list' | 'kanban';
 
@@ -45,6 +54,8 @@ function getFilterParams(filter: FilterValue): GetTasksApiV1TasksGetParams {
 
 export default function WorkBoardPage() {
   const [filter, setFilter] = useState<FilterValue>('active');
+  const [searchInput, setSearchInput] = useState('');
+  const debouncedKeyword = useDebounce(searchInput, 300);
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const saved = localStorage.getItem('workboard-view-mode');
     return saved === 'kanban' ? 'kanban' : 'list';
@@ -58,12 +69,13 @@ export default function WorkBoardPage() {
   const queryClient = useQueryClient();
 
   const filterParams = getFilterParams(filter);
+  const keyword = debouncedKeyword.trim() || undefined;
 
-  const { data: tasks = [] } = useGetTasksApiV1TasksGet(filterParams);
+  const { data: tasks = [] } = useGetTasksApiV1TasksGet({ ...filterParams, keyword });
 
   // 모든 필터의 건수를 위해 전체 데이터도 조회
-  const { data: allTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: false });
-  const { data: archivedTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: true });
+  const { data: allTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: false, keyword });
+  const { data: archivedTasks = [] } = useGetTasksApiV1TasksGet({ is_archived: true, keyword });
 
   // 칸반 뷰에서는 상태 필터를 무시하고 전체 태스크에서 선택
   const selectedTask = (viewMode === 'kanban' ? allTasks : tasks).find((t) => t.id === selectedTaskId) ?? null;
@@ -265,6 +277,25 @@ export default function WorkBoardPage() {
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border-primary bg-surface p-3 shadow-xs">
           <TaskStatusFilter value={filter} onChange={setFilter} counts={counts} />
           <div className="ml-auto flex items-center gap-2">
+            {/* 검색 */}
+            <div className="relative">
+              <MagnifyingGlassIcon className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="검색"
+                className="h-8 w-36 rounded-lg border border-border-primary bg-surface pl-8 pr-7 text-xs text-text-primary placeholder:text-text-tertiary focus:border-border-focus focus:outline-none sm:w-44"
+              />
+              {searchInput && (
+                <button
+                  onClick={() => setSearchInput('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-secondary"
+                >
+                  <XMarkIcon className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
             {/* 뷰 모드 토글 */}
             <div
               className="hidden items-center rounded-lg border border-border-primary lg:flex"
