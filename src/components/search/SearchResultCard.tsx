@@ -75,7 +75,7 @@ export default function SearchResultCard({ platform, content, targetDate, score,
   };
 
   const handleDateClick = () => {
-    navigate(`/platform`);
+    navigate('/platform', { state: { date: targetDate } });
   };
 
   return (

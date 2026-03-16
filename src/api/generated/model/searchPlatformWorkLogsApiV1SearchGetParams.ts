@@ -5,6 +5,7 @@
  * Dev Blackbox API
  * OpenAPI spec version: 0.1.1
  */
+import type { PlatformEnum } from './platformEnum';
 
 export type SearchPlatformWorkLogsApiV1SearchGetParams = {
 /**
@@ -17,4 +18,21 @@ query: string;
  * @maximum 50
  */
 limit?: number;
+/**
+ * @minimum 0
+ * @maximum 1
+ */
+similarity?: number;
+/**
+ * 플랫폼 필터 (GITHUB, JIRA, SLACK 등)
+ */
+platform?: PlatformEnum | null;
+/**
+ * 검색 시작 날짜 (YYYY-MM-DD)
+ */
+from_date?: string | null;
+/**
+ * 검색 종료 날짜 (YYYY-MM-DD)
+ */
+to_date?: string | null;
 };

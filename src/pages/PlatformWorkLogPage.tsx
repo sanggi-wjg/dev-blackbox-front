@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
+import { useLocation } from 'react-router';
 import dayjs from 'dayjs';
 import {
   useGetPlatformWorkLogsApiV1PlatformWorkLogsGet,
@@ -32,7 +33,10 @@ const POLL_INTERVAL = 30_000;
 const PLATFORM_ORDER = ['GITHUB', 'JIRA', 'CONFLUENCE', 'SLACK'];
 
 export default function PlatformWorkLogPage() {
-  const [targetDate, setTargetDate] = useState(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
+  const location = useLocation();
+  const [targetDate, setTargetDate] = useState(
+    () => (location.state as { date?: string } | null)?.date ?? dayjs().subtract(1, 'day').format('YYYY-MM-DD'),
+  );
   const [viewMode, setViewMode] = useState<PlatformViewMode>('card');
   const [heatmapExpanded, setHeatmapExpanded] = useState(true);
   const [syncingDate, setSyncingDate] = useState<string | null>(null);
