@@ -5,6 +5,7 @@
  * Dev Blackbox API
  * OpenAPI spec version: 0.1.1
  */
+import type { PlatformWorkLogChunkSearchResultDto } from './platformWorkLogChunkSearchResultDto';
 
 export interface PlatformWorkLogSearchResultDto {
   id: number;
@@ -18,4 +19,8 @@ export interface PlatformWorkLogSearchResultDto {
   score: number;
   created_at: string;
   updated_at: string;
+  /** 유사한 청크 검색 결과 목록 */
+  chunk_result: PlatformWorkLogChunkSearchResultDto[];
+  /** 유사한 청크 검색 결과 수 */
+  chunk_count: number;
 }

@@ -4,7 +4,7 @@ import WorkLogDatePicker from '@/components/worklog/WorkLogDatePicker';
 import ActivityHeatmapWidget from '@/components/dashboard/ActivityHeatmapWidget';
 import PlatformSummaryWidget from '@/components/dashboard/PlatformSummaryWidget';
 import TaskSummaryWidget from '@/components/dashboard/TaskSummaryWidget';
-import DailyLogWidget from '@/components/dashboard/DailyLogWidget';
+
 import Card from '@/components/common/Card';
 
 export default function DashboardPage() {
@@ -40,9 +40,6 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="animate-stagger-up">
             <PlatformSummaryWidget targetDate={targetDate} />
-          </div>
-          <div className="animate-stagger-up" style={{ animationDelay: '160ms' }}>
-            <DailyLogWidget targetDate={targetDate} />
           </div>
         </div>
       </div>

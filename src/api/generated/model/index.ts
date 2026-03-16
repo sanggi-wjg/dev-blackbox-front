@@ -72,6 +72,7 @@ export * from './jiraSecretSimpleResponseDto';
 export * from './jiraUserResponseDto';
 export * from './minimumGitHubEventResponseDto';
 export * from './platformEnum';
+export * from './platformWorkLogChunkSearchResultDto';
 export * from './platformWorkLogDetailResponseDto';
 export * from './platformWorkLogResponseDto';
 export * from './platformWorkLogSearchResponseDto';
